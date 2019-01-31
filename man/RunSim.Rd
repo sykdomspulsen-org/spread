@@ -21,7 +21,13 @@ RunSim(id = 1, startVals, R0 = 1.88, gammaTheoretical = 3,
 
 \item{a}{days latent}
 
+\item{asymptomaticProb}{Probability someone is asymptomatic}
+
+\item{asymptomaticRelativeInfectiousness}{How infectious is this person relative to symptomatic}
+
 \item{M}{days simulated}
+
+\item{verbose}{True/False}
 }
 \description{
 RunSim

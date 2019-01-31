@@ -220,8 +220,11 @@ SetupCPPAndStructure <- function(){
 #' @param R0 R0
 #' @param gammaTheoretical days infectious
 #' @param gammaEffective days infectious
+#' @param asymptomaticProb Probability someone is asymptomatic
+#' @param asymptomaticRelativeInfectiousness How infectious is this person relative to symptomatic
 #' @param a days latent
 #' @param M days simulated
+#' @param verbose True/False
 #' @export
 RunSim <- function(
   id=1,

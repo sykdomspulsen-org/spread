@@ -15,7 +15,9 @@ Imports:
   ggplot2,
   processx,
   readxl,
-  uuid
+  uuid,
+  withr,
+  sykdomspuls
 Suggests:
   testthat
 Remotes: raubreywhite/RAWmisc, folkehelseinstituttet/fhi
