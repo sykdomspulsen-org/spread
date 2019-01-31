@@ -10,10 +10,10 @@
 #include <cmath>
 #include <random>
 #include <stdlib.h>
-#include <time.h> 
+#include <time.h>
 //~ #include <gsl/gsl_randist.h>
 //~ #include <gsl/gsl_sf_bessel.h>
-//~ #include <time.h> 
+//~ #include <time.h>
 
 using namespace std;
 
@@ -23,7 +23,7 @@ class Graph;
 
 class Location{
 	private:
-	
+
 	public:
 		string name;
 		int S;
@@ -36,21 +36,21 @@ class Location{
 		vector<Link*> in_links;
 		vector<Link*> out_links2;
 		vector<Link*> in_links2;
-		
-		
+
+
 	Location(string name_, int Shome);
 	void add_inlink(Link *link);
 	void add_outlink(Link *link);
 	void add_inlink2(Link *link);
 	void add_outlink2(Link *link);
 	void print();
-	void seir_step_day(int day, int locnum, float beta, float a, float gamma, int &de2);
-	void seir_step_night(int day, int locnum, float beta, float a, float gamma, int &de2);
+	void seir_step_day(int day, int locnum, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int &de2);
+	void seir_step_night(int day, int locnum, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int &de2);
 	//~ ~Location();
 };
 
 class Link{
-	
+
 	public:
 		int S;
 		int E;
@@ -78,7 +78,7 @@ class Graph{
 	void add_edge_index(int i1, int i2, int S, int E, int I, int Ia, int R);
 	void inform_locations_of_edges();
 	void add_edge_index2(int i1, int i2, int S, int E, int I, int Ia, int R);
-	void inform_locations_of_edges2();	
+	void inform_locations_of_edges2();
 	void copy_graph(Graph G);
 	void print();
 	//~ ~Graph();

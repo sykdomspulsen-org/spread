@@ -213,190 +213,80 @@ SetupCPPAndStructure <- function(){
   return(list("regions"=regions,"d"=d))
 }
 
-#' SetupStartInfected
-#' @param betaFile a
-#' @param betas a
-#' @param d a
-#' @param s a
-#' @param startWeek a
-#' @import data.table
-#' @export SetupStartInfected
-SetupStartInfected <- function(betaFile, betas,d,s,startWeek){
-  season <- NULL
-  age <- NULL
-
-  toSave <- data.frame(betas)
-
-  fwrite(toSave,
-         file=betaFile,
-         sep=" ",
-         col.names=F)
-
-  toSave <- data.frame(floor(d[season==s & week==startWeek]$n))
-  #toSave[,1] <- rep(1,nrow(toSave))
-
-  fwrite(toSave,
-         file=file.path(CONFIG_DIR$DIR_TMP,"start_infected.txt"),
-         sep=" ",
-         col.names=F)
-
-  return(d[season==s & week==startWeek]$x[1])
-}
 
 #' RunSim
-#' @param param a
-#' @param regions a
-#' @param doctorVisitingProb a
-#' @param d a
-#' @param s a
-#' @param startWeek a
-#' @param outputFile a
-#' @import data.table
-#' @importFrom withr with_dir
-#' @importFrom processx run
-#' @export RunSim
-RunSim <- function(param,regions,doctorVisitingProb,d,s,startWeek,outputFile=tempfile(),verbose=F){
-  . <- NULL
-  kn <- NULL
-  day <- NULL
-  x <- NULL
-  S <- NULL
-  E <- NULL
-  SI <- NULL
-  AI <- NULL
-  R <- NULL
-  location <- NULL
-  season <- NULL
-  age <- NULL
-  region <- NULL
-  pop <- NULL
-  INCIDENCE <- NULL
-  INCIDENCE_DIF <- NULL
+#' @param id fileid
+#' @param startVals a
+#' @param R0 R0
+#' @param gammaTheoretical days infectious
+#' @param gammaEffective days infectious
+#' @param a days latent
+#' @param M days simulated
+#' @export
+RunSim <- function(
+  id=1,
+  startVals,
+  R0=1.88,
+  gammaTheoretical=3,
+  gammaEffective=gammaTheoretical,
+  a=1.9,
+  asymptomaticProb=0.33,
+  asymptomaticRelativeInfectiousness=0.5,
+  M=100,
+  verbose=F){
 
+  fwrite(startVals[,"value"],
+         file=file.path(dirTemp,sprintf("start_infected_%s.txt",id)),
+         sep=" ",
+         col.names=F)
 
-  regions[,beta:=0]
-  for(i in 1:5){
-    regions[region==sprintf("region%s",i),beta:=param[i]]
-  }
-  #regions[,beta:=param[1]]
+  symptomaticProb <- 1 - asymptomaticProb
+  beta = R0/gammaTheoretical/(symptomaticProb + asymptomaticProb*asymptomaticRelativeInfectiousness)
+  beta=round(beta,3)
 
-  betaFile=tempfile()
-
-
-  startX <- SetupStartInfected(
-    betaFile=betaFile,
-    betas=regions$beta,
-     d=d,
-     s=s,
-     startWeek=startWeek)
-
-  res <- withr::with_dir(CONFIG_DIR$DIR_TMP,{
+  # beta;  // infection parameter, 0.6
+  # gamma; // 1/infectious period, 1/3
+  # a;  // 1/latent period, 1/1.9
+  # asymptomaticProb
+  # asymptomaticRelativeInfectiousness
+  res <- withr::with_dir(dirTemp,{
     processx::run(
-      command=file.path(CONFIG_DIR$DIR_TMP,"infl_kommuner.exe"),
+      command=file.path(dirTemp,"infl_kommuner.exe"),
       args=c(
-        outputFile,
-        betaFile,
-        as.character(CONFIG_PAR$gamma),
-        as.character(CONFIG_PAR$a),
-        as.character(10)
-        ),
+        as.character(id),
+        as.character(beta),
+        as.character(gammaEffective),
+        as.character(a),
+        as.character(asymptomaticProb),
+        as.character(asymptomaticRelativeInfectiousness),
+        as.character(M)
+      ),
       echo_cmd = verbose,
       echo = verbose)
   })
 
-  list.files(CONFIG_DIR$DIR_TMP)
-
-  loc <- fread(file.path(CONFIG_DIR$DIR_TMP,"pop_wo_com.txt"))
-  setnames(loc,c("x","pop"))
+  loc <- fread(file.path(dirTemp,"pop_wo_com.txt"))
+  setnames(loc,c("location","pop"))
   loc[,kn:=1:.N-1]
-  loc[,c("location","age"):=tstrsplit(x,"_")]
-  loc[,x:=NULL]
 
-  m <- fread(outputFile)
-  setnames(m,c("kn","S","E","SI","AI","R","INCIDENCE"))
+  m <- fread(file.path(dirTemp,sprintf("cpp_res_series_%s.txt",id)))
+  setnames(m,c("kn","S","E","I","IA","R","INCIDENCE"))
   #m <- m[seq(1,nrow(d),2)]
   m[,day:=rep(1:(.N/2),each=2),by=kn]
 
   m <- merge(m,loc,by="kn")
-  m[,x:=floor(day/7)+startX]
 
   m <- m[,.(
     S=base::mean(S),
     E=base::mean(E),
-    SI=base::mean(SI),
-    AI=base::mean(AI),
+    I=base::mean(I),
+    IA=base::mean(IA),
     R=base::mean(R),
     INCIDENCE=sum(INCIDENCE)),
     by=.(
-      location,age,x
+      location,day
     )]
 
-  res <- merge(d[season==s],m,by=c("location","age","x"),all.x=T)
+  return(m)
 
-  resIncidence <- res[,.(
-    INCIDENCE=base::sum(INCIDENCE)),
-    by=.(x)]
-  resIncidence[,INCIDENCE_DIF:=(INCIDENCE-shift(INCIDENCE))/shift(INCIDENCE)]
-  resIncidence[,doctorVisitingProb:=(1-abs(INCIDENCE_DIF))*0.25]
-  resIncidence$doctorVisitingProb[1] <- resIncidence$doctorVisitingProb[2]
-
-  resIncidence[doctorVisitingProb<0.01,doctorVisitingProb:=0.01]
-  resIncidence <- resIncidence[,c("x","doctorVisitingProb")]
-
-  #res <- merge(res,resIncidence,by="x")
-
-  res[,doc_INCIDENCE:=INCIDENCE*doctorVisitingProb]
-
-  return(res)
-}
-
-#' OptimFunction
-#' @param param a
-#' @param regions a
-#' @param d a
-#' @param s a
-#' @param startWeek a
-#' @import data.table
-#' @importFrom devtools load_all
-#' @importFrom stats aggregate
-#' @export OptimFunction
-OptimFunction <- function(param=rep(0.75,5),regions,d,s,startWeek){
-  library(data.table)
-
-  if(Sys.getenv("RSTUDIO") == "1"){
-    suppressPackageStartupMessages(devtools::load_all("/git/dashboards_compartmental_influenza/", export_all=FALSE, quiet=T))
-  } else {
-    #library(sykdomspulscompartmentalinfluenza)
-  }
-
-  res <- RunSim(
-    param=param,
-    regions=regions,
-    betaShape=10,
-    betaScale=20,
-    doctorVisitingProb=0.3,
-    d=d,
-    s=s,
-    startWeek=startWeek
-    )
-
-#  xres <- res[!is.na(S),list(
-#    n=sum(res$MinusOffSeason),
-#    S=sum(res$S),
-#    E=sum(res$E),
-#    SI=sum(res$SI),
-#    AI=sum(res$AI),
-#    R=sum(res$R),
-#    INCIDENCE=sum(res$INCIDENCE),
-#    doc_INCIDENCE=sum(res$doc_INCIDENCE)
-#  ),by=list(x)]
-
- # res[,error:=n-doc_INCIDENCE]
-
-  region <- aggregate(cbind(n,doc_INCIDENCE) ~ region + age + x, data = res[!is.na(res$S),],FUN=sum)
-
-  RMSE <- sqrt(mean((region$n-region$doc_INCIDENCE)^2,na.rm=T))
-  #print(RMSE)
-
-  return(RMSE)
 }

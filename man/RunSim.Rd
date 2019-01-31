@@ -4,23 +4,24 @@
 \alias{RunSim}
 \title{RunSim}
 \usage{
-RunSim(param, regions, doctorVisitingProb, d, s, startWeek,
-  outputFile = tempfile(), verbose = F)
+RunSim(id = 1, startVals, R0 = 1.88, gammaTheoretical = 3,
+  gammaEffective = gammaTheoretical, a = 1.9, asymptomaticProb = 0.33,
+  asymptomaticRelativeInfectiousness = 0.5, M = 100, verbose = F)
 }
 \arguments{
-\item{param}{a}
+\item{id}{fileid}
 
-\item{regions}{a}
+\item{startVals}{a}
 
-\item{doctorVisitingProb}{a}
+\item{R0}{R0}
 
-\item{d}{a}
+\item{gammaTheoretical}{days infectious}
 
-\item{s}{a}
+\item{gammaEffective}{days infectious}
 
-\item{startWeek}{a}
+\item{a}{days latent}
 
-\item{outputFile}{a}
+\item{M}{days simulated}
 }
 \description{
 RunSim
