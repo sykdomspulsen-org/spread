@@ -234,21 +234,21 @@ SetupCPPAndStructure <- function() {
 #' @param verbose True/False
 #' @export
 RunSim <- function(
-  id=1,
-  startVals,
-  R0=1.88,
-  a=1.9,
-  gammaTheoretical=3,
-  gammaEffective=gammaTheoretical,
-  asymptomaticProb=0.33,
-  asymptomaticRelativeInfectiousness=0.5,
-  M=100,
-  verbose=F){
-
-  fwrite(startVals[,"value"],
-         file=file.path(dirTemp,sprintf("start_infected_%s.txt",id)),
-         sep=" ",
-         col.names=F)
+                   id = 1,
+                   startVals,
+                   R0 = 1.88,
+                   a = 1.9,
+                   gammaTheoretical = 3,
+                   gammaEffective = gammaTheoretical,
+                   asymptomaticProb = 0.33,
+                   asymptomaticRelativeInfectiousness = 0.5,
+                   M = 100,
+                   verbose = F) {
+  fwrite(startVals[, "value"],
+    file = file.path(dirTemp, sprintf("start_infected_%s.txt", id)),
+    sep = " ",
+    col.names = F
+  )
 
   symptomaticProb <- 1 - asymptomaticProb
   beta <- R0 / gammaTheoretical / (symptomaticProb + asymptomaticProb * asymptomaticRelativeInfectiousness)
