@@ -218,11 +218,11 @@ SetupCPPAndStructure <- function(){
 #' @param id fileid
 #' @param startVals a
 #' @param R0 R0
+#' @param a days latent
 #' @param gammaTheoretical days infectious
 #' @param gammaEffective days infectious
 #' @param asymptomaticProb Probability someone is asymptomatic
 #' @param asymptomaticRelativeInfectiousness How infectious is this person relative to symptomatic
-#' @param a days latent
 #' @param M days simulated
 #' @param verbose True/False
 #' @export
@@ -230,9 +230,9 @@ RunSim <- function(
   id=1,
   startVals,
   R0=1.88,
+  a=1.9,
   gammaTheoretical=3,
   gammaEffective=gammaTheoretical,
-  a=1.9,
   asymptomaticProb=0.33,
   asymptomaticRelativeInfectiousness=0.5,
   M=100,
@@ -248,8 +248,8 @@ RunSim <- function(
   beta=round(beta,3)
 
   # beta;  // infection parameter, 0.6
-  # gamma; // 1/infectious period, 1/3
   # a;  // 1/latent period, 1/1.9
+  # gamma; // 1/infectious period, 1/3
   # asymptomaticProb
   # asymptomaticRelativeInfectiousness
   res <- withr::with_dir(dirTemp,{
@@ -258,8 +258,8 @@ RunSim <- function(
       args=c(
         as.character(id),
         as.character(beta),
-        as.character(gammaEffective),
         as.character(a),
+        as.character(gammaEffective),
         as.character(asymptomaticProb),
         as.character(asymptomaticRelativeInfectiousness),
         as.character(M)

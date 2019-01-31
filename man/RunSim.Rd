@@ -4,8 +4,8 @@
 \alias{RunSim}
 \title{RunSim}
 \usage{
-RunSim(id = 1, startVals, R0 = 1.88, gammaTheoretical = 3,
-  gammaEffective = gammaTheoretical, a = 1.9, asymptomaticProb = 0.33,
+RunSim(id = 1, startVals, R0 = 1.88, a = 1.9, gammaTheoretical = 3,
+  gammaEffective = gammaTheoretical, asymptomaticProb = 0.33,
   asymptomaticRelativeInfectiousness = 0.5, M = 100, verbose = F)
 }
 \arguments{
@@ -15,11 +15,11 @@ RunSim(id = 1, startVals, R0 = 1.88, gammaTheoretical = 3,
 
 \item{R0}{R0}
 
+\item{a}{days latent}
+
 \item{gammaTheoretical}{days infectious}
 
 \item{gammaEffective}{days infectious}
-
-\item{a}{days latent}
 
 \item{asymptomaticProb}{Probability someone is asymptomatic}
 

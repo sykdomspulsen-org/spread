@@ -40,11 +40,13 @@ startValsUtsira1[location=="municip1151",value:=1]
 m <- RunSim(
   startVals=startValsOslo100,
   R0=1.88,
-  gammaTheoretical =3,
   a=1.9,
+  gammaTheoretical =3,
+  gammaEffective =3,
   asymptomaticProb=0.33,
   asymptomaticRelativeInfectiousness=0.5,
-  verbose=T)
+  verbose=F)
+sum(m[day==100]$INCIDENCE)
 
 q <- ggplot(m,aes(x=day,y=INCIDENCE))
 q <- q + geom_col()

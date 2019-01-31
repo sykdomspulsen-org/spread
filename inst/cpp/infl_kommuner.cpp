@@ -633,8 +633,8 @@ void Graph::copy_graph(Graph G){
 int main(int nargs, char ** argsv){
   string id; //output for file id
 	float beta;  // infection parameter, 0.6
-	float gamma; // 1/infectious period, 1/3
 	float a;  // 1/latent period, 1/1.9
+  float gamma; // 1/infectious period, 1/3
 	float asymptomaticProb;
 	float asymptomaticRelativeInfectiousness;
 	int N = 1; // Number of repetitions
