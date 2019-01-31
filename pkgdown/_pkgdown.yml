@@ -1,0 +1,22 @@
+url: https://folkehelseinstituttet.github.io/fhi/
+navbar:
+  title: "fhi"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Articles"
+      menu:
+      - text: "Dashboard Basics"
+        href: articles/dashboardbasics.html
+      - text: "PDF Documents"
+        href: articles/pdfdocuments.html
+    - text: "Reference"
+      href: reference/
+    - text: "Changelog"
+      href: news/
+    - text: "Contributing"
+      href: CONTRIBUTING.html
+  right:
+    - icon: fa-github
+      href: https://github.com/folkehelseinstituttet/fhi/
+

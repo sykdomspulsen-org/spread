@@ -1,0 +1,28 @@
+language: r
+cache: packages
+r_packages:
+- covr
+- drat
+- pkgdown
+- lintr
+- styler
+before_install:
+- bash travis/make.sh
+after_success:
+- Rscript -e 'lintr::lint_package(lint=lintr::with_defaults(camel_case_linter = NULL,
+  snake_case_linter=NULL, line_length_linter = lintr::line_length_linter(120), object_usage_linter=NULL))'
+- Rscript -e 'library(covr); codecov()'
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
+  travis/drat.sh
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
+  travis/styler.sh
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && Rscript
+  -e 'Sys.sleep(10);install.packages("commuter",repos="https://folkehelseinstituttet.github.io/drat/");pkgdown::build_site()'
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: "$GITHUB_PAT"
+  keep-history: true
+  local-dir: docs
+  on:
+    branch: master

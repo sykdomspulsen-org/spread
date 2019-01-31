@@ -1,0 +1,26 @@
+Package: commuter
+Title: Prevalensundersokelser av helsetjenesteassosierte infeksjoner og antibiotikabruk, NOIS-PIAH
+Version: 2018.11.02
+Authors@R: person("Richard", "White", email = "w@rwhite.no", role = c("aut", "cre"))
+Description: This package implements the NOIS-PIAH analyses and subsequent report generating.
+Depends: R (>= 3.4.0)
+Imports:
+  fhi,
+  RAWmisc,
+  data.table,
+  lubridate,
+  xtable,
+  rmarkdown,
+  stringr,
+  ggplot2,
+  processx,
+  readxl,
+  uuid
+Suggests:
+  testthat
+Remotes: raubreywhite/RAWmisc, folkehelseinstituttet/fhi
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Additional_repositories: https://folkehelseinstituttet.github.io/drat/, https://raubreywhite.github.io/drat/
