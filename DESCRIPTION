@@ -16,8 +16,7 @@ Imports:
   processx,
   readxl,
   uuid,
-  withr,
-  sykdomspuls
+  withr
 Suggests:
   testthat
 Remotes: raubreywhite/RAWmisc, folkehelseinstituttet/fhi

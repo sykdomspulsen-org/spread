@@ -2,61 +2,53 @@
 #' @export CreateDataFiles
 CreateDataFiles <- function() {
   dirData <- system.file("extdata", package = "commuter")
-  pop_wo_com <- data.table(readxl::read_excel(file.path(dirData, sprintf("%s.xlsx", "pop_wo_com"))))
-  di_edge_list <- data.table(readxl::read_excel(file.path(dirData, sprintf("%s.xlsx", "di_edge_list"))))
 
-  popFiles <- sum(pop_wo_com$pop)
-  popReal <- 5000000
-  popMultiplier <- 1 # popReal/popFiles
+  di_edge_list <- data.table(readxl::read_excel(file.path(dirData, "di_edge_list_2017.xlsx"),skip=3))
+  setnames(di_edge_list,c("from","to","n"))
+  di_edge_list[,year:=2017]
+  di_edge_list <- di_edge_list[!is.na(n)]
+  di_edge_list[,from:=zoo::na.locf(from)]
 
-  loc <- pop_wo_com[, c("kommuneNameOld", "location")]
-  setnames(loc, "kommuneNameOld", "from")
-  loc[, from := factor(from, levels = from)]
+  di_edge_list[,from:=stringr::str_extract(from,"^[0-9][0-9][0-9][0-9]")]
+  di_edge_list[,to:=stringr::str_extract(to,"^[0-9][0-9][0-9][0-9]")]
+
+  di_edge_list[,from:=sprintf("municip%s",from)]
+  di_edge_list[,to:=sprintf("municip%s",to)]
+
+  norwayMunicipMerging <- fhi::NorwayMunicipMerging()
 
   nrow(di_edge_list)
-  di_edge_list <- merge(di_edge_list, loc, by = "from")
+  di_edge_list <- merge(di_edge_list,norwayMunicipMerging[,c("year","municip","municipEnd")],
+                        by.x=c("from","year"),
+                        by.y=c("municip","year"))
   nrow(di_edge_list)
-  di_edge_list[, from := NULL]
-  setnames(di_edge_list, "location", "from")
+  di_edge_list[,from:=NULL]
+  setnames(di_edge_list,"municipEnd","from")
 
-  setnames(loc, "from", "to")
   nrow(di_edge_list)
-  di_edge_list <- merge(di_edge_list, loc, by = "to")
+  di_edge_list <- merge(di_edge_list,norwayMunicipMerging[,c("year","municip","municipEnd")],
+                        by.x=c("to","year"),
+                        by.y=c("municip","year"))
   nrow(di_edge_list)
-  di_edge_list[, to := NULL]
-  setnames(di_edge_list, "location", "to")
-  setcolorder(di_edge_list, c("from", "to", "n"))
+  di_edge_list[,to:=NULL]
+  setnames(di_edge_list,"municipEnd","to")
 
-  pop_wo_com[, kommuneNameOld := NULL]
-  setcolorder(pop_wo_com, c("location", "pop"))
+  di_edge_list <- di_edge_list[,.(n=sum(n)),keyby=.(
+    from,
+    to
+  )]
+  di_edge_list <- di_edge_list[from!=to]
+  di_edge_list <- di_edge_list[n>0]
 
+  commuters <- di_edge_list[,.(n=sum(n)),keyby=.(from)]
 
+  pop_wo_com <- fhi::NorwayPopulation()[year==2017,.(
+    pop=sum(pop)
+  ),by=.(municip)]
 
-  aMaster <- sykdomspuls::GenNorwayMunicipMerging()
-  for (i in unique(aMaster$year)) {
-    a <- unique(aMaster[year == i, c("municip", "municipEnd")])
-    setnames(a, c("from", "fromNew"))
-    nrow(di_edge_list)
-    di_edge_list <- merge(di_edge_list, a, by = "from", all.x = T)
-    nrow(di_edge_list)
-    di_edge_list[!is.na(fromNew), from := fromNew]
-    di_edge_list[, fromNew := NULL]
-
-    setnames(a, c("to", "toNew"))
-    nrow(di_edge_list)
-    di_edge_list <- merge(di_edge_list, a, by = "to", all.x = T)
-    nrow(di_edge_list)
-    di_edge_list[!is.na(toNew), to := toNew]
-    di_edge_list[, toNew := NULL]
-
-    setnames(a, c("location", "locationNew"))
-    nrow(pop_wo_com)
-    pop_wo_com <- merge(pop_wo_com, a, by = "location", all.x = T)
-    nrow(pop_wo_com)
-    pop_wo_com[!is.na(locationNew), location := locationNew]
-    pop_wo_com[, locationNew := NULL]
-  }
-  di_edge_list <- di_edge_list[from != to]
+  pop_wo_com <- merge(pop_wo_com,commuters,by.x=c("municip"),by.y=c("from"))
+  pop_wo_com[,pop:=pop-n]
+  pop_wo_com[,n:=NULL]
 
   return(list(
     "di_edge_list" = di_edge_list,
