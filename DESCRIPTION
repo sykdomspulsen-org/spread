@@ -16,7 +16,8 @@ Imports:
   processx,
   readxl,
   uuid,
-  withr
+  withr,
+  zoo
 Suggests:
   testthat
 Remotes: raubreywhite/RAWmisc, folkehelseinstituttet/fhi
