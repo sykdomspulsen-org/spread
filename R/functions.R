@@ -59,7 +59,6 @@ CreateDataFiles <- function() {
 #' SetupCPPAndStructure
 #' @import data.table
 #' @importFrom readxl read_excel
-#' @importFrom sykdomspuls GenNorwayMunicipMerging
 #' @importFrom withr with_dir
 #' @importFrom processx run
 #' @export SetupCPPAndStructure
