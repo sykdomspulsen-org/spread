@@ -48,7 +48,7 @@ CreateDataFiles <- function() {
     pop = sum(pop)
   ), by = .(municip)]
 
-  pop_wo_com <- merge(pop_wo_com, commuters, by.x = c("municip"), by.y = c("from"), all.x=T)
+  pop_wo_com <- merge(pop_wo_com, commuters, by.x = c("municip"), by.y = c("from"), all.x = T)
   pop_wo_com[!is.na(n), pop := pop - n]
   pop_wo_com[, n := NULL]
 
