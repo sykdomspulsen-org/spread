@@ -40,7 +40,7 @@ CreateDataFiles <- function() {
     to
   )]
   di_edge_list <- di_edge_list[from != to]
-  #di_edge_list <- di_edge_list[n > 0]
+  # di_edge_list <- di_edge_list[n > 0]
 
   commuters <- di_edge_list[, .(n = sum(n)), keyby = .(from)]
 
