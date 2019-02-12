@@ -48,7 +48,7 @@ void seir_sim(int &ds, int &de1, int &de2, int &dia, int &di,       // Outputs
         else{
             dia = random_binomial(Ia, gamma*delta_t);
         }
-		ds = random_binomial(S, beta*delta_t*I/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia/pop);
+	ds = random_binomial(S, beta*delta_t*I/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia/pop);
     }
 }
 
@@ -572,6 +572,10 @@ void Graph::add_edge(string name1, string name2, int S, int E, int I, int Ia, in
 		cout << "name1_index = " << name1_index << ", name2_index = " << name2_index << endl;
 		exit(1);
 	}
+
+  //cout << "Error in add edge with input: " << name1 << ", " << name2 << ", " << S << ", " << E << ", " << I << ", " << Ia << ", " << R << endl;
+  //cout << "name1_index = " << name1_index << ", name2_index = " << name2_index << endl;
+
 	Link newlink(&(locations[name1_index]), &(locations[name2_index]), S, E, I, Ia, R);
 	newlink.from_index = name1_index;
 	newlink.to_index = name2_index;
@@ -669,6 +673,9 @@ int main(int nargs, char ** argsv){
 		n+= 1;
 	}
 	infile.close();
+
+
+
 
   int *startPoints = new int[n];
   ifstream start_infile("start_infected_"+id+".txt");
@@ -786,15 +793,22 @@ int main(int nargs, char ** argsv){
       if(G_current.locations[i].S > startPoints[i]){  // Number 40 is Oslo
         G_current.locations[i].I += startPoints[i];
         G_current.locations[i].S -= startPoints[i];
+	cout << i << " " << startPoints[i] << endl;
       }
     }
-		cout << "Starting simulation" << i_sim <<  endl;
+    cout << "Starting simulation" << i_sim <<  endl;
+
+cout << "Checking that starting values are ok" << i_sim <<  endl;
+  for (int i = 0; i < G_current.locations.size(); ++i){
+		cout << i << " " << G_current.locations[i].name << " " << G_current.locations[i].S << " " << G_current.locations[i].E << " " << G_current.locations[i].I << endl;
+  }
+
+cout << "Starting simulation" << i_sim <<  endl;
+
+
 		for(int i_day = 0; i_day < M; ++i_day){
-      /*
-			if(G_current.locations[40].S > 10){  // Number 40 is Oslo
-				G_current.locations[40].I += 10;
-				G_current.locations[40].S -= 10;
-			}	*/
+cout << "Day " << i_day << endl;
+
 			for (int i = 0; i < n; ++i){
 				int de2 = 0;
 				G_current.locations[i].seir_step_day(i_day, i, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, de2);

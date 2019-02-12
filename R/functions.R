@@ -40,7 +40,7 @@ CreateDataFiles <- function() {
     to
   )]
   di_edge_list <- di_edge_list[from != to]
-  #di_edge_list <- di_edge_list[n > 0]
+  di_edge_list <- di_edge_list[n > 0]
 
   commuters <- di_edge_list[, .(n = sum(n)), keyby = .(from)]
 
@@ -48,8 +48,8 @@ CreateDataFiles <- function() {
     pop = sum(pop)
   ), by = .(municip)]
 
-  pop_wo_com <- merge(pop_wo_com, commuters, by.x = c("municip"), by.y = c("from"))
-  pop_wo_com[, pop := pop - n]
+  pop_wo_com <- merge(pop_wo_com, commuters, by.x = c("municip"), by.y = c("from"), all.x=T)
+  pop_wo_com[!is.na(n), pop := pop - n]
   pop_wo_com[, n := NULL]
 
   return(list(
