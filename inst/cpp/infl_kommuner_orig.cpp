@@ -3,7 +3,7 @@
 //~ * ./infl_kommuner.exe
 //~ * */
 // #include "stdafx.h"
-#include "infl_kommuner.h"
+#include "infl_kommuner_orig.h"
 using namespace std;
 default_random_engine generator;
 
@@ -23,7 +23,12 @@ void cumulative_sum(double **outarray, double **array, int n){
 void seir_sim(int &ds, int &de1, int &de2, int &dia, int &di,       // Outputs
             int S, int E, int Ia, int I, float beta, float a,  float gamma, int pop, double delta_t){ // Inputs
     ds = 0; de1 = 0; de2 = 0; dia = 0; di = 0;
-    // de1 are the exposed going to asymptomatic, de2 are the exposed going to symptomatic 
+    /// Function to run one time step of the seir model 
+    /// ds are susceptible going to exposed
+    /// de1 are the exposed going to asymptomatic
+    /// de2 are the exposed going to symptomatic
+    /// dia are the infectious asymptomatic going to recovered
+    /// di are the infectious symptomatic going to recovered
     int de = 0;
     if(I != 0 || Ia != 0 || E != 0){
         if( E == 0){
@@ -102,6 +107,9 @@ void Location::print(){
 }
 	
 void Location::seir_step_day(int day, int locnum, float beta, float a, float gamma, int &de2){
+	// Function to run a day time step of the model. 
+	// The commuters are all sent to their work locations. 	
+	// Return symptomatic incidence, de2
 	int S_tmp = S;
 	int E_tmp = E;
 	int Ia_tmp = Ia;
@@ -109,7 +117,12 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 	int R_tmp = R;
 	double pop_tmp = S + E + Ia + I + R;
 	int num = in_links.size();
-	int *S_probs = new int[num+1]; // Every in_link goes here, and home_pop last
+	//Vectors with the number of people in the respective compartment, 
+	//on each link, and in the home population
+	//used to distribute the transitions between compartments 
+	//between the commuters on the different links and the home population
+	//The in-edges are on the first num elements, the home population last
+	int *S_probs = new int[num+1]; 
 	int *E_probs = new int[num+1];
 	int *I_probs = new int[num+1];
 	int *Ia_probs = new int[num+1];
@@ -136,21 +149,19 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 	R_probs[num] = R;
 	int ds; int de1; int dia; int di; 
 
-
+	// Run the SEIR step
 	seir_sim(ds, de1, de2, dia, di, S_tmp, E_tmp, Ia_tmp, I_tmp, beta, a, gamma, pop_tmp, 12.0/24.0);	
 	
+	//Distribute the transitions 
 	double *probs = new double[num+1];
 	double *probs_cum = new double[num+1];
 	double randomnumber;
 	int index = -1;
 	for(int i = 0; i < dia; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =Ia_probs[k]*1.0/ Ia_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}		
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
@@ -176,13 +187,10 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 
 	for(int i = 0; i < di; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =I_probs[k]*1.0/ I_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
-		}		
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
+		}	
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
 			if(randomnumber < probs_cum[h]){
@@ -207,13 +215,10 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 	
 	for(int i = 0; i < de1; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
-		}		
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
+		}	
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
 			if(randomnumber < probs_cum[h]){
@@ -238,12 +243,9 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 			
 	for(int i = 0; i < de2; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}		
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
@@ -269,12 +271,9 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 
 	for(int i = 0; i < ds; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =S_probs[k]*1.0/S_tmp; // Oneline for-loop
-		randomnumber =rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}
 		cumulative_sum(&probs_cum, &probs, num+1);				
 		for(int h = 0; h < num+1; ++h){
@@ -309,6 +308,9 @@ void Location::seir_step_day(int day, int locnum, float beta, float a, float gam
 }
 
 void Location::seir_step_night(int day, int locnum, float beta, float a, float gamma, int &de2){
+	// Function to run a night time step of the model. 
+	// The commuters are all sent to their home locations.
+	// Return the symptomatic incidence, de2
 	int S_tmp = S;
 	int E_tmp = E;
 	int Ia_tmp = Ia;
@@ -316,7 +318,12 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 	int R_tmp = R;
 	double pop_tmp = S + E + Ia + I + R;
 	int num = out_links.size();
-	int *S_probs = new int[num+1]; // Every in_link goes here, and home_pop last
+	//Vectors with the number of people in the respective compartment, 
+	//on each link, and in the home population
+	//used to distribute the transitions between compartments 
+	//between the commuters on the different links and the home population
+	//The out-edges are on the first num elements, the home population last
+	int *S_probs = new int[num+1]; 
 	int *E_probs = new int[num+1];
 	int *I_probs = new int[num+1];
 	int *Ia_probs = new int[num+1];
@@ -342,21 +349,19 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 	R_probs[num] = R;
 	int ds; int de1; int dia; int di; 
 
-	
+	// Run the SEIR step
 	seir_sim(ds, de1, de2, dia, di, S_tmp, E_tmp, Ia_tmp, I_tmp, beta, a, gamma, pop_tmp, 12.0/24.0);
 
+	//Distribute the transitions
 	double *probs = new double[num+1];
 	double *probs_cum = new double[num+1];
 	double randomnumber;
 	int index = -1;
 	for(int i = 0; i < dia; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =Ia_probs[k]*1.0/ Ia_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}		
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
@@ -382,12 +387,9 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 
 	for(int i = 0; i < di; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =I_probs[k]*1.0/ I_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}		
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
@@ -414,12 +416,9 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 	
 	for(int i = 0; i < de1; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}		
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
@@ -445,13 +444,10 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 	
 	for(int i = 0; i < de2; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
-		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
-		}		
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
+		}	
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
 			if(randomnumber < probs_cum[h]){
@@ -475,13 +471,10 @@ void Location::seir_step_night(int day, int locnum, float beta, float a, float g
 
 	for(int i = 0; i < ds; ++i){
 		for(int k = 0; k < num+1; ++k) probs[k] =S_probs[k]*1.0/ S_tmp; // Oneline for-loop
-		randomnumber = rand()/RAND_MAX;
-		if (randomnumber == 0){
-			randomnumber = 0.0001;
+		randomnumber = rand()*1.0/RAND_MAX;
+		while(randomnumber == 0 || randomnumber == 1){
+			randomnumber = rand()*1.0/RAND_MAX;
 		}
-		if (randomnumber == 1){
-			randomnumber = 0.9999;
-		}	
 		cumulative_sum(&probs_cum, &probs, num+1);
 		for(int h = 0; h < num + 1; ++h){
 			if(randomnumber < probs_cum[h]){
@@ -620,7 +613,7 @@ int main(int nargs, char ** argsv){
 	float a;  // 1/latent period, 1/1.9
 	int N = 1; // Number of repetitions 
 	int M = 300; // Number of days
-	int n=0;
+	int n=0; // Number of locations
 
 	
 	beta = atof(argsv[1]);
@@ -630,7 +623,8 @@ int main(int nargs, char ** argsv){
 	string tmpstr;
 	string tmpstr2;
 	char tmpchar[3];
-	int ix; int iy; int pop;
+	int pop;
+	// Read node file with the names and population sizes without commuters 
 	ifstream infile("pop_wo_com.txt");
 	if(!infile.is_open()){
 		cout << "Error in opening network node file" << endl;
@@ -649,6 +643,8 @@ int main(int nargs, char ** argsv){
 	I = 0;
 	Ia = 0;
 	R = 0;
+	// Read edges file with the number of commuters
+	//Should not include edges with zeros for computational efficiency
 	ifstream edge_infile("di_edge_list.txt");
 	if(!edge_infile.is_open()){
 		cout << "Error in opening network edge file" << endl;
@@ -677,31 +673,34 @@ int main(int nargs, char ** argsv){
 	edge_infile.close();
 	G.inform_locations_of_edges();
 	// Storage for statistics
-	int ***values = new int**[n];
-	int **peak_date = new int*[n];
-	int **peak_val = new int*[n];
-	int **start_date = new int*[n];
+	
+	//The state in each location at each time point
+	int ***values = new int**[n]; 
+	
+	// Peak dates in each location
+	int **peak_date = new int*[n]; 
+	
+	// Peak number infected in each location
+	int **peak_val = new int*[n]; 
+	
+	//Initial dates in each location
+	//defined as first day where the symptomatic prevalence has been 
+	//more than 1% for 7 consecutive days 
+	int **start_date = new int*[n]; 
+	
+	//Dummy vector, to find peak and initial dates
 	int **I_this = new int*[n];
+	
+	//Final number infected in each location
 	int **final_size = new int*[n];
-	int **bonds = new int*[N];
-	int ns;
-	int ne;
-	int ni;
-	int nia;
-	int nr; 
-	//~ unsigned int mult_op[5];
-	//~ unsigned int Seed2 = 123;
-	//~ gsl_rng_env_setup();
-	//~ const gsl_rng_type * T2;
-	//~ gsl_rng * r2;
-	//~ unsigned int Seed2 = time(NULL); // rand();
-	//~ T2 = gsl_rng_default;
-	//~ r2 = gsl_rng_alloc (T2);
-	//~ gsl_rng_set (r2, Seed2);	
+	
+	//Save the prevalence curves (infectious + infectious asymptomatic) for each location
+	// For each run, in order to make confidence curves over the N simulations
+	int **bonds = new int*[N];	
 	/// Values has first index for position, second for time and third for value.
-	/// Third index 0=S, 1=E, 2=I, 3=Ia, 4=R; 5 incidence;
+	/// Third index 0=S, 1=E, 2=I, 3=Ia, 4=R; 5 = symptomatic incidence;
 	for(int i = 0; i < n; ++i){
-		values[i] = new int*[M*2];
+		values[i] = new int*[M*2]; // 2*M, stored for both day and night time.
 		peak_date[i] = new int[N];
 		peak_val[i] = new int[N];
 		start_date[i] = new int[N];
@@ -714,19 +713,18 @@ int main(int nargs, char ** argsv){
 			values[i][k][2] = 0;
 			values[i][k][3] = 0;
 			values[i][k][4] = 0;
-			values[i][k][5] = 0; // No 5 is incidence
+			values[i][k][5] = 0; 
 		}
 	}
 	
 	for (int i = 0; i < N; ++i){
-		bonds[i] = new int[2*M];
+		bonds[i] = new int[2*M]; // 2*M, stored for both day and night time.
 		for (int j = 0; j < 2*M; ++j){
 			bonds[i][j] = 0;
 		}	
 	}	
 		
 	unsigned int Seed2 = 123;
-	//~ unsigned int Seed2 = time(NULL); // rand();
 	int Nk;	
 	float sum;
 	
@@ -746,8 +744,10 @@ int main(int nargs, char ** argsv){
 				G_current.locations[40].I += 10;
 				G_current.locations[40].S -= 10;
 			}	
+			cout << " Day " << i_day << endl;
 			for (int i = 0; i < n; ++i){
 				int de2 = 0;
+				// Let commuters mix at their work location during day time 
 				G_current.locations[i].seir_step_day(i_day, i, beta, a, gamma, de2);				
 				values[i][2*i_day][0] += G_current.locations[i].S;
 				values[i][2*i_day][1] += G_current.locations[i].E;
@@ -769,7 +769,8 @@ int main(int nargs, char ** argsv){
 				}
 			}		
 			for (int i = 0; i < n; ++i){	
-				int de2 = 0;				
+				int de2 = 0;	
+				// Let commuters mix in their home location during night time			
 				G_current.locations[i].seir_step_night(i_day, i, beta, a, gamma, de2);			
 				if(i_day == (M-1)){
 					final_size[i][i_sim] += G_current.locations[i].R;
@@ -797,7 +798,7 @@ int main(int nargs, char ** argsv){
 				}								
 			}
 		}
-		// Here you can find the initial dates and peak dates. 
+		// Initial dates and peak dates.
 		float baseline;
 		int pop = 0;
 		int pday = 0;
@@ -829,7 +830,7 @@ int main(int nargs, char ** argsv){
 					count += 1;
 					if (count > 6){
 						startday = i_day;
-						count = -2000;
+						count = -20000;
 					}
 				}
 			}
