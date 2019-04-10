@@ -1,6 +1,6 @@
 Package: commuter
 Title: Prevalensundersokelser av helsetjenesteassosierte infeksjoner og antibiotikabruk, NOIS-PIAH
-Version: 2019.02.12
+Version: 2019.04.10
 Authors@R: person("Richard", "White", email = "w@rwhite.no", role = c("aut", "cre"))
 Description: This package implements the NOIS-PIAH analyses and subsequent report generating.
 Depends: R (>= 3.4.0)
