@@ -17,7 +17,7 @@ after_success:
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
   travis/styler.sh
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && Rscript
-  -e 'Sys.sleep(10);install.packages("commuter",repos="https://folkehelseinstituttet.github.io/drat/");pkgdown::build_site()'
+  -e 'Sys.sleep(10);install.packages("spread",repos="https://folkehelseinstituttet.github.io/drat/");pkgdown::build_site()'
 deploy:
   provider: pages
   skip-cleanup: true
