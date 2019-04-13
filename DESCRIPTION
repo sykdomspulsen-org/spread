@@ -8,22 +8,13 @@ Authors@R: c(
 Description: This package implements the NOIS-PIAH analyses and subsequent report generating.
 Depends: R (>= 3.4.0)
 Imports:
-    fhidata,
-    fhi,
-    RAWmisc,
-    data.table,
-    lubridate,
-    xtable,
-    rmarkdown,
-    stringr,
-    ggplot2,
-    processx,
-    readxl,
-    uuid,
-    withr,
-    zoo,
     Rcpp (>= 0.9.4),
-    RcppProgress (>= 0.1)
+    RcppProgress (>= 0.1),
+    data.table,
+    fhidata,
+    stringr,
+    readxl,
+    zoo
 Suggests:
     testthat,
     knitr

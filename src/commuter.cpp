@@ -9,13 +9,6 @@
 using namespace Rcpp;
 using namespace std;
 
-default_random_engine generator(time(0));
-
-int random_binomial(int n, double p){
-  binomial_distribution<int> distribution(n,p);
-  return distribution(generator);
-}
-
 void cumulative_sum(double **outarray, double **array, int n){
   /// REMEMBER to delete outarray after use
   (*outarray)[0] = (*array)[0];
@@ -41,7 +34,7 @@ void seir_sim(int &ds, int &de1, int &de2, int &dia, int &di,       // Outputs
     else{
       de = R::rbinom(E, a*delta_t);
       if(de != 0){
-        de1 = random_binomial(de, asymptomaticProb);
+        de1 = R::rbinom(de, asymptomaticProb);
         de2 = de-de1;
       }
     }
@@ -49,15 +42,15 @@ void seir_sim(int &ds, int &de1, int &de2, int &dia, int &di,       // Outputs
       di = 0;
     }
     else{
-      di = random_binomial(I, gamma*delta_t);
+      di = R::rbinom(I, gamma*delta_t);
     }
     if(Ia == 0){
       dia = 0;
     }
     else{
-      dia = random_binomial(Ia, gamma*delta_t);
+      dia = R::rbinom(Ia, gamma*delta_t);
     }
-    ds = random_binomial(S, beta*delta_t*I/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia/pop);
+    ds = R::rbinom(S, beta*delta_t*I/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia/pop);
   }
 }
 

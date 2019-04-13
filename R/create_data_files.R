@@ -39,6 +39,16 @@
 "start_points_oslo"
 
 create_data_files_norway_2017 <- function(base_loc) {
+
+  . <- NULL
+  year <- NULL
+  n <- NULL
+  from <- NULL
+  to <- NULL
+  level <- NULL
+  pop <- NULL
+  location_code <- NULL
+
   dirData <- system.file("extdata", package = "spread")
 
   di_edge_list <- data.table(readxl::read_excel(file.path(dirData, "di_edge_list_2017.xlsx"), skip = 3))

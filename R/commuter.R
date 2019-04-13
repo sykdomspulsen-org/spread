@@ -23,6 +23,7 @@ commuter_calculate_beta_from_r0 <- function(
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
+#' @import data.table
 #' @export
 commuter <- function(
   pop_wo_com=spread::norway_pop_wo_com_2017,
