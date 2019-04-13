@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 
+// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>
 #include <progress_bar.hpp>
