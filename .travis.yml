@@ -1,15 +1,5 @@
 language: r
 
-include:
-- compiler: gcc
-  addons:
-    apt:
-      sources:
-        - ubuntu-toolchain-r-test
-      packages:
-        - g++-5
-  env: COMPILER=g++-5
-
 r_packages:
 - covr
 - drat
@@ -18,6 +8,7 @@ r_packages:
 - styler
 before_install:
 - bash travis/make.sh
+- bash travis/makevars.sh
 after_success:
 - Rscript -e 'lintr::lint_package(lint=lintr::with_defaults(camel_case_linter = NULL,
   snake_case_linter=NULL, line_length_linter = lintr::line_length_linter(120), object_usage_linter=NULL))'
