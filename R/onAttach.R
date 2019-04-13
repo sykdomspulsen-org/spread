@@ -1,7 +1,6 @@
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("PACKAGE: noispiah")
+  packageStartupMessage("PACKAGE: spread")
   packageStartupMessage("Version 2019.04.10")
-  packageStartupMessage("Developed by Richard White")
-  packageStartupMessage("Department of Infectious Disease Epidemiology and Modelling")
-  packageStartupMessage("Norwegian Institute of Public Health")
+  packageStartupMessage("Model and C++ code developed by Solveig Engebretsen and Andreas Nyg\u00E5rd Osnes")
+  packageStartupMessage("Ported to RCPP by Richard White")
 }
