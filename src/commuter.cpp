@@ -81,13 +81,13 @@ void Location::print(){
   // This is a debug function
   Rcout << "Location " << name << " with S= "<< S << ", E=" << E <<", I=" << I << ", Ia=" << Ia << ", R= " << R << ". " << endl;
   Rcout << "out_links: "<< out_links.size() <<endl;
-  for(int i = 0; i < out_links.size(); ++i){
+  for(unsigned int i = 0; i < out_links.size(); ++i){
     Rcout << "Trying to print from out_link " << i << endl;
     out_links[i]->print();
     Rcout.flush();
   }
   Rcout << "in_links: "<< in_links.size()<< endl;
-  for(int i = 0; i < in_links.size(); ++i){
+  for(unsigned int i = 0; i < in_links.size(); ++i){
     Rcout << "Trying to print from in_link " << i << endl;
     in_links[i]->print();
     Rcout.flush();
@@ -122,7 +122,7 @@ void Location::seir_step_day(
   int *I_probs = new int[num+1];
   int *Ia_probs = new int[num+1];
   int *R_probs = new int[num+1];
-  for(int i = 0; i < in_links.size(); ++i){
+  for(unsigned int i = 0; i < in_links.size(); ++i){
     S_tmp += in_links[i]->S;
     E_tmp += in_links[i]->E;
     Ia_tmp += in_links[i]->Ia;
@@ -326,7 +326,7 @@ void Location::seir_step_night(
   int *I_probs = new int[num+1];
   int *Ia_probs = new int[num+1];
   int *R_probs = new int[num+1];
-  for(int i = 0; i < out_links.size(); ++i){
+  for(unsigned int i = 0; i < out_links.size(); ++i){
     S_tmp += out_links[i]->S;
     E_tmp += out_links[i]->E;
     Ia_tmp += out_links[i]->Ia;
@@ -354,7 +354,7 @@ void Location::seir_step_night(
   double *probs = new double[num+1];
   double *probs_cum = new double[num+1];
   double randomnumber;
-  int index = -1;
+  unsigned int index = 0;
   for(int i = 0; i < dia; ++i){
     for(int k = 0; k < num+1; ++k) probs[k] =Ia_probs[k]*1.0/ Ia_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
@@ -534,7 +534,7 @@ void Graph::add_edge(string name1, string name2, int S, int E, int I, int Ia, in
   /// Find locations with names name1 and name2
   int name1_index = -1;
   int name2_index = -1;
-  for (int i = 0; i < locations.size(); ++i){
+  for (unsigned int i = 0; i < locations.size(); ++i){
     if(locations[i].name.compare(name1) == 0){
       name1_index = i;
     }
@@ -571,11 +571,11 @@ void Graph::inform_locations_of_edges(){
 void Graph::print(){
   Rcout << endl << "Printing graph: " << endl;
   Rcout << "Links: " << endl;
-  for(int i = 0; i < edges.size(); ++i){
+  for(unsigned int i = 0; i < edges.size(); ++i){
     edges[i].print();
   }
   Rcout << "Locations: " << endl;
-  for(int i = 0; i < locations.size(); ++i){
+  for(unsigned int i = 0; i < locations.size(); ++i){
     locations[i].print();
     Rcout.flush();
   }
@@ -628,12 +628,6 @@ DataFrame commuter_cpp(
 
   int n=0; //Number of locations
 
-  int S, E, I, Ia, R;
-  E = 0;
-  I = 0;
-  Ia = 0;
-  R = 0;
-
   Graph G;
   // Read node file with the names and population sizes without commuters
   StringVector names = pop_wo_com[0] ;
@@ -663,7 +657,8 @@ DataFrame commuter_cpp(
 
     if (people != 0){
       safecount += 1;
-      G.add_edge(name_from, name_to, people, E, I, Ia, R);
+      // name_from, name_to, S, E, I, Ia, R
+      G.add_edge(name_from, name_to, people, 0, 0, 0, 0);
 
       if(safecount % 1000 == 0){
         Rcout << safecount << " ";
@@ -728,11 +723,6 @@ DataFrame commuter_cpp(
       bonds[i][j] = 0;
     }
   }
-
-  unsigned int Seed2 = 123;
-  int Nk;
-  float sum;
-
 
   Rcout << "Running " << N << " simulations of " << M << " days" << endl << endl;
   Progress p(N*M, true);

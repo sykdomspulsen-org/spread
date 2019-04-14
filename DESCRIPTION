@@ -5,7 +5,7 @@ Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
     person("Richard", "White", email = "w@rwhite.no", role = c("aut", "cre")))
-Description: This package implements the NOIS-PIAH analyses and subsequent report generating.
+Description: Different infectious disease spread models.
 Depends: R (>= 3.4.0)
 Imports:
     Rcpp (>= 0.9.4),
@@ -17,13 +17,12 @@ Imports:
     zoo
 Suggests:
     testthat,
-    knitr
-Remotes: raubreywhite/RAWmisc, folkehelseinstituttet/fhi
+    knitr,
+    ggplot2
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Additional_repositories: https://folkehelseinstituttet.github.io/drat/, https://raubreywhite.github.io/drat/
 LinkingTo: 
     Rcpp, RcppProgress
 VignetteBuilder: knitr

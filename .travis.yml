@@ -18,10 +18,7 @@ r_packages:
 - styler
 before_install:
 - bash travis/make.sh
-#- bash travis/makevars.sh
 after_success:
-#- Rscript -e 'lintr::lint_package(lint=lintr::with_defaults(camel_case_linter = NULL,
-#  snake_case_linter=NULL, line_length_linter = lintr::line_length_linter(120), object_usage_linter=NULL))'
 - Rscript -e 'library(covr); codecov()'
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
   travis/drat.sh
