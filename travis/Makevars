@@ -1,1 +1,2 @@
-CXXSTD=-std=c++11
+CXXSTD = -std=c++11
+PKG_CXXFLAGS = -std=c++11
