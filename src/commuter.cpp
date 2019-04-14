@@ -315,7 +315,7 @@ void Location::seir_step_night(
   int I_tmp = I;
   int R_tmp = R;
   double pop_tmp = S + E + Ia + I + R;
-  int num = out_links.size();
+  unsigned int num = out_links.size();
   //Vectors with the number of people in the respective compartment,
   //on each link, and in the home population
   //used to distribute the transitions between compartments
