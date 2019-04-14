@@ -39,7 +39,6 @@
 "start_points_oslo"
 
 create_data_files_norway_2017 <- function(base_loc) {
-
   . <- NULL
   year <- NULL
   n <- NULL
@@ -67,8 +66,8 @@ create_data_files_norway_2017 <- function(base_loc) {
 
   nrow(di_edge_list)
   di_edge_list <- merge(di_edge_list, norwayMunicipMerging[, c("year", "municip_code_current", "municip_code_original")],
-                        by.x = c("from", "year"),
-                        by.y = c("municip_code_original", "year")
+    by.x = c("from", "year"),
+    by.y = c("municip_code_original", "year")
   )
   nrow(di_edge_list)
   di_edge_list[, from := NULL]
@@ -76,8 +75,8 @@ create_data_files_norway_2017 <- function(base_loc) {
 
   nrow(di_edge_list)
   di_edge_list <- merge(di_edge_list, norwayMunicipMerging[, c("year", "municip_code_current", "municip_code_original")],
-                        by.x = c("to", "year"),
-                        by.y = c("municip_code_original", "year")
+    by.x = c("to", "year"),
+    by.y = c("municip_code_original", "year")
   )
   nrow(di_edge_list)
   di_edge_list[, to := NULL]
@@ -92,7 +91,7 @@ create_data_files_norway_2017 <- function(base_loc) {
 
   commuters <- di_edge_list[, .(n = sum(n)), keyby = .(from)]
 
-  pop_wo_com <- fhidata::norway_population_current[year == 2017 & level=="municipality", .(
+  pop_wo_com <- fhidata::norway_population_current[year == 2017 & level == "municipality", .(
     pop = sum(pop)
   ), by = .(location_code)]
 
@@ -107,12 +106,11 @@ create_data_files_norway_2017 <- function(base_loc) {
   save(norway_pop_wo_com_2017, file = file.path(base_loc, "norway_pop_wo_com_2017.rda"), compress = "xz")
 
   start_points_blank <- copy(norway_pop_wo_com_2017)
-  start_points_blank[,pop:=NULL]
-  start_points_blank[,I:=0]
+  start_points_blank[, pop := NULL]
+  start_points_blank[, I := 0]
   save(start_points_blank, file = file.path(base_loc, "start_points_blank.rda"), compress = "xz")
 
   start_points_oslo <- copy(start_points_blank)
-  start_points_oslo[location_code=="municip0301",I:=10]
+  start_points_oslo[location_code == "municip0301", I := 10]
   save(start_points_oslo, file = file.path(base_loc, "start_points_oslo.rda"), compress = "xz")
-
 }

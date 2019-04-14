@@ -1,6 +1,6 @@
 Package: spread
 Title: Prevalensundersokelser av helsetjenesteassosierte infeksjoner og antibiotikabruk, NOIS-PIAH
-Version: 2019.04.10
+Version: 2019.04.14
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
