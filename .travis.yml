@@ -8,6 +8,8 @@ addons:
       - gcc-4.9
       - g++-4.9
 
+warnings_are_errors: false
+
 r_packages:
 - covr
 - drat
