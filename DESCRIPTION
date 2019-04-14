@@ -27,3 +27,4 @@ Additional_repositories: https://folkehelseinstituttet.github.io/drat/, https://
 LinkingTo: 
     Rcpp, RcppProgress
 VignetteBuilder: knitr
+SystemRequirements: C++11
