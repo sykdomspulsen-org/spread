@@ -1,4 +1,4 @@
 #!/bin/bash
 
-mkdir ~/.R
-cp travis/Makevars ~/.R/Makevars
+#mkdir ~/.R
+cp travis/Makevars src/Makevars
