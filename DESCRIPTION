@@ -1,6 +1,6 @@
 Package: spread
 Title: Infectious Disease Spread Models
-Version: 2019.4.15
+Version: 2019.4.18
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
