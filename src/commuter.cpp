@@ -650,7 +650,7 @@ DataFrame commuter_cpp(
   IntegerVector peoples = di_edge_list[2] ;
 
   Rcout << "Starting to add edges, printing every 1000 edge" << endl;
-  for (int i = 0; i < pop_wo_com.rows(); i++) {
+  for (int i = 0; i < di_edge_list.rows(); i++) {
     string name_from = std::string(names_from[i]);
     string name_to = std::string(names_to[i]);
     int people = peoples[i];
