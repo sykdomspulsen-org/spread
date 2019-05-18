@@ -7,7 +7,7 @@
 commuter(pop_wo_com = spread::norway_pop_wo_com_2017,
   di_edge_list = spread::norway_di_edge_list_2017,
   start_points = spread::start_points_oslo, r0 = NULL, beta = NULL,
-  a = 1/1.9, gamma = 1/3, asymptomatic_prob = 0,
+  latent_period = 1.9, infectious_period = 3, asymptomatic_prob = 0,
   asymptomatic_relative_infectiousness = 0, N = 1, M = 7 * 8)
 }
 \arguments{
@@ -21,9 +21,9 @@ commuter(pop_wo_com = spread::norway_pop_wo_com_2017,
 
 \item{beta}{Float, infection parameter, 0.6}
 
-\item{a}{Float, 1/latent period, 1/1.9}
+\item{latent_period}{Float, 1.9}
 
-\item{gamma}{Float, 1/infectious period, 1/3}
+\item{infectious_period}{Float, 3}
 
 \item{asymptomatic_prob}{Float, Proportion/probability of asymptomatic given infectious}
 

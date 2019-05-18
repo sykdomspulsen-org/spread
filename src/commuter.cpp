@@ -853,6 +853,7 @@ DataFrame commuter_cpp(
 
   StringVector res_names(n*2*M);
   IntegerVector res_day(n*2*M);
+  LogicalVector res_6pm(n*2*M);
   IntegerVector res_S(n*2*M);
   IntegerVector res_E(n*2*M);
   IntegerVector res_I(n*2*M);
@@ -866,6 +867,7 @@ DataFrame commuter_cpp(
 
       res_names[index] = names[i];
       res_day[index] = k/2+1;
+      res_6pm[index] = k%2;
       res_S[index] = values[i][k][0]*1.0/N;
       res_E[index] = values[i][k][1]*1.0/N;
       res_I[index] = values[i][k][2]*1.0/N;
@@ -881,6 +883,7 @@ DataFrame commuter_cpp(
   DataFrame df = DataFrame::create(
     _["location_code"]= res_names,
     _["day"]=res_day,
+    _["is_6pm"]=res_6pm,
     _["S"]= res_S,
     _["E"]= res_E,
     _["I"]= res_I,
