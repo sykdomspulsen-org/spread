@@ -13,6 +13,5 @@
 #' @param M Int, Number of days
 #' @export
 commuter_cpp <- function(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_commuter_cpp`, seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+  .Call(`_spread_commuter_cpp`, seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
 }
-
