@@ -28,7 +28,7 @@
 #' @source \url{https://snl.no/kommunenummer}
 "norway_seiiar_oslo_2017"
 
-create_data_files_norway_2017 <- function(base_loc="data") {
+create_data_files_norway_2017 <- function(base_loc = "data") {
   . <- NULL
   year <- NULL
   n <- NULL
@@ -97,8 +97,7 @@ create_data_files_norway_2017 <- function(base_loc="data") {
   save(norway_seiiar_noinfected_2017, file = file.path(base_loc, "norway_seiiar_noinfected_2017.rda"), compress = "xz")
 
   norway_seiiar_oslo_2017 <- copy(seiiar)
-  norway_seiiar_oslo_2017[location_code=="municip0301", I := 10]
-  norway_seiiar_oslo_2017[location_code=="municip0301", S := S-I]
+  norway_seiiar_oslo_2017[location_code == "municip0301", I := 10]
+  norway_seiiar_oslo_2017[location_code == "municip0301", S := S - I]
   save(norway_seiiar_oslo_2017, file = file.path(base_loc, "norway_seiiar_oslo_2017.rda"), compress = "xz")
-
 }
