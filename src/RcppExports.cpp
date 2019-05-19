@@ -6,14 +6,13 @@
 using namespace Rcpp;
 
 // commuter_cpp
-DataFrame commuter_cpp(DataFrame pop_wo_com, DataFrame di_edge_list, IntegerVector start_points, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
-RcppExport SEXP _spread_commuter_cpp(SEXP pop_wo_comSEXP, SEXP di_edge_listSEXP, SEXP start_pointsSEXP, SEXP betaSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
+DataFrame commuter_cpp(DataFrame seiiar_home, DataFrame seiiar_commuters, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
+RcppExport SEXP _spread_commuter_cpp(SEXP seiiar_homeSEXP, SEXP seiiar_commutersSEXP, SEXP betaSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type pop_wo_com(pop_wo_comSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type di_edge_list(di_edge_listSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type start_points(start_pointsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type seiiar_home(seiiar_homeSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type seiiar_commuters(seiiar_commutersSEXP);
     Rcpp::traits::input_parameter< float >::type beta(betaSEXP);
     Rcpp::traits::input_parameter< float >::type a(aSEXP);
     Rcpp::traits::input_parameter< float >::type gamma(gammaSEXP);
@@ -21,13 +20,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type asymptomaticRelativeInfectiousness(asymptomaticRelativeInfectiousnessSEXP);
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(commuter_cpp(pop_wo_com, di_edge_list, start_points, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
+    rcpp_result_gen = Rcpp::wrap(commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 10},
+    {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 9},
     {NULL, NULL, 0}
 };
 

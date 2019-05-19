@@ -32,13 +32,11 @@ The figure sizes have been customised so that you can easily put two images side
 
 ```{r}
 d <- spread::commuter(
-  pop_wo_com=spread::norway_pop_wo_com_2017,
-  di_edge_list=spread::norway_di_edge_list_2017,
-  start_points=spread::start_points_oslo,
+  seiiar=spread::norway_seiiar_oslo_2017,
+  commuters=spread::norway_commuters_2017,
   r0=1.8,
-  beta=NULL,
-  a=1/1.9,
-  gamma=1/3,
+  latent_period = 1.9,
+  infectious_period = 3.0,
   asymptomatic_prob=0,
   asymptomatic_relative_infectiousness=0,
   N=1,

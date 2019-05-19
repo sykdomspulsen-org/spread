@@ -2,9 +2,8 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' commuter
-#' @param pop_wo_com Data frame
-#' @param di_edge_list Data frame
-#' @param start_points Data frame
+#' @param seiiar_home Data frame
+#' @param seiiar_commuters Data frame
 #' @param beta Float, infection parameter, 0.6
 #' @param a Float, 1/latent period, 1/1.9
 #' @param gamma Float, 1/infectious period, 1/3
@@ -13,7 +12,7 @@
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
 #' @export
-commuter_cpp <- function(pop_wo_com, di_edge_list, start_points, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_commuter_cpp`, pop_wo_com, di_edge_list, start_points, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+commuter_cpp <- function(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
+    .Call(`_spread_commuter_cpp`, seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
 }
 

@@ -356,13 +356,13 @@ void Location::seir_step_night(
   double randomnumber;
   unsigned int index = 0;
   for(int i = 0; i < dia; ++i){
-    for(int k = 0; k < num+1; ++k) probs[k] =Ia_probs[k]*1.0/ Ia_tmp; // Oneline for-loop
+    for(unsigned int k = 0; k < num+1; ++k) probs[k] =Ia_probs[k]*1.0/ Ia_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = R::runif(0.0,1.0);
     }
     cumulative_sum(&probs_cum, &probs, num+1);
-    for(int h = 0; h < num + 1; ++h){
+    for(unsigned int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
         break;
@@ -384,13 +384,13 @@ void Location::seir_step_night(
   }
 
   for(int i = 0; i < di; ++i){
-    for(int k = 0; k < num+1; ++k) probs[k] =I_probs[k]*1.0/ I_tmp; // Oneline for-loop
+    for(unsigned int k = 0; k < num+1; ++k) probs[k] =I_probs[k]*1.0/ I_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = R::runif(0.0,1.0);
     }
     cumulative_sum(&probs_cum, &probs, num+1);
-    for(int h = 0; h < num + 1; ++h){
+    for(unsigned int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
         break;
@@ -413,13 +413,13 @@ void Location::seir_step_night(
   }
 
   for(int i = 0; i < de1; ++i){
-    for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
+    for(unsigned int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = R::runif(0.0,1.0);
     }
     cumulative_sum(&probs_cum, &probs, num+1);
-    for(int h = 0; h < num + 1; ++h){
+    for(unsigned int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
         break;
@@ -441,13 +441,13 @@ void Location::seir_step_night(
   }
 
   for(int i = 0; i < de2; ++i){
-    for(int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
+    for(unsigned int k = 0; k < num+1; ++k) probs[k] =E_probs[k]*1.0/ E_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = R::runif(0.0,1.0);
     }
     cumulative_sum(&probs_cum, &probs, num+1);
-    for(int h = 0; h < num + 1; ++h){
+    for(unsigned int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
         break;
@@ -468,13 +468,13 @@ void Location::seir_step_night(
   }
 
   for(int i = 0; i < ds; ++i){
-    for(int k = 0; k < num+1; ++k) probs[k] =S_probs[k]*1.0/ S_tmp; // Oneline for-loop
+    for(unsigned int k = 0; k < num+1; ++k) probs[k] =S_probs[k]*1.0/ S_tmp; // Oneline for-loop
     randomnumber = R::runif(0.0,1.0);
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = R::runif(0.0,1.0);
     }
     cumulative_sum(&probs_cum, &probs, num+1);
-    for(int h = 0; h < num + 1; ++h){
+    for(unsigned int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
         break;
@@ -602,9 +602,8 @@ void Graph::copy_graph(Graph G){
 // int M; // Number of days
 
 //' commuter
-//' @param pop_wo_com Data frame
-//' @param di_edge_list Data frame
-//' @param start_points Data frame
+//' @param seiiar_home Data frame
+//' @param seiiar_commuters Data frame
 //' @param beta Float, infection parameter, 0.6
 //' @param a Float, 1/latent period, 1/1.9
 //' @param gamma Float, 1/infectious period, 1/3
@@ -615,9 +614,8 @@ void Graph::copy_graph(Graph G){
 //' @export
 // [[Rcpp::export]]
 DataFrame commuter_cpp(
-    DataFrame pop_wo_com,
-    DataFrame di_edge_list,
-    IntegerVector start_points,
+    DataFrame seiiar_home,
+    DataFrame seiiar_commuters,
     float beta,
     float a,
     float gamma,
@@ -630,13 +628,16 @@ DataFrame commuter_cpp(
 
   Graph G;
   // Read node file with the names and population sizes without commuters
-  StringVector names = pop_wo_com[0] ;
-  IntegerVector pops = pop_wo_com[1] ;
+  StringVector names = seiiar_home[0] ;
+  IntegerVector home_S = seiiar_home[1] ;
+  IntegerVector home_E = seiiar_home[2] ;
+  IntegerVector home_I = seiiar_home[3] ;
+  IntegerVector home_Ia = seiiar_home[4] ;
+  IntegerVector home_R = seiiar_home[5] ;
 
-  for (int i = 0; i < pop_wo_com.rows(); i++) {
+  for (int i = 0; i < seiiar_home.rows(); i++) {
     string name = std::string(names[i]);
-    int pop = pops[i];
-    G.add_node(name, pop);
+    G.add_node(name, 0);
     n+= 1;
   }
 
@@ -645,20 +646,28 @@ DataFrame commuter_cpp(
   int safecount = 0;
   int n_edges = 0;
 
-  StringVector names_from = di_edge_list[0] ;
-  StringVector names_to = di_edge_list[1] ;
-  IntegerVector peoples = di_edge_list[2] ;
+  StringVector names_from = seiiar_commuters[0] ;
+  StringVector names_to = seiiar_commuters[1] ;
+  IntegerVector commuters_S = seiiar_commuters[2] ;
+  IntegerVector commuters_E = seiiar_commuters[3] ;
+  IntegerVector commuters_I = seiiar_commuters[4] ;
+  IntegerVector commuters_Ia = seiiar_commuters[5] ;
+  IntegerVector commuters_R = seiiar_commuters[6] ;
 
   Rcout << "Starting to add edges, printing every 1000 edge" << endl;
-  for (int i = 0; i < di_edge_list.rows(); i++) {
+  for (int i = 0; i < seiiar_commuters.rows(); i++) {
     string name_from = std::string(names_from[i]);
     string name_to = std::string(names_to[i]);
-    int people = peoples[i];
+    int c_S = commuters_S[i];
+    int c_E = commuters_E[i];
+    int c_I = commuters_I[i];
+    int c_Ia = commuters_Ia[i];
+    int c_R = commuters_R[i];
 
-    if (people != 0){
+    if (c_S != 0 || c_E !=0 || c_I != 0 || c_Ia != 0 || c_R != 0){
       safecount += 1;
       // name_from, name_to, S, E, I, Ia, R
-      G.add_edge(name_from, name_to, people, 0, 0, 0, 0);
+      G.add_edge(name_from, name_to, c_S, c_E, c_I, c_Ia, c_R);
 
       if(safecount % 1000 == 0){
         Rcout << safecount << " ";
@@ -739,10 +748,11 @@ DataFrame commuter_cpp(
 
     // Seed the epidemic
     for(int i = 0; i < n; ++i){
-      if(G_current.locations[i].S > start_points[i]){
-        G_current.locations[i].I += start_points[i];
-        G_current.locations[i].S -= start_points[i];
-      }
+      G_current.locations[i].S = home_S[i];
+      G_current.locations[i].E = home_E[i];
+      G_current.locations[i].I = home_I[i];
+      G_current.locations[i].Ia = home_Ia[i];
+      G_current.locations[i].R = home_R[i];
     }
     //Rcout << "Starting simulation " << i_sim+1 << "/" << N << endl;
 
@@ -857,7 +867,7 @@ DataFrame commuter_cpp(
   IntegerVector res_S(n*2*M);
   IntegerVector res_E(n*2*M);
   IntegerVector res_I(n*2*M);
-  IntegerVector res_IA(n*2*M);
+  IntegerVector res_Ia(n*2*M);
   IntegerVector res_R(n*2*M);
   IntegerVector res_INCIDENCE(n*2*M);
 
@@ -871,7 +881,7 @@ DataFrame commuter_cpp(
       res_S[index] = values[i][k][0]*1.0/N;
       res_E[index] = values[i][k][1]*1.0/N;
       res_I[index] = values[i][k][2]*1.0/N;
-      res_IA[index] = values[i][k][3]*1.0/N;
+      res_Ia[index] = values[i][k][3]*1.0/N;
       res_R[index] = values[i][k][4]*1.0/N;
       res_INCIDENCE[index] = values[i][k][5]*1.0/N;
 
@@ -887,7 +897,7 @@ DataFrame commuter_cpp(
     _["S"]= res_S,
     _["E"]= res_E,
     _["I"]= res_I,
-    _["IA"]= res_IA,
+    _["Ia"]= res_Ia,
     _["R"]= res_R,
     _["INCIDENCE"]= res_INCIDENCE
   );
@@ -898,10 +908,14 @@ DataFrame commuter_cpp(
 }
 
 /*** R
+x <- spread:::commuter_convert_seiiar(
+  seiiar=spread::norway_seiiar_oslo_2017,
+  commuters=spread::norway_commuters_2017
+)
+
 d <- commuter_cpp(
-  pop_wo_com=spread::norway_pop_wo_com_2017,
-  di_edge_list=spread::norway_di_edge_list_2017,
-  start_points=rep(1,length=nrow(spread::norway_pop_wo_com_2017)),
+  seiiar_home=x[["seiiar_home"]],
+  seiiar_commuters=x[["seiiar_commuters"]],
   beta=1,
   a=1,
   gamma=1,

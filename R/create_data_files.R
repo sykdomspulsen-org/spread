@@ -6,7 +6,7 @@
 #' \item{location_name}{Location name.}
 #' }
 #' @source \url{https://snl.no/kommunenummer}
-"norway_di_edge_list_2017"
+"norway_commuters_2017"
 
 #' Names of areas in Norway that previously existed.
 #'
@@ -16,7 +16,7 @@
 #' \item{location_name}{Location name.}
 #' }
 #' @source \url{https://no.wikipedia.org/wiki/Liste_over_norske_kommunenummer}
-"norway_pop_wo_com_2017"
+"norway_seiiar_noinfected_2017"
 
 #' Names of areas in Norway that currently exist.
 #'
@@ -26,19 +26,9 @@
 #' \item{location_name}{Location name.}
 #' }
 #' @source \url{https://snl.no/kommunenummer}
-"start_points_blank"
+"norway_seiiar_oslo_2017"
 
-#' Names of areas in Norway that previously existed.
-#'
-#' @format
-#' \describe{
-#' \item{location_code}{Location code.}
-#' \item{location_name}{Location name.}
-#' }
-#' @source \url{https://no.wikipedia.org/wiki/Liste_over_norske_kommunenummer}
-"start_points_oslo"
-
-create_data_files_norway_2017 <- function(base_loc) {
+create_data_files_norway_2017 <- function(base_loc="data") {
   . <- NULL
   year <- NULL
   n <- NULL
@@ -91,26 +81,23 @@ create_data_files_norway_2017 <- function(base_loc) {
 
   commuters <- di_edge_list[, .(n = sum(n)), keyby = .(from)]
 
-  pop_wo_com <- fhidata::norway_population_current[year == 2017 & level == "municipality", .(
-    pop = sum(pop)
+  seiiar <- fhidata::norway_population_current[year == 2017 & level == "municipality", .(
+    S = sum(pop),
+    E = 0,
+    I = 0,
+    Ia = 0,
+    R = 0
   ), by = .(location_code)]
 
-  pop_wo_com <- merge(pop_wo_com, commuters, by.x = c("location_code"), by.y = c("from"), all.x = T)
-  pop_wo_com[!is.na(n), pop := pop - n]
-  pop_wo_com[, n := NULL]
+  norway_commuters_2017 <- di_edge_list
+  save(norway_commuters_2017, file = file.path(base_loc, "norway_commuters_2017.rda"), compress = "xz")
 
-  norway_di_edge_list_2017 <- di_edge_list
-  save(norway_di_edge_list_2017, file = file.path(base_loc, "norway_di_edge_list_2017.rda"), compress = "xz")
+  norway_seiiar_noinfected_2017 <- seiiar
+  save(norway_seiiar_noinfected_2017, file = file.path(base_loc, "norway_seiiar_noinfected_2017.rda"), compress = "xz")
 
-  norway_pop_wo_com_2017 <- pop_wo_com
-  save(norway_pop_wo_com_2017, file = file.path(base_loc, "norway_pop_wo_com_2017.rda"), compress = "xz")
+  norway_seiiar_oslo_2017 <- copy(seiiar)
+  norway_seiiar_oslo_2017[location_code=="municip0301", I := 10]
+  norway_seiiar_oslo_2017[location_code=="municip0301", S := S-I]
+  save(norway_seiiar_oslo_2017, file = file.path(base_loc, "norway_seiiar_oslo_2017.rda"), compress = "xz")
 
-  start_points_blank <- copy(norway_pop_wo_com_2017)
-  start_points_blank[, pop := NULL]
-  start_points_blank[, I := 0]
-  save(start_points_blank, file = file.path(base_loc, "start_points_blank.rda"), compress = "xz")
-
-  start_points_oslo <- copy(start_points_blank)
-  start_points_oslo[location_code == "municip0301", I := 10]
-  save(start_points_oslo, file = file.path(base_loc, "start_points_oslo.rda"), compress = "xz")
 }

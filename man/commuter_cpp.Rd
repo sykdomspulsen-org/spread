@@ -4,16 +4,14 @@
 \alias{commuter_cpp}
 \title{commuter}
 \usage{
-commuter_cpp(pop_wo_com, di_edge_list, start_points, beta, a, gamma,
+commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma,
   asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
   M = 56L)
 }
 \arguments{
-\item{pop_wo_com}{Data frame}
+\item{seiiar_home}{Data frame}
 
-\item{di_edge_list}{Data frame}
-
-\item{start_points}{Data frame}
+\item{seiiar_commuters}{Data frame}
 
 \item{beta}{Float, infection parameter, 0.6}
 

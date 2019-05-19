@@ -4,18 +4,16 @@
 \alias{commuter}
 \title{commuter}
 \usage{
-commuter(pop_wo_com = spread::norway_pop_wo_com_2017,
-  di_edge_list = spread::norway_di_edge_list_2017,
-  start_points = spread::start_points_oslo, r0 = NULL, beta = NULL,
-  latent_period = 1.9, infectious_period = 3, asymptomatic_prob = 0,
-  asymptomatic_relative_infectiousness = 0, N = 1, M = 7 * 8)
+commuter(seiiar = spread::norway_commuters_2017,
+  commuters = spread::norway_seiiar_oslo_2017, r0 = NULL,
+  beta = NULL, latent_period = 1.9, infectious_period = 3,
+  asymptomatic_prob = 0, asymptomatic_relative_infectiousness = 0,
+  N = 1, M = 7 * 8)
 }
 \arguments{
-\item{pop_wo_com}{Data frame}
+\item{seiiar}{Data frame}
 
-\item{di_edge_list}{Data frame}
-
-\item{start_points}{Data frame}
+\item{commuters}{Data frame}
 
 \item{r0}{Float, basic reproduction number}
 
