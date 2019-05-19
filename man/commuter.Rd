@@ -4,11 +4,10 @@
 \alias{commuter}
 \title{commuter}
 \usage{
-commuter(seiiar = spread::norway_commuters_2017,
-  commuters = spread::norway_seiiar_oslo_2017, r0 = NULL,
-  beta = NULL, latent_period = 1.9, infectious_period = 3,
-  asymptomatic_prob = 0, asymptomatic_relative_infectiousness = 0,
-  N = 1, M = 7 * 8)
+commuter(seiiar = spread::norway_seiiar_oslo_2017,
+  commuters = spread::norway_commuters_2017, r0 = NULL, beta = NULL,
+  latent_period = 1.9, infectious_period = 3, asymptomatic_prob = 0,
+  asymptomatic_relative_infectiousness = 0, N = 1, M = 7 * 8)
 }
 \arguments{
 \item{seiiar}{Data frame}
@@ -32,5 +31,12 @@ commuter(seiiar = spread::norway_commuters_2017,
 \item{M}{Int, Number of days}
 }
 \description{
-commuter
+This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered)
+metapopulation model. Each location has a local infection system, while the locations are connected
+by people who commute each day. The model differentiates between day and night. During the day you
+can infect/be infected in the location where you work, while during the night you can infect/be infected
+in the location where you live. It is the same commuters who travel back and forth each day. At the
+start of a day, all commuters are sent to their work location, where they mix for 12 hours. The
+commuters are then sent to their respective home locations, where they mix for 12 hours. The model
+is based upon a published model.
 }

@@ -37,6 +37,7 @@ create_data_files_norway_2017 <- function(base_loc="data") {
   level <- NULL
   pop <- NULL
   location_code <- NULL
+  S <- NULL
 
   dirData <- system.file("extdata", package = "spread")
 
