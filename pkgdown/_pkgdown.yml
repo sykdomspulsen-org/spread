@@ -1,15 +1,13 @@
-url: https://folkehelseinstituttet.github.io/fhi/
+url: https://folkehelseinstituttet.github.io/spread/
 navbar:
-  title: "fhi"
+  title: "spread"
   left:
     - text: "Home"
       href: index.html
     - text: "Articles"
       menu:
-      - text: "Dashboard Basics"
-        href: articles/dashboardbasics.html
-      - text: "PDF Documents"
-        href: articles/pdfdocuments.html
+      - text: "Commuter Model"
+        href: articles/commuter.html
     - text: "Reference"
       href: reference/
     - text: "Changelog"
@@ -18,5 +16,5 @@ navbar:
       href: CONTRIBUTING.html
   right:
     - icon: fa-github
-      href: https://github.com/folkehelseinstituttet/fhi/
+      href: https://github.com/folkehelseinstituttet/spread/
 
