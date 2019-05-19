@@ -18,7 +18,8 @@ Imports:
 Suggests:
     testthat,
     knitr,
-    ggplot2
+    ggplot2,
+    glue
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
