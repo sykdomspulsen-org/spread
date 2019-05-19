@@ -862,6 +862,7 @@ DataFrame commuter_cpp(
   Rcout << endl << "Finished all simulations" << endl;
 
   StringVector res_names(n*2*M);
+  IntegerVector res_week(n*2*M);
   IntegerVector res_day(n*2*M);
   LogicalVector res_6pm(n*2*M);
   IntegerVector res_S(n*2*M);
@@ -876,6 +877,7 @@ DataFrame commuter_cpp(
     for (int k = 0; k<2*M; ++k){
 
       res_names[index] = names[i];
+      res_week[index] = k/14+1;
       res_day[index] = k/2+1;
       res_6pm[index] = k%2;
       res_S[index] = values[i][k][0]*1.0/N;
@@ -892,6 +894,7 @@ DataFrame commuter_cpp(
   // return a new data frame
   DataFrame df = DataFrame::create(
     _["location_code"]= res_names,
+    _["week"]=res_week,
     _["day"]=res_day,
     _["is_6pm"]=res_6pm,
     _["S"]= res_S,
@@ -899,7 +902,7 @@ DataFrame commuter_cpp(
     _["I"]= res_I,
     _["Ia"]= res_Ia,
     _["R"]= res_R,
-    _["INCIDENCE"]= res_INCIDENCE
+    _["incidence"]= res_INCIDENCE
   );
 
   df.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");

@@ -4,7 +4,7 @@ author: "Vignette Author"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Commuter Model}
+  %\VignetteIndexEntry{commuter}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r}
+library(ggplot2)
+library(data.table)
+```
 ## Styles
 
 The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
@@ -28,41 +32,81 @@ The `html_vignette` template includes a basic CSS theme. To override this theme 
 
 ## Figures
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
+Simulation
 
 ```{r}
+set.seed(4)
 d <- spread::commuter(
   seiiar=spread::norway_seiiar_oslo_2017,
   commuters=spread::norway_commuters_2017,
-  r0=1.8,
+  r0=1.6,
   latent_period = 1.9,
   infectious_period = 3.0,
   asymptomatic_prob=0,
   asymptomatic_relative_infectiousness=0,
   N=1,
-  M=7*8
+  M=7*9
 )
-
-d
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Inspecting the data from Oslo:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+d[location_code=="municip0301"]
 ```
 
-Also a quote using `>`:
+We can merge in information about counties, and create county level data:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+d <- merge(d,fhidata::norway_locations_current, by.x="location_code",by.y="municip_code")
+county <- d[,.(
+  S=sum(S),
+  E=sum(E),
+  I=sum(I),
+  Ia=sum(Ia),
+  R=sum(R),
+  incidence=sum(incidence),
+  pop=sum(pop)
+),
+keyby=.(county_code,county_name,week,day,is_6pm)]
+county[,county_name:=factor(county_name,levels=unique(fhidata::norway_locations_current[,c("county_code","county_name")]$county_name))]
+county
+```
+
+
+We can produce a daily epicurve for each county:
+```{r fig.height=7, fig.width=7}
+p <- ggplot(county, aes(x=day, y=incidence))
+p <- p + geom_col()
+p <- p + facet_wrap(~county_name)
+p <- p + scale_x_continuous("Day")
+p
+```
+
+And we can produce weekly maps:
+
+```{r fig.height=7, fig.width=7}
+w <- county[,.(
+  incidence_weekly = sum(incidence),
+  pop = mean(pop)
+), keyby=.(county_code, week)]
+
+w[,weekly_incidence_per_10000 := 10000*incidence_weekly/pop]
+w[,facet:=glue::glue("Week {week}",week=week)]
+
+pd <- merge(
+  w,
+  fhidata::norway_map_counties, 
+  by.x="county_code",
+  by.y="location_code",
+  allow.cartesian = T)
+
+p <- ggplot(data=pd, mapping=aes( x = long, y = lat, group = group))
+p <- p + geom_polygon(aes(fill=weekly_incidence_per_10000))
+p <- p + facet_wrap(~facet)
+p <- p + theme_void()
+p <- p + coord_quickmap()
+p
+
+```
+

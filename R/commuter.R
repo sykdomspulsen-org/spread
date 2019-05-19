@@ -194,8 +194,9 @@ commuter <- function(
     M = M
   )
 
-  d[, INCIDENCE := sum(INCIDENCE), by = .(location_code, day)]
+  d[, incidence := sum(incidence), by = .(location_code, day)]
   d <- d[is_6pm == 1]
+  d[, pop:=S+E+I+Ia+R]
 
   return(d)
 }
