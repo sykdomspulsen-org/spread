@@ -40,3 +40,6 @@ start of a day, all commuters are sent to their work location, where they mix fo
 commuters are then sent to their respective home locations, where they mix for 12 hours. The model
 is based upon a published model.
 }
+\details{
+For more information, look at \code{vignette("commuter_model","spread")}
+}

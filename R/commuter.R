@@ -128,6 +128,8 @@ check_commuters <- function(commuters) {
 #' start of a day, all commuters are sent to their work location, where they mix for 12 hours. The
 #' commuters are then sent to their respective home locations, where they mix for 12 hours. The model
 #' is based upon a published model.
+#'
+#' For more information, look at \code{vignette("commuter_model","spread")}
 #' @param seiiar Data frame
 #' @param commuters Data frame
 #' @param r0 Float, basic reproduction number

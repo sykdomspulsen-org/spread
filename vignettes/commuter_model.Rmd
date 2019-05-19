@@ -1,10 +1,10 @@
 ---
 title: "Commuter Model"
-author: "Vignette Author"
+author: "Richard White"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{commuter}
+  %\VignetteIndexEntry{Commuter Model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -18,21 +18,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
+# Background
+
+This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered) metapopulation model. Each location has a local infection system, while the locations are connected by people who commute each day. The model differentiates between day and night. During the day you can infect/be infected in the location where you work, while during the night you can infect/be infected in the location where you live. It is the same commuters who travel back and forth each day. At the start of a day, all commuters are sent to their work location, where they mix for 12 hours. The commuters are then sent to their respective home locations, where they mix for 12 hours. The model is based upon a published model.
+
+# Example
+
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
 library(data.table)
 ```
-## Styles
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-Simulation
+We simulate:
 
 ```{r}
 set.seed(4)
@@ -72,7 +69,6 @@ keyby=.(county_code,county_name,week,day,is_6pm)]
 county[,county_name:=factor(county_name,levels=unique(fhidata::norway_locations_current[,c("county_code","county_name")]$county_name))]
 county
 ```
-
 
 We can produce a daily epicurve for each county:
 ```{r fig.height=7, fig.width=7}

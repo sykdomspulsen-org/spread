@@ -7,7 +7,7 @@ navbar:
     - text: "Articles"
       menu:
       - text: "Commuter Model"
-        href: articles/commuter.html
+        href: articles/commuter_model.html
     - text: "Reference"
       href: reference/
     - text: "Changelog"
