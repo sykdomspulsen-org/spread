@@ -97,11 +97,11 @@ create_blank_norway_2017 <- function() {
 
   norwayMunicipMerging <- fhidata::norway_municip_merging
 
-  di_edge_list[fhidata::norway_municip_merging,on=c("from==municip_code_original", "year==year"), municip_code_current:=municip_code_current]
+  di_edge_list[fhidata::norway_municip_merging, on = c("from==municip_code_original", "year==year"), municip_code_current := municip_code_current]
   di_edge_list[, from := NULL]
   setnames(di_edge_list, "municip_code_current", "from")
 
-  di_edge_list[fhidata::norway_municip_merging,on=c("to==municip_code_original", "year==year"), municip_code_current:=municip_code_current]
+  di_edge_list[fhidata::norway_municip_merging, on = c("to==municip_code_original", "year==year"), municip_code_current := municip_code_current]
   di_edge_list[, to := NULL]
   setnames(di_edge_list, "municip_code_current", "to")
 
@@ -159,16 +159,20 @@ create_data_files_norway_2017 <- function(base_loc = "data") {
   save(norway_seiiar_oslo_2017, file = file.path(base_loc, "norway_seiiar_oslo_2017.rda"), compress = "xz")
 
   # measles
-  vax_prev <- fhidata::norway_childhood_vax[year==2016 & stringr::str_detect(location_code,"^municip") & vax=="measles"]
+  vax_prev <- fhidata::norway_childhood_vax[year == 2016 & stringr::str_detect(location_code, "^municip") & vax == "measles"]
   norway_seiiar_measles_noinfected_2017 <- copy(seiiar)
-  norway_seiiar_measles_noinfected_2017[vax_prev,on="location_code",
-                                        R:=round(S*proportion)]
-  norway_seiiar_measles_noinfected_2017[,S:=S-R]
+  norway_seiiar_measles_noinfected_2017[vax_prev,
+    on = "location_code",
+    R := round(S * proportion)
+  ]
+  norway_seiiar_measles_noinfected_2017[, S := S - R]
 
   norway_seiiar_measles_noinfected_2017 <- copy(seiiar)
-  norway_seiiar_measles_noinfected_2017[vax_prev,on="location_code",
-                                        R:=round(S*proportion)]
-  norway_seiiar_measles_noinfected_2017[,S:=S-R]
+  norway_seiiar_measles_noinfected_2017[vax_prev,
+    on = "location_code",
+    R := round(S * proportion)
+  ]
+  norway_seiiar_measles_noinfected_2017[, S := S - R]
 
   save(norway_seiiar_measles_noinfected_2017, file = file.path(base_loc, "norway_seiiar_measles_noinfected_2017.rda"), compress = "xz")
 
@@ -177,5 +181,3 @@ create_data_files_norway_2017 <- function(base_loc = "data") {
   norway_seiiar_measles_oslo_2017[location_code == "municip0301", S := S - I]
   save(norway_seiiar_measles_oslo_2017, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017.rda"), compress = "xz")
 }
-
-
