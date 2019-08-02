@@ -4,7 +4,7 @@ author: "Richard White"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Commuter Model}
+  %\VignetteIndexEntry{commuter_model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
