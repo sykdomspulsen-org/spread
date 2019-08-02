@@ -22,27 +22,81 @@ knitr::opts_chunk$set(
 
 This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered) metapopulation model. Each location has a local infection system, while the locations are connected by people who commute each day. The model differentiates between day and night. During the day you can infect/be infected in the location where you work, while during the night you can infect/be infected in the location where you live. It is the same commuters who travel back and forth each day. At the start of a day, all commuters are sent to their work location, where they mix for 12 hours. The commuters are then sent to their respective home locations, where they mix for 12 hours. The model is based upon a published model.
 
-# Example
+# Data required
 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
 library(data.table)
 ```
 
-We simulate:
+`seiiar` is a dataset that contains the following variables for the entire population you want to model:
+
+- `location_code` a code for each location
+- `S` the starting value of susceptible people
+- `E` the starting value of exposed people
+- `I` the starting value of infectious and symptomatic people
+- `Ia` the starting value of infectious and asymptomatic people
+- `R` the starting value of recovered people
+
+```{r}
+# no one in Norway is infected, and everyone is susceptible
+spread::norway_seiiar_noinfected_2017
+
+# 10 people in Oslo are infected, and everyone is susceptible
+spread::norway_seiiar_oslo_2017
+
+# no one in Norway is infected, and childhood vaccination data is used to
+# estimate the number of "recovered" (i.e. non-susceptible) people for measles
+spread::norway_seiiar_measles_noinfected_2017
+
+# 10 people in Oslo is infected, and childhood vaccination data is used to
+# estimate the number of "recovered" (i.e. non-susceptible) people for measles
+spread::norway_seiiar_measles_oslo_2017
+
+# we can take a closer look at Oslo
+spread::norway_seiiar_measles_oslo_2017[location_code=="municip0301"]
+```
+
+`commuters` is a dataset that contains the following variables:
+
+- `from` location code for the location where the people live
+- `to` location code for the location where the people work
+- `n` the number of people this applies to
+
+```{r}
+# we provide the number of municipal commuters in Norway in 2017
+spread::norway_commuters_2017
+```
+
+`r0` is the basic reproductive number.
+
+`latent_period` is the average number of days from when a person is exposed until they are infectious.
+
+`asymptomatic_prob` is the probability that an infectious person is asymptomatic.
+
+`asymptomatic_relative_infectiousness` is the relative infectiousness of an asymptomatic infectious person when compared to a symptomatic infectious person. This value is between 0 and 1.
+
+`days_simulation` the number of days you want to simulate.
+
+`N` this is the number of simulations that will be run and then the results will be averaged. This should generally be set to 1, unless you are performing model fitting.
+
+# Example
+
+
+We simulate one measles outbreak using the datasets `spread::norway_seiiar_measles_oslo_2017` and spread::norway_commuters_2017:
 
 ```{r}
 set.seed(4)
 d <- spread::commuter(
-  seiiar=spread::norway_seiiar_oslo_2017,
+  seiiar=spread::norway_seiiar_measles_oslo_2017,
   commuters=spread::norway_commuters_2017,
-  r0=1.6,
-  latent_period = 1.9,
-  infectious_period = 3.0,
+  r0=14,
+  latent_period = 8,
+  infectious_period = 5,
   asymptomatic_prob=0,
   asymptomatic_relative_infectiousness=0,
-  N=1,
-  M=7*9
+  days_simulation=7*9,
+  N=1
 )
 ```
 

@@ -3,18 +3,19 @@
 \docType{data}
 \name{norway_seiiar_noinfected_2017}
 \alias{norway_seiiar_noinfected_2017}
-\title{Names of areas in Norway that previously existed.}
+\title{SEIIaR data.frame for Norway with no one infected and everyone susceptible.}
 \format{\describe{
 \item{location_code}{Location code.}
-\item{location_name}{Location name.}
+\item{S}{Number of susceptible people.}
+\item{E}{Number of exposed people.}
+\item{I}{Number of infectious and symptomatic people.}
+\item{Ia}{Number of infectious and asymptomatic people.}
+\item{R}{Number of recovered people.}
 }}
-\source{
-\url{https://no.wikipedia.org/wiki/Liste_over_norske_kommunenummer}
-}
 \usage{
 norway_seiiar_noinfected_2017
 }
 \description{
-Names of areas in Norway that previously existed.
+SEIIaR data.frame for Norway with no one infected and everyone susceptible.
 }
 \keyword{datasets}

@@ -3,18 +3,19 @@
 \docType{data}
 \name{norway_commuters_2017}
 \alias{norway_commuters_2017}
-\title{Names of areas in Norway that currently exist.}
+\title{Daily number of commuters from/to municipalities in Norway in 2017}
 \format{\describe{
-\item{location_code}{Location code.}
-\item{location_name}{Location name.}
+\item{from}{Location code.}
+\item{to}{Location name.}
+\item{n}{Number of people.}
 }}
 \source{
-\url{https://snl.no/kommunenummer}
+\url{https://www.ssb.no/statbank/table/03321}
 }
 \usage{
 norway_commuters_2017
 }
 \description{
-Names of areas in Norway that currently exist.
+Daily number of commuters from/to municipalities in Norway in 2017
 }
 \keyword{datasets}

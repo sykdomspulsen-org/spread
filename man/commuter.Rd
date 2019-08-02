@@ -7,12 +7,13 @@
 commuter(seiiar = spread::norway_seiiar_oslo_2017,
   commuters = spread::norway_commuters_2017, r0 = NULL, beta = NULL,
   latent_period = 1.9, infectious_period = 3, asymptomatic_prob = 0,
-  asymptomatic_relative_infectiousness = 0, N = 1, M = 7 * 8)
+  asymptomatic_relative_infectiousness = 0, days_simulation = 7 * 8,
+  N = 1)
 }
 \arguments{
-\item{seiiar}{Data frame}
+\item{seiiar}{Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population}
 
-\item{commuters}{Data frame}
+\item{commuters}{Data frame comtaining `from`, `to`, `n` for the number of people who travel}
 
 \item{r0}{Float, basic reproduction number}
 
@@ -26,9 +27,9 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017,
 
 \item{asymptomatic_relative_infectiousness}{Float, Relative infectiousness of asymptomatic infectious}
 
-\item{N}{Int = 1 int, Number of repetitions}
+\item{days_simulation}{Int, Number of days to simulate}
 
-\item{M}{Int, Number of days}
+\item{N}{Int = 1 int, Number of repetitions}
 }
 \description{
 This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered)

@@ -130,16 +130,16 @@ check_commuters <- function(commuters) {
 #' is based upon a published model.
 #'
 #' For more information, look at \code{vignette("commuter_model","spread")}
-#' @param seiiar Data frame
-#' @param commuters Data frame
+#' @param seiiar Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population
+#' @param commuters Data frame comtaining `from`, `to`, `n` for the number of people who travel
 #' @param r0 Float, basic reproduction number
 #' @param beta Float, infection parameter, 0.6
 #' @param latent_period Float, 1.9
 #' @param infectious_period Float, 3
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
+#' @param days_simulation Int, Number of days to simulate
 #' @param N Int = 1 int, Number of repetitions
-#' @param M Int, Number of days
 #' @import data.table
 #' @export
 commuter <- function(
@@ -151,13 +151,20 @@ commuter <- function(
                      infectious_period = 3.0,
                      asymptomatic_prob = 0,
                      asymptomatic_relative_infectiousness = 0,
-                     N = 1,
-                     M = 7 * 8) {
+                     days_simulation = 7 * 8,
+                     N = 1) {
   . <- NULL
-  INCIDENCE <- NULL
+  incidence <- NULL
   location_code <- NULL
   day <- NULL
   is_6pm <- NULL
+  pop <- NULL
+  S <- NULL
+  E <- NULL
+  I <- NULL
+  Ia <- NULL
+  R <- NULL
+
 
   check_seiiar(seiiar)
   check_commuters(commuters)
@@ -193,7 +200,7 @@ commuter <- function(
     asymptomaticProb = asymptomatic_prob,
     asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness,
     N = N,
-    M = M
+    M = days_simulation
   )
 
   d[, incidence := sum(incidence), by = .(location_code, day)]

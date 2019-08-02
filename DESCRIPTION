@@ -6,7 +6,7 @@ Authors@R: c(
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
     person("Richard", "White", email = "w@rwhite.no", role = c("aut", "cre")))
 Description: Different infectious disease spread models.
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.9.4),
     RcppProgress (>= 0.1),
