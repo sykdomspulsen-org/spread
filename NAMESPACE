@@ -2,6 +2,7 @@
 
 export(commuter)
 export(commuter_cpp)
+export(convert_blank_seiiar_with_vax)
 import(data.table)
 importFrom(Rcpp,sourceCpp)
 useDynLib(spread, .registration = TRUE)

@@ -1,6 +1,6 @@
 Package: spread
 Title: Infectious Disease Spread Models
-Version: 2019.8.2
+Version: 2019.8.3
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
@@ -19,7 +19,8 @@ Suggests:
     testthat,
     knitr,
     ggplot2,
-    glue
+    glue,
+    rmarkdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

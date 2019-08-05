@@ -1,0 +1,56 @@
+---
+title: "Including vax"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{including_vax}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+We begin with a blank SEIIAR data.table:
+```{r}
+library(data.table)
+print(spread::norway_seiiar_noinfected_2017)
+```
+
+We then take a vax data.table that has the proportion of vaccinated people for each location_code:
+
+```{r}
+vax_measles <- fhidata::norway_childhood_vax[
+  year==2016 & 
+  stringr::str_detect(location_code,"^municip") & 
+  vax=="measles",
+  c("location_code","proportion")
+  ]
+```
+
+We then use the function `convert_blank_seiiar_with_vax` to combine the two:
+
+```{r}
+norway_seiiar_measles_noinfected_2017 <- spread::convert_blank_seiiar_with_vax(
+  seiiar = spread::norway_seiiar_noinfected_2017, 
+  vax = vax_measles
+  )
+```
+
+We now have a data.table that contains "recovered" people (i.e. vaccinated people):
+
+```{r}
+print(norway_seiiar_measles_noinfected_2017)
+```
+
+We can then add some infected people:
+
+```{r}
+norway_seiiar_measles_oslo_2017 <- copy(norway_seiiar_measles_noinfected_2017)
+norway_seiiar_measles_oslo_2017[location_code == "municip0301", I := 10]
+norway_seiiar_measles_oslo_2017[location_code == "municip0301", S := S - I]
+print(norway_seiiar_measles_oslo_2017)  
+```
