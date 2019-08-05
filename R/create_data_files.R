@@ -136,7 +136,7 @@ create_blank_norway_2017 <- function() {
 #' @param seiiar SEIIAR data.table representing a fully susceptible population
 #' @param vax data.table containing proportion of people vaccinated per location code
 #' @export
-convert_blank_seiiar_with_vax <- function(seiiar, vax){
+convert_blank_seiiar_with_vax <- function(seiiar, vax) {
   R <- NULL
   S <- NULL
   proportion <- NULL
@@ -145,8 +145,8 @@ convert_blank_seiiar_with_vax <- function(seiiar, vax){
 
   retval <- copy(seiiar)
   setDT(retval)
-  retval[vax,on="location_code",R:=round(S*proportion)]
-  retval[,S:=S-R]
+  retval[vax, on = "location_code", R := round(S * proportion)]
+  retval[, S := S - R]
 
   return(retval)
 }
@@ -179,7 +179,7 @@ create_data_files_norway_2017 <- function(base_loc = "data") {
   save(norway_seiiar_oslo_2017, file = file.path(base_loc, "norway_seiiar_oslo_2017.rda"), compress = "xz")
 
   # measles
-  vax_prev <- fhidata::norway_childhood_vax[year==2016 & stringr::str_detect(location_code,"^municip") & vax=="measles"]
+  vax_prev <- fhidata::norway_childhood_vax[year == 2016 & stringr::str_detect(location_code, "^municip") & vax == "measles"]
   norway_seiiar_measles_noinfected_2017 <- convert_blank_seiiar_with_vax(seiiar, vax_prev)
 
   save(norway_seiiar_measles_noinfected_2017, file = file.path(base_loc, "norway_seiiar_measles_noinfected_2017.rda"), compress = "xz")
@@ -189,5 +189,3 @@ create_data_files_norway_2017 <- function(base_loc = "data") {
   norway_seiiar_measles_oslo_2017[location_code == "municip0301", S := S - I]
   save(norway_seiiar_measles_oslo_2017, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017.rda"), compress = "xz")
 }
-
-
