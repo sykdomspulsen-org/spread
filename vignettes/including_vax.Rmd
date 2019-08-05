@@ -29,6 +29,8 @@ vax_measles <- fhidata::norway_childhood_vax[
   vax=="measles",
   c("location_code","proportion")
   ]
+
+print(vax_measles)
 ```
 
 We then use the function `convert_blank_seiiar_with_vax` to combine the two:
@@ -52,5 +54,6 @@ We can then add some infected people:
 norway_seiiar_measles_oslo_2017 <- copy(norway_seiiar_measles_noinfected_2017)
 norway_seiiar_measles_oslo_2017[location_code == "municip0301", I := 10]
 norway_seiiar_measles_oslo_2017[location_code == "municip0301", S := S - I]
-print(norway_seiiar_measles_oslo_2017)  
+
+print(norway_seiiar_measles_oslo_2017[location_code=="municip0301"])  
 ```

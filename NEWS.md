@@ -1,5 +1,16 @@
-# noispiah 2018.10.25
+# spread 2019.8.5
 
-## Migration
+Submitted to CRAN.
 
-Migrating from [raubreywhite/dashboards_noispiah](https://www.github.com/raubreywhite/dashboards_noispiah/) to [folkehelseinstituttet/dashboards_noispiah](https://www.github.com/folkehelseinstituttet/dashboards_noispiah/)
+Exported functions:
+
+- commuter
+- convert_blank_seiiar_with_vax
+
+Exported datasets:
+
+- norway_commuters_2017
+- norway_seiiar_noinfected_2017
+- norway_seiiar_oslo_2017
+- norway_seiiar_measles_noinfected_2017
+- norway_seiiar_measles_oslo_2017

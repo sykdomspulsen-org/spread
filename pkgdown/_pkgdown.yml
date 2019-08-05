@@ -6,6 +6,8 @@ navbar:
       href: index.html
     - text: "Articles"
       menu:
+      - text: "Including vax data"
+        href: articles/including_vax.html
       - text: "Commuter Model"
         href: articles/commuter_model.html
     - text: "Reference"
