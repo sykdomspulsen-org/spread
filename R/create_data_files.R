@@ -1,4 +1,4 @@
-#' Daily number of commuters from/to municipalities in Norway in 2017
+#' Daily number of commuters from/to municipalities in Norway in 2017 (2020 borders)
 #'
 #' @format
 #' \describe{
@@ -7,9 +7,9 @@
 #' \item{n}{Number of people.}
 #' }
 #' @source \url{https://www.ssb.no/statbank/table/03321}
-"norway_commuters_2017"
+"norway_commuters_2017_b2020"
 
-#' SEIIaR data.frame for Norway with no one infected and everyone susceptible.
+#' SEIIaR data.frame for Norway with no one infected and everyone susceptible (2020 borders)
 #'
 #' @format
 #' \describe{
@@ -20,9 +20,9 @@
 #' \item{Ia}{Number of infectious and asymptomatic people.}
 #' \item{R}{Number of recovered people.}
 #' }
-"norway_seiiar_noinfected_2017"
+"norway_seiiar_noinfected_2017_b2020"
 
-#' SEIIaR data.frame for Norway with 10 people infected in Oslo and everyone susceptible.
+#' SEIIaR data.frame for Norway with 10 people infected in Oslo and everyone susceptible (2020 borders)
 #'
 #' @format
 #' \describe{
@@ -33,9 +33,9 @@
 #' \item{Ia}{Number of infectious and asymptomatic people.}
 #' \item{R}{Number of recovered people.}
 #' }
-"norway_seiiar_oslo_2017"
+"norway_seiiar_oslo_2017_b2020"
 
-#' SEIIaR data.frame for Norway with no one infected and real measles susceptibility.
+#' SEIIaR data.frame for Norway with no one infected and real measles susceptibility (2020 borders)
 #'
 #' Measles vaccination coverate rates for 16 year olds in the 5 year average
 #' from 2014 to 2018 were used as the proportion of recovered people.
@@ -50,9 +50,9 @@
 #' \item{R}{Number of recovered people.}
 #' }
 #' @source \url{http://khs.fhi.no/webview/}
-"norway_seiiar_measles_noinfected_2017"
+"norway_seiiar_measles_noinfected_2017_b2020"
 
-#' SEIIaR data.frame for Norway with 10 people infected in Oslo and real measles susceptibility.
+#' SEIIaR data.frame for Norway with 10 people infected in Oslo and real measles susceptibility (2020 borders)
 #'
 #' Measles vaccination coverate rates for 16 year olds in the 5 year average
 #' from 2014 to 2018 were used as the proportion of recovered people.
@@ -67,7 +67,7 @@
 #' \item{R}{Number of recovered people.}
 #' }
 #' @source \url{http://khs.fhi.no/webview/}
-"norway_seiiar_measles_oslo_2017"
+"norway_seiiar_measles_oslo_2017_b2020"
 
 create_blank_norway_2017 <- function() {
   . <- NULL
@@ -79,6 +79,7 @@ create_blank_norway_2017 <- function() {
   pop <- NULL
   location_code <- NULL
   municip_code_current <- NULL
+  weighting <- NULL
   S <- NULL
 
   dirData <- system.file("extdata", package = "spread")
@@ -95,14 +96,35 @@ create_blank_norway_2017 <- function() {
   di_edge_list[, from := sprintf("municip%s", from)]
   di_edge_list[, to := sprintf("municip%s", to)]
 
-  norwayMunicipMerging <- fhidata::norway_municip_merging
-
-  di_edge_list[fhidata::norway_municip_merging, on = c("from==municip_code_original", "year==year"), municip_code_current := municip_code_current]
+  norwayMunicipMerging <- fhidata::norway_municip_merging_b2020
+  sum(di_edge_list$n)
+  di_edge_list <- merge(
+    di_edge_list,
+    norwayMunicipMerging,
+    by.x=c("from", "year"),
+    by.y=c("municip_code_original","year"),
+    all.x=T
+    )
+  sum(di_edge_list$n)
+  di_edge_list[, n := n*weighting]
+  di_edge_list <- di_edge_list[!is.na(n) & n>0]
+  sum(di_edge_list$n,na.rm=T)
   di_edge_list[, from := NULL]
+  di_edge_list[, weighting := NULL]
   setnames(di_edge_list, "municip_code_current", "from")
 
-  di_edge_list[fhidata::norway_municip_merging, on = c("to==municip_code_original", "year==year"), municip_code_current := municip_code_current]
+  di_edge_list <- merge(
+    di_edge_list,
+    norwayMunicipMerging,
+    by.x=c("to", "year"),
+    by.y=c("municip_code_original","year"),
+    all.x=T
+  )
+  di_edge_list[, n := n*weighting]
+  di_edge_list <- di_edge_list[!is.na(n) & n>0]
+  sum(di_edge_list$n,na.rm=T)
   di_edge_list[, to := NULL]
+  di_edge_list[, weighting := NULL]
   setnames(di_edge_list, "municip_code_current", "to")
 
   di_edge_list <- di_edge_list[, .(n = sum(n)), keyby = .(
@@ -111,8 +133,8 @@ create_blank_norway_2017 <- function() {
   )]
   di_edge_list <- di_edge_list[from != to]
   di_edge_list <- di_edge_list[n > 0]
-
-  seiiar <- fhidata::norway_population_current[year == 2017 & level == "municipality", .(
+  sum(di_edge_list$n)
+  seiiar <- fhidata::norway_population_b2020[year == 2017 & level == "municipality", .(
     S = sum(pop),
     E = 0,
     I = 0,
@@ -131,10 +153,22 @@ create_blank_norway_2017 <- function() {
 #' Takes a fully susceptible population and
 #' proportion of people vaccinated per location code
 #' and allocates an appropriate amount of people to
-#' recovered
-#' For more information, look at \code{vignette("including_vax","spread")}
+#' recovered.
+#' For more information, look at \code{vignette("including_vax","spread")}.
 #' @param seiiar SEIIAR data.table representing a fully susceptible population
 #' @param vax data.table containing proportion of people vaccinated per location code
+#' @examples
+#' vax_measles <- fhidata::norway_childhood_vax_b2020[
+#'   year==2016 &
+#'   stringr::str_detect(location_code,"^municip") &
+#'   vax=="measles",
+#'   c("location_code","proportion")
+#' ]
+#'
+#' norway_seiiar_measles_noinfected_2017_b2020 <- spread::convert_blank_seiiar_with_vax(
+#'   seiiar = spread::norway_seiiar_noinfected_2017_b2020,
+#'   vax = vax_measles
+#' )
 #' @export
 convert_blank_seiiar_with_vax <- function(seiiar, vax) {
   R <- NULL
@@ -151,7 +185,7 @@ convert_blank_seiiar_with_vax <- function(seiiar, vax) {
   return(retval)
 }
 
-create_data_files_norway_2017 <- function(base_loc = "data") {
+create_data_files_norway_2017 <- function(base_loc) {
   . <- NULL
   year <- NULL
   n <- NULL
@@ -166,26 +200,26 @@ create_data_files_norway_2017 <- function(base_loc = "data") {
   x <- create_blank_norway_2017()
 
   seiiar <- x[["seiiar"]]
-  norway_commuters_2017 <- x[["commuters"]]
+  norway_commuters_2017_b2020 <- x[["commuters"]]
 
-  save(norway_commuters_2017, file = file.path(base_loc, "norway_commuters_2017.rda"), compress = "xz")
+  save(norway_commuters_2017_b2020, file = file.path(base_loc, "norway_commuters_2017_b2020.rda"), compress = "xz")
 
-  norway_seiiar_noinfected_2017 <- seiiar
-  save(norway_seiiar_noinfected_2017, file = file.path(base_loc, "norway_seiiar_noinfected_2017.rda"), compress = "xz")
+  norway_seiiar_noinfected_2017_b2020 <- seiiar
+  save(norway_seiiar_noinfected_2017_b2020, file = file.path(base_loc, "norway_seiiar_noinfected_2017_b2020.rda"), compress = "xz")
 
-  norway_seiiar_oslo_2017 <- copy(seiiar)
-  norway_seiiar_oslo_2017[location_code == "municip0301", I := 10]
-  norway_seiiar_oslo_2017[location_code == "municip0301", S := S - I]
-  save(norway_seiiar_oslo_2017, file = file.path(base_loc, "norway_seiiar_oslo_2017.rda"), compress = "xz")
+  norway_seiiar_oslo_2017_b2020 <- copy(seiiar)
+  norway_seiiar_oslo_2017_b2020[location_code == "municip0301", I := 10]
+  norway_seiiar_oslo_2017_b2020[location_code == "municip0301", S := S - I]
+  save(norway_seiiar_oslo_2017_b2020, file = file.path(base_loc, "norway_seiiar_oslo_2017_b2020.rda"), compress = "xz")
 
   # measles
-  vax_prev <- fhidata::norway_childhood_vax[year == 2016 & stringr::str_detect(location_code, "^municip") & vax == "measles"]
-  norway_seiiar_measles_noinfected_2017 <- convert_blank_seiiar_with_vax(seiiar, vax_prev)
+  vax_prev <- fhidata::norway_childhood_vax_b2020[year == 2016 & stringr::str_detect(location_code, "^municip") & vax == "measles"]
+  norway_seiiar_measles_noinfected_2017_b2020 <- convert_blank_seiiar_with_vax(seiiar, vax_prev)
 
-  save(norway_seiiar_measles_noinfected_2017, file = file.path(base_loc, "norway_seiiar_measles_noinfected_2017.rda"), compress = "xz")
+  save(norway_seiiar_measles_noinfected_2017_b2020, file = file.path(base_loc, "norway_seiiar_measles_noinfected_2017_b2020.rda"), compress = "xz")
 
-  norway_seiiar_measles_oslo_2017 <- copy(norway_seiiar_measles_noinfected_2017)
-  norway_seiiar_measles_oslo_2017[location_code == "municip0301", I := 10]
-  norway_seiiar_measles_oslo_2017[location_code == "municip0301", S := S - I]
-  save(norway_seiiar_measles_oslo_2017, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017.rda"), compress = "xz")
+  norway_seiiar_measles_oslo_2017_b2020 <- copy(norway_seiiar_measles_noinfected_2017_b2020)
+  norway_seiiar_measles_oslo_2017_b2020[location_code == "municip0301", I := 10]
+  norway_seiiar_measles_oslo_2017_b2020[location_code == "municip0301", S := S - I]
+  save(norway_seiiar_measles_oslo_2017_b2020, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017_b2020.rda"), compress = "xz")
 }

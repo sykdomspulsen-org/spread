@@ -1,4 +1,8 @@
-## Sumission
+## Resubmission
+
+## Changes made
+
+- Fixed DOI in inst/doc/commuter_model.html
 
 ## Test environments
 * local Debian 9.5 install, R 3.6.0

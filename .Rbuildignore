@@ -7,3 +7,6 @@ pkgdown
 travis
 inst/extdata/di_edge_list_2017.xlsx
 cran-comments.md
+^CRAN-RELEASE$
+^doc$
+^Meta$

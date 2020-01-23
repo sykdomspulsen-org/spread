@@ -17,13 +17,13 @@ knitr::opts_chunk$set(
 We begin with a blank SEIIAR data.table:
 ```{r}
 library(data.table)
-print(spread::norway_seiiar_noinfected_2017)
+print(spread::norway_seiiar_noinfected_2017_b2020)
 ```
 
 We then take a vax data.table that has the proportion of vaccinated people for each location_code:
 
 ```{r}
-vax_measles <- fhidata::norway_childhood_vax[
+vax_measles <- fhidata::norway_childhood_vax_b2020[
   year==2016 & 
   stringr::str_detect(location_code,"^municip") & 
   vax=="measles",
@@ -37,7 +37,7 @@ We then use the function `convert_blank_seiiar_with_vax` to combine the two:
 
 ```{r}
 norway_seiiar_measles_noinfected_2017 <- spread::convert_blank_seiiar_with_vax(
-  seiiar = spread::norway_seiiar_noinfected_2017, 
+  seiiar = spread::norway_seiiar_noinfected_2017_b2020, 
   vax = vax_measles
   )
 ```

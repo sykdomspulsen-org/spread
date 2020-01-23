@@ -4,11 +4,11 @@
 \alias{commuter}
 \title{commuter}
 \usage{
-commuter(seiiar = spread::norway_seiiar_oslo_2017,
-  commuters = spread::norway_commuters_2017, r0 = NULL, beta = NULL,
-  latent_period = 1.9, infectious_period = 3, asymptomatic_prob = 0,
-  asymptomatic_relative_infectiousness = 0, days_simulation = 7 * 8,
-  N = 1)
+commuter(seiiar = spread::norway_seiiar_oslo_2017_b2020,
+  commuters = spread::norway_commuters_2017_b2020, r0 = NULL,
+  beta = NULL, latent_period = 1.9, infectious_period = 3,
+  asymptomatic_prob = 0, asymptomatic_relative_infectiousness = 0,
+  days_simulation = 7 * 8, N = 1)
 }
 \arguments{
 \item{seiiar}{Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population}
@@ -33,14 +33,30 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017,
 }
 \description{
 This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered)
-metapopulation model. Each location has a local infection system, while the locations are connected
+metapopulation model that including commuting.
+}
+\details{
+Each location has a local infection system, while the locations are connected
 by people who commute each day. The model differentiates between day and night. During the day you
 can infect/be infected in the location where you work, while during the night you can infect/be infected
 in the location where you live. It is the same commuters who travel back and forth each day. At the
 start of a day, all commuters are sent to their work location, where they mix for 12 hours. The
-commuters are then sent to their respective home locations, where they mix for 12 hours. The model
-is based upon a published model.
-}
-\details{
+commuters are then sent to their respective home locations, where they mix for 12 hours.
+
+The model is loosely based upon a published model by Engebretsen (2019) \doi{10.1371/journal.pcbi.1006879}.
+
 For more information, look at \code{vignette("commuter_model","spread")}
+}
+\examples{
+spread::commuter(
+  seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
+  commuters = spread::norway_commuters_2017_b2020,
+  r0 = 14,
+  latent_period = 8,
+  infectious_period = 5,
+  asymptomatic_prob = 0,
+  asymptomatic_relative_infectiousness = 0,
+  days_simulation = 7*9,
+  N = 1
+)
 }

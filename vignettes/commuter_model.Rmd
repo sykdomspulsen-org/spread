@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 # Background
 
-This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered) metapopulation model. Each location has a local infection system, while the locations are connected by people who commute each day. The model differentiates between day and night. During the day you can infect/be infected in the location where you work, while during the night you can infect/be infected in the location where you live. It is the same commuters who travel back and forth each day. At the start of a day, all commuters are sent to their work location, where they mix for 12 hours. The commuters are then sent to their respective home locations, where they mix for 12 hours. The model is based upon a published model.
+This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered) metapopulation model. Each location has a local infection system, while the locations are connected by people who commute each day. The model differentiates between day and night. During the day you can infect/be infected in the location where you work, while during the night you can infect/be infected in the location where you live. It is the same commuters who travel back and forth each day. At the start of a day, all commuters are sent to their work location, where they mix for 12 hours. The commuters are then sent to their respective home locations, where they mix for 12 hours. The model is loosely based upon a published model by Engebretsen (2019).
 
 # Data required
 
@@ -40,21 +40,21 @@ library(data.table)
 
 ```{r}
 # no one in Norway is infected, and everyone is susceptible
-spread::norway_seiiar_noinfected_2017
+spread::norway_seiiar_noinfected_2017_b2020
 
 # 10 people in Oslo are infected, and everyone is susceptible
-spread::norway_seiiar_oslo_2017
+spread::norway_seiiar_oslo_2017_b2020
 
 # no one in Norway is infected, and childhood vaccination data is used to
 # estimate the number of "recovered" (i.e. non-susceptible) people for measles
-spread::norway_seiiar_measles_noinfected_2017
+spread::norway_seiiar_measles_noinfected_2017_b2020
 
 # 10 people in Oslo is infected, and childhood vaccination data is used to
 # estimate the number of "recovered" (i.e. non-susceptible) people for measles
-spread::norway_seiiar_measles_oslo_2017
+spread::norway_seiiar_measles_oslo_2017_b2020
 
 # we can take a closer look at Oslo
-spread::norway_seiiar_measles_oslo_2017[location_code=="municip0301"]
+spread::norway_seiiar_measles_oslo_2017_b2020[location_code=="municip0301"]
 ```
 
 `commuters` is a dataset that contains the following variables:
@@ -65,7 +65,7 @@ spread::norway_seiiar_measles_oslo_2017[location_code=="municip0301"]
 
 ```{r}
 # we provide the number of municipal commuters in Norway in 2017
-spread::norway_commuters_2017
+spread::norway_commuters_2017_b2020
 ```
 
 `r0` is the basic reproductive number.
@@ -83,13 +83,13 @@ spread::norway_commuters_2017
 # Example
 
 
-We simulate one measles outbreak using the datasets `spread::norway_seiiar_measles_oslo_2017` and spread::norway_commuters_2017:
+We simulate one measles outbreak using the datasets `spread::norway_seiiar_measles_oslo_2017_b2020` and `spread::norway_commuters_2017_b2020`:
 
 ```{r}
 set.seed(4)
 d <- spread::commuter(
-  seiiar=spread::norway_seiiar_measles_oslo_2017,
-  commuters=spread::norway_commuters_2017,
+  seiiar=spread::norway_seiiar_measles_oslo_2017_b2020,
+  commuters=spread::norway_commuters_2017_b2020,
   r0=14,
   latent_period = 8,
   infectious_period = 5,
@@ -109,7 +109,7 @@ d[location_code=="municip0301"]
 We can merge in information about counties, and create county level data:
 
 ```{r}
-d <- merge(d,fhidata::norway_locations_current, by.x="location_code",by.y="municip_code")
+d <- merge(d,fhidata::norway_locations_b2020, by.x="location_code",by.y="municip_code")
 county <- d[,.(
   S=sum(S),
   E=sum(E),
@@ -120,7 +120,7 @@ county <- d[,.(
   pop=sum(pop)
 ),
 keyby=.(county_code,county_name,week,day,is_6pm)]
-county[,county_name:=factor(county_name,levels=unique(fhidata::norway_locations_current[,c("county_code","county_name")]$county_name))]
+county[,county_name:=factor(county_name,levels=unique(fhidata::norway_locations_b2020[,c("county_code","county_name")]$county_name))]
 county
 ```
 
@@ -146,7 +146,7 @@ w[,facet:=glue::glue("Week {week}",week=week)]
 
 pd <- merge(
   w,
-  fhidata::norway_map_counties, 
+  fhidata::norway_map_counties_b2020, 
   by.x="county_code",
   by.y="location_code",
   allow.cartesian = T)
