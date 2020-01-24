@@ -3,8 +3,10 @@ title: "Including vax"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{including_vax}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -15,6 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 We begin with a blank SEIIAR data.table:
+
 ```{r}
 library(data.table)
 print(spread::norway_seiiar_noinfected_2017_b2020)
