@@ -101,14 +101,14 @@ create_blank_norway_2017 <- function() {
   di_edge_list <- merge(
     di_edge_list,
     norwayMunicipMerging,
-    by.x=c("from", "year"),
-    by.y=c("municip_code_original","year"),
-    all.x=T
-    )
+    by.x = c("from", "year"),
+    by.y = c("municip_code_original", "year"),
+    all.x = T
+  )
   sum(di_edge_list$n)
-  di_edge_list[, n := n*weighting]
-  di_edge_list <- di_edge_list[!is.na(n) & n>0]
-  sum(di_edge_list$n,na.rm=T)
+  di_edge_list[, n := n * weighting]
+  di_edge_list <- di_edge_list[!is.na(n) & n > 0]
+  sum(di_edge_list$n, na.rm = T)
   di_edge_list[, from := NULL]
   di_edge_list[, weighting := NULL]
   setnames(di_edge_list, "municip_code_current", "from")
@@ -116,13 +116,13 @@ create_blank_norway_2017 <- function() {
   di_edge_list <- merge(
     di_edge_list,
     norwayMunicipMerging,
-    by.x=c("to", "year"),
-    by.y=c("municip_code_original","year"),
-    all.x=T
+    by.x = c("to", "year"),
+    by.y = c("municip_code_original", "year"),
+    all.x = T
   )
-  di_edge_list[, n := n*weighting]
-  di_edge_list <- di_edge_list[!is.na(n) & n>0]
-  sum(di_edge_list$n,na.rm=T)
+  di_edge_list[, n := n * weighting]
+  di_edge_list <- di_edge_list[!is.na(n) & n > 0]
+  sum(di_edge_list$n, na.rm = T)
   di_edge_list[, to := NULL]
   di_edge_list[, weighting := NULL]
   setnames(di_edge_list, "municip_code_current", "to")
@@ -159,10 +159,10 @@ create_blank_norway_2017 <- function() {
 #' @param vax data.table containing proportion of people vaccinated per location code
 #' @examples
 #' vax_measles <- fhidata::norway_childhood_vax_b2020[
-#'   year==2016 &
-#'   stringr::str_detect(location_code,"^municip") &
-#'   vax=="measles",
-#'   c("location_code","proportion")
+#'   year == 2016 &
+#'     stringr::str_detect(location_code, "^municip") &
+#'     vax == "measles",
+#'   c("location_code", "proportion")
 #' ]
 #'
 #' norway_seiiar_measles_noinfected_2017_b2020 <- spread::convert_blank_seiiar_with_vax(

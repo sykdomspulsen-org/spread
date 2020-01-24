@@ -152,7 +152,7 @@ check_commuters <- function(commuters) {
 #'   infectious_period = 5,
 #'   asymptomatic_prob = 0,
 #'   asymptomatic_relative_infectiousness = 0,
-#'   days_simulation = 7*9,
+#'   days_simulation = 7 * 9,
 #'   N = 1
 #' )
 #' @import data.table
