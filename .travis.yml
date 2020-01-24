@@ -17,6 +17,7 @@ r_packages:
 - lintr
 - styler
 before_install:
+- Rscript -e 'install.packages("devtools");devtools::install_github("folkehelseinstituttet/fhidata")'
 - bash travis/make.sh
 after_success:
 - Rscript -e 'library(covr); codecov()'
