@@ -14,6 +14,7 @@ Imports:
     fhidata (>= 2019.1.23),
     stringr,
     readxl,
+    matrixStats,
     zoo
 Suggests:
     testthat,
