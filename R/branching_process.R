@@ -1,5 +1,3 @@
-library(ggplot2)
-
 #'
 #'
 #' Samples from a branching process model with a constant reproduction number
@@ -69,6 +67,8 @@ fit_params_bp <- function(cases_min, cases_max, param_list, N=100){
 
 
 #' plot_quantiles
+#'
+#' @import ggplot2
 #'
 #' @export
 plot_quantiles <- function(da, x=NULL, max_v=NULL, min=0){
