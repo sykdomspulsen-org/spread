@@ -20,7 +20,10 @@ Suggests:
     knitr,
     ggplot2,
     glue,
-    rmarkdown
+    rmarkdown,
+    distcrete,
+    HDInterval,
+    epitrix
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
