@@ -24,8 +24,7 @@ Suggests:
     rmarkdown,
     distcrete,
     HDInterval,
-    epitrix,
-    fhiplot
+    epitrix
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -48,7 +48,7 @@ summary <- spread::summarize_bp(incidences)
 spread::plot_quantiles(incidences) + ggtitle("Estimated daily incidence") + xlab("Days") + ylab("Incidence")
 spread::plot_quantiles(summary$cummulative) + ggtitle("Estimated cummulative case counts")  + xlab("Days") + ylab("Cummulative Cases")
 
-ggplot() + geom_histogram(aes(x=colSums(incidences))) +fhiplot::theme_fhi_basic() +ggtitle("Distribution of number of cases after 30 days") + xlab("N cases after 30 days") 
+ggplot() + geom_histogram(aes(x=colSums(incidences))) +theme_minimal() +ggtitle("Distribution of number of cases after 30 days") + xlab("N cases after 30 days") 
 
 print(median(summary$cummulative[30,]))
 print(summary$p_no_spread)
