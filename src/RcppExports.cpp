@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // commuter_cpp
-DataFrame commuter_cpp(DataFrame seiiar_home, DataFrame seiiar_commuters, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
-RcppExport SEXP _spread_commuter_cpp(SEXP seiiar_homeSEXP, SEXP seiiar_commutersSEXP, SEXP betaSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
+DataFrame commuter_cpp(DataFrame seiiar_home, DataFrame seiiar_commuters, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M, bool verbose);
+RcppExport SEXP _spread_commuter_cpp(SEXP seiiar_homeSEXP, SEXP seiiar_commutersSEXP, SEXP betaSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,13 +20,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type asymptomaticRelativeInfectiousness(asymptomaticRelativeInfectiousnessSEXP);
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 9},
+    {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 10},
     {NULL, NULL, 0}
 };
 

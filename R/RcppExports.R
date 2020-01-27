@@ -11,8 +11,9 @@
 #' @param asymptomaticRelativeInfectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
+#' @param verbose Bool
 #' @export
-commuter_cpp <- function(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_commuter_cpp`, seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+commuter_cpp <- function(seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L, verbose = 1L) {
+    .Call(`_spread_commuter_cpp`, seiiar_home, seiiar_commuters, beta, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M, verbose)
 }
 

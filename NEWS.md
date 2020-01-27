@@ -1,3 +1,22 @@
+# spread 2020.1.27
+
+Included option for "verbose" in comuter function.
+
+Exported functions:
+
+- commuter
+- convert_blank_seiiar_with_vax
+
+Exported datasets:
+
+- norway_commuters_2017_b2020
+- norway_seiiar_noinfected_2017_b2020
+- norway_seiiar_oslo_2017_b2020
+- norway_seiiar_measles_noinfected_2017_b2020
+- norway_seiiar_measles_oslo_2017_b2020
+- single_entity_fake_commuters_2017.rda (new)
+- single_entity_seiiar_2017.rda (new)
+
 # spread 2020.1.23
 
 Upgraded to 2020 borders.

@@ -143,6 +143,7 @@ check_commuters <- function(commuters) {
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param days_simulation Int, Number of days to simulate
 #' @param N Int = 1 int, Number of repetitions
+#' @param verbose boolean
 #' @examples
 #' spread::commuter(
 #'   seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
@@ -167,7 +168,8 @@ commuter <- function(
                      asymptomatic_prob = 0,
                      asymptomatic_relative_infectiousness = 0,
                      days_simulation = 7 * 8,
-                     N = 1) {
+                     N = 1,
+                     verbose = TRUE) {
   . <- NULL
   incidence <- NULL
   location_code <- NULL
@@ -215,7 +217,8 @@ commuter <- function(
     asymptomaticProb = asymptomatic_prob,
     asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness,
     N = N,
-    M = days_simulation
+    M = days_simulation,
+    verbose = verbose
   )
 
   d[, incidence := sum(incidence), by = .(location_code, day)]
