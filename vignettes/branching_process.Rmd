@@ -60,3 +60,28 @@ The median number of cases is around 50, witha probability of no spread is aroun
 
 
 
+# Estimating parameters via rejection ABC
+
+We can also estimate the R0 if we know the number of cases after a time t. Here we will assume that there are between 2000 and 4000 cases after 56 days. One can also here vary the other parameters to include uncertainty in them
+
+```{r}
+mu <- 8.4
+sd <- 3.4
+param <- epitrix::gamma_mucv2shapescale(mu, sd/mu)
+si <-   distcrete::distcrete("gamma", interval = 1,
+                shape = param$shape,
+                scale = param$scale, w = 0)
+params <- list()
+for(R0 in seq(from=1, to=10, by=0.05)){
+    params[[length(params)+1]] <- list(
+      initial_cases=1,                
+      R0=R0,
+      dispersion=1,
+      serial_interval=si,
+      end_time=56
+    )
+}
+
+r <- spread::fit_params_bp(2000,3000, params, N=1000)
+print(HDInterval::hdi(r$R0))
+```

@@ -14,7 +14,6 @@ branching_process <- function(initial_cases=1,
                               serial_interval=0,
                               end_time=10,
                               N=1000){
-
   incidences <- matrix(nrow=end_time, ncol=N)
   incidences[1,] <- initial_cases
   for(day in 2:end_time){
@@ -29,6 +28,44 @@ branching_process <- function(initial_cases=1,
   return(incidences)
 
 }
+
+
+#' Fit parameters
+#'
+#' @export
+fit_params_bp <- function(cases_min, cases_max, param_list, N=100){
+
+  run_bp <- function(param){
+    incidences <- branching_process(param$initial_cases,
+                                    param$R0,
+                                    param$dispersion,
+                                    param$serial_interval,
+                                    param$end_time, N=N)
+    cum <- colSums(incidences)
+    df <- data.table(cummulative=cum,
+                     R0=param$R0,
+                     dispersion=param$dispersion,
+                     initial_cases = param$initial_cases,
+                     time= param$end_time,
+                     serial_interval=param$serial_interval$parameters$shape
+                     )
+
+
+    return(df)
+  }
+#  results_list <- lapply(param_list,run_bp)
+  results_list <- parallel::mclapply(param_list,run_bp, mc.cores=4)
+  results <- rbindlist(results_list)
+
+
+  fitting_results <- results[cummulative >= cases_min & cummulative < cases_max]
+
+  return(fitting_results)
+
+}
+
+
+
 
 
 #' plot_quantiles
