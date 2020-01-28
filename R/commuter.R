@@ -171,8 +171,7 @@ commuter <- function(
                      days_simulation = 7 * 8,
                      N = 1,
                      verbose = TRUE,
-                     simulations = 1
-                     ) {
+                     simulations = 1) {
   . <- NULL
   incidence <- NULL
   location_code <- NULL
@@ -224,7 +223,7 @@ commuter <- function(
       asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness,
       N = N,
       M = days_simulation,
-      verbose = verbose & simulations==1
+      verbose = verbose & simulations == 1
     )
     retval <- copy(retval)
     retval[, sim_id := i]
