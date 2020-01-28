@@ -14,7 +14,9 @@ Imports:
     fhidata (>= 2019.1.23),
     stringr,
     readxl,
-    zoo
+    zoo,
+    foreach,
+    magrittr
 Suggests:
     testthat,
     knitr,

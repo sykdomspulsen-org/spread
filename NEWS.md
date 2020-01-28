@@ -1,6 +1,10 @@
+# spread 2020.1.28
+
+Included option for "simulations" (number of simulations to be repeated) in commuter function via a `foreach` loop, allowing for simulations to be run in parallel if desired (backend must be registered externally to package).
+
 # spread 2020.1.27
 
-Included option for "verbose" in comuter function.
+Included option for "verbose" in commuter function.
 
 Exported functions:
 

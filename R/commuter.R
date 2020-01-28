@@ -142,8 +142,9 @@ check_commuters <- function(commuters) {
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param days_simulation Int, Number of days to simulate
-#' @param N Int = 1 int, Number of repetitions
+#' @param N Int = 1 int, Number of internal simulations (average taken)
 #' @param verbose boolean
+#' @param simulations Number of simulations (all returned)
 #' @examples
 #' spread::commuter(
 #'   seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
@@ -169,7 +170,9 @@ commuter <- function(
                      asymptomatic_relative_infectiousness = 0,
                      days_simulation = 7 * 8,
                      N = 1,
-                     verbose = TRUE) {
+                     verbose = TRUE,
+                     simulations = 1
+                     ) {
   . <- NULL
   incidence <- NULL
   location_code <- NULL
@@ -181,6 +184,8 @@ commuter <- function(
   I <- NULL
   Ia <- NULL
   R <- NULL
+  i <- NULL
+  sim_id <- NULL
 
 
   check_seiiar(seiiar)
@@ -208,22 +213,30 @@ commuter <- function(
     commuters = commuters
   )
 
-  d <- commuter_cpp(
-    seiiar_home = x[["seiiar_home"]],
-    seiiar_commuters = x[["seiiar_commuters"]],
-    beta = beta,
-    a = a,
-    gamma = gamma,
-    asymptomaticProb = asymptomatic_prob,
-    asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness,
-    N = N,
-    M = days_simulation,
-    verbose = verbose
-  )
+  d <- foreach::foreach(i = 1:simulations) %dopar% {
+    retval <- commuter_cpp(
+      seiiar_home = x[["seiiar_home"]],
+      seiiar_commuters = x[["seiiar_commuters"]],
+      beta = beta,
+      a = a,
+      gamma = gamma,
+      asymptomaticProb = asymptomatic_prob,
+      asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness,
+      N = N,
+      M = days_simulation,
+      verbose = verbose & simulations==1
+    )
+    retval <- copy(retval)
+    retval[, sim_id := i]
+    return(retval)
+  }
+  d <- rbindlist(d)
+
 
   d[, incidence := sum(incidence), by = .(location_code, day)]
   d <- d[is_6pm == 1]
   d[, pop := S + E + I + Ia + R]
+  setcolorder(d, "sim_id")
 
   return(d)
 }
