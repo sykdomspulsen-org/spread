@@ -215,7 +215,7 @@ commuter <- function(
   )
 
   d <- foreach::foreach(i = 1:simulations) %dopar% {
-    if(!is.null(seed)) set.seed(seed+i)
+    if (!is.null(seed)) set.seed(seed + i)
     retval <- commuter_cpp(
       seiiar_home = x[["seiiar_home"]],
       seiiar_commuters = x[["seiiar_commuters"]],
