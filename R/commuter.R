@@ -232,7 +232,7 @@ commuter <- function(
   d <- rbindlist(d)
 
 
-  d[, incidence := sum(incidence), by = .(location_code, day)]
+  d[, incidence := sum(incidence), by = .(sim_id, location_code, day)]
   d <- d[is_6pm == 1]
   d[, pop := S + E + I + Ia + R]
   setcolorder(d, "sim_id")
