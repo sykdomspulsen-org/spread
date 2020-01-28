@@ -143,8 +143,9 @@ check_commuters <- function(commuters) {
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param days_simulation Int, Number of days to simulate
 #' @param N Int = 1 int, Number of internal simulations (average taken)
-#' @param verbose boolean
 #' @param simulations Number of simulations (all returned)
+#' @param verbose boolean
+#' @param seed seed
 #' @examples
 #' spread::commuter(
 #'   seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
@@ -170,8 +171,9 @@ commuter <- function(
                      asymptomatic_relative_infectiousness = 0,
                      days_simulation = 7 * 8,
                      N = 1,
+                     simulations = 1,
                      verbose = TRUE,
-                     simulations = 1) {
+                     seed = NULL) {
   . <- NULL
   incidence <- NULL
   location_code <- NULL
@@ -213,6 +215,7 @@ commuter <- function(
   )
 
   d <- foreach::foreach(i = 1:simulations) %dopar% {
+    if(!is.null(seed)) set.seed(seed+i)
     retval <- commuter_cpp(
       seiiar_home = x[["seiiar_home"]],
       seiiar_commuters = x[["seiiar_commuters"]],

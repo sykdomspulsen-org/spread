@@ -8,7 +8,8 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017_b2020,
   commuters = spread::norway_commuters_2017_b2020, r0 = NULL,
   beta = NULL, latent_period = 1.9, infectious_period = 3,
   asymptomatic_prob = 0, asymptomatic_relative_infectiousness = 0,
-  days_simulation = 7 * 8, N = 1, verbose = TRUE, simulations = 1)
+  days_simulation = 7 * 8, N = 1, simulations = 1, verbose = TRUE,
+  seed = NULL)
 }
 \arguments{
 \item{seiiar}{Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population}
@@ -31,9 +32,11 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017_b2020,
 
 \item{N}{Int = 1 int, Number of internal simulations (average taken)}
 
+\item{simulations}{Number of simulations (all returned)}
+
 \item{verbose}{boolean}
 
-\item{simulations}{Number of simulations (all returned)}
+\item{seed}{seed}
 }
 \description{
 This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered)
