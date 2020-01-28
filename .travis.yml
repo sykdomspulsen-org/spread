@@ -14,8 +14,8 @@ r_packages:
 - covr
 - drat
 - pkgdown
-- lintr
 - styler
+- devtools
 before_install:
 - Rscript -e 'install.packages("devtools");devtools::install_github("folkehelseinstituttet/fhidata")'
 - bash travis/make.sh
