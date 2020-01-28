@@ -254,20 +254,19 @@ create_data_files_norway_2017 <- function(base_loc) {
   save(norway_seiiar_measles_oslo_2017_b2020, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017_b2020.rda"), compress = "xz")
 
   # norway as a single entity
-  single_entity_fake_commuters_2017 <- data.table(from="norge",to="x",n=1)
+  single_entity_fake_commuters_2017 <- data.table(from = "norge", to = "x", n = 1)
   save(single_entity_fake_commuters_2017, file = file.path(base_loc, "single_entity_fake_commuters_2017.rda"), compress = "xz")
 
-  single_entity_seiiar_2017 <- spread::norway_seiiar_noinfected_2017_b2020[,.(
-    location_code="norge",
-    S=sum(S),
-    E=sum(E),
-    I=sum(I),
-    Ia=sum(Ia),
-    R=sum(R)
+  single_entity_seiiar_2017 <- spread::norway_seiiar_noinfected_2017_b2020[, .(
+    location_code = "norge",
+    S = sum(S),
+    E = sum(E),
+    I = sum(I),
+    Ia = sum(Ia),
+    R = sum(R)
   )]
   single_entity_seiiar_2017 <- rbind(single_entity_seiiar_2017, single_entity_seiiar_2017)
-  single_entity_seiiar_2017[2,location_code:="x"]
-  single_entity_seiiar_2017[2,S:=1]
+  single_entity_seiiar_2017[2, location_code := "x"]
+  single_entity_seiiar_2017[2, S := 1]
   save(single_entity_seiiar_2017, file = file.path(base_loc, "single_entity_seiiar_2017.rda"), compress = "xz")
 }
-
