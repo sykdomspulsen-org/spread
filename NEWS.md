@@ -1,3 +1,7 @@
+# spread 2020.1.30
+
+Included option for "aggregate_location" in commuter function. This will automatically aggregate the results over all locations, resulting in a smaller memory footprint. Useful when `simulations` is a large number.
+
 # spread 2020.1.28
 
 Included option for "simulations" (number of simulations to be repeated) in commuter function via a `foreach` loop, allowing for simulations to be run in parallel if desired (backend must be registered externally to package).

@@ -142,10 +142,11 @@ check_commuters <- function(commuters) {
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param days_simulation Int, Number of days to simulate
-#' @param N Int = 1 int, Number of internal simulations (average taken)
-#' @param simulations Number of simulations (all returned)
+#' @param N Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.
+#' @param simulations Int, Number of simulations (all returned). This is generally used to generate stochastic results.
 #' @param verbose boolean
 #' @param seed seed
+#' @param aggregate_location Do you want to aggregate over all location_codes?
 #' @examples
 #' spread::commuter(
 #'   seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
@@ -156,8 +157,21 @@ check_commuters <- function(commuters) {
 #'   asymptomatic_prob = 0,
 #'   asymptomatic_relative_infectiousness = 0,
 #'   days_simulation = 7 * 9,
-#'   N = 1
+#'   N = 1,
+#'   simulations = 1,
+#'   verbose = TRUE,
+#'   seed = 4
 #' )
+#' @return
+#'
+#' \describe{
+#' \item{year}{The middle year of a 5 year range (e.g. 2011 is the average of data from 2009-2013).}
+#' \item{location_code}{The location code.}
+#' \item{age}{The population age.}
+#' \item{vax}{The vaccine.}
+#' \item{proportion}{Proportion of people who are vaccinated.}
+#' \item{imputed}{FALSE if real data. TRUE if it is the national average.}
+#' }
 #' @import data.table
 #' @export
 commuter <- function(
@@ -173,7 +187,8 @@ commuter <- function(
                      N = 1,
                      simulations = 1,
                      verbose = TRUE,
-                     seed = NULL) {
+                     seed = NULL,
+                     aggregate_location = FALSE) {
   . <- NULL
   incidence <- NULL
   location_code <- NULL
@@ -229,7 +244,38 @@ commuter <- function(
       verbose = verbose & simulations == 1
     )
     retval <- copy(retval)
+
+    if(aggregate_location){
+      retval <- retval[,.(
+        S=sum(S),
+        E=sum(E),
+        I=sum(I),
+        Ia=sum(Ia),
+        R=sum(R),
+        incidence=sum(incidence)
+      ),keyby=.(
+        week,
+        day,
+        is_6pm
+      )]
+      retval[,location_code:="all"]
+      setcolorder(retval,c(
+        "location_code",
+        "week",
+        "day",
+        "is_6pm",
+        "S",
+        "E",
+        "I",
+        "Ia",
+        "R",
+        "incidence"
+        ))
+    }
     retval[, sim_id := i]
+
+    gc()
+
     return(retval)
   }
   d <- rbindlist(d)
