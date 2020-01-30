@@ -245,21 +245,21 @@ commuter <- function(
     )
     retval <- copy(retval)
 
-    if(aggregate_location){
-      retval <- retval[,.(
-        S=sum(S),
-        E=sum(E),
-        I=sum(I),
-        Ia=sum(Ia),
-        R=sum(R),
-        incidence=sum(incidence)
-      ),keyby=.(
+    if (aggregate_location) {
+      retval <- retval[, .(
+        S = sum(S),
+        E = sum(E),
+        I = sum(I),
+        Ia = sum(Ia),
+        R = sum(R),
+        incidence = sum(incidence)
+      ), keyby = .(
         week,
         day,
         is_6pm
       )]
-      retval[,location_code:="all"]
-      setcolorder(retval,c(
+      retval[, location_code := "all"]
+      setcolorder(retval, c(
         "location_code",
         "week",
         "day",
@@ -270,7 +270,7 @@ commuter <- function(
         "Ia",
         "R",
         "incidence"
-        ))
+      ))
     }
     retval[, sim_id := i]
 
