@@ -13,20 +13,18 @@
 #' @param simulations Number of simulations
 #' @export
 branching_process <- function(
-  initial_cases = 1,
-  R0 = 3,
-  dispersion = 1,
-  serial_interval = distcrete::distcrete(
-    "gamma",
-    interval = 1,
-    shape = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$shape,
-    scale = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$scale,
-    w = 0
-  ),
-  days_simulation = 10,
-  simulations = 1000
-  ) {
-
+                              initial_cases = 1,
+                              R0 = 3,
+                              dispersion = 1,
+                              serial_interval = distcrete::distcrete(
+                                "gamma",
+                                interval = 1,
+                                shape = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4 / 8.4)$shape,
+                                scale = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4 / 8.4)$scale,
+                                w = 0
+                              ),
+                              days_simulation = 10,
+                              simulations = 1000) {
   incidences <- matrix(nrow = days_simulation, ncol = simulations)
   incidences[1, ] <- initial_cases
   for (day in 2:days_simulation) {
@@ -38,7 +36,7 @@ branching_process <- function(
     new <- stats::rnbinom(simulations, mu = FI, size = dispersion)
     incidences[day, ] <- new
   }
-  class(incidences) <- append(class(incidences),"bp-incidence")
+  class(incidences) <- append(class(incidences), "bp-incidence")
   return(incidences)
 }
 
@@ -81,7 +79,7 @@ fit_params_bp <- function(cases_min, cases_max, param_list, simulations = 100) {
 
   fitting_results <- results[cumulative >= cases_min & cumulative < cases_max]
 
-  class(fitting_results) <- append(class(fitting_results),"bp-fit")
+  class(fitting_results) <- append(class(fitting_results), "bp-fit")
   return(fitting_results)
 }
 
@@ -98,7 +96,7 @@ fit_params_bp <- function(cases_min, cases_max, param_list, simulations = 100) {
 #' @import ggplot2
 #' @export
 plot_quantiles_bp <- function(da, x = NULL, max_v = NULL, min = 0) {
-  stopifnot(inherits(da,c("bp-incidence","bp-cumulative")))
+  stopifnot(inherits(da, c("bp-incidence", "bp-cumulative")))
 
   med <- matrixStats::rowQuantiles(da, p = c(0.05, 0.5, 0.95))
   if (is.null(x)) {
@@ -118,10 +116,10 @@ plot_quantiles_bp <- function(da, x = NULL, max_v = NULL, min = 0) {
 #' @param incidences A `bp` class
 #' @export
 summarize_bp <- function(incidences) {
-  stopifnot(inherits(incidences,"bp-incidence"))
+  stopifnot(inherits(incidences, "bp-incidence"))
 
   cumulative <- apply(incidences, 2, cumsum)
-  class(cumulative) <- append(class(incidences),"bp-cumulative")
+  class(cumulative) <- append(class(incidences), "bp-cumulative")
 
   retval <- list(
     incidence = incidences,
@@ -129,7 +127,7 @@ summarize_bp <- function(incidences) {
     p_no_spread = sum(colSums(incidences) == 1) / ncol(incidences)
   )
 
-  class(retval) <- append(class(retval),"bp-summary")
+  class(retval) <- append(class(retval), "bp-summary")
 
   return(retval)
 }
