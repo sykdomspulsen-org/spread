@@ -1,3 +1,12 @@
+# spread 2020.1.31
+
+Included branching process functions from GunnarOyvindIsaksson.Ro@fhi.no
+
+- branching_process
+- fit_params_bp
+- plot_quantiles_bp
+- summarize_bp
+
 # spread 2020.1.30
 
 Included option for "aggregate_location" in commuter function. This will automatically aggregate the results over all locations, resulting in a smaller memory footprint. Useful when `simulations` is a large number.

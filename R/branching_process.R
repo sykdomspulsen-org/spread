@@ -5,43 +5,67 @@
 #' R0 - basic reproduction number
 #' serial_interval a distcrete object
 #'
+#' @param initial_cases Number of initial cases
+#' @param R0 R0
+#' @param dispersion Dispersion parameter
+#' @param serial_interval Serial interval (distribution in days)
+#' @param days_simulation Days simulated
+#' @param simulations Number of simulations
 #' @export
-branching_process <- function(initial_cases = 1,
-                              R0 = 3,
-                              dispersion = 1,
-                              serial_interval = 0,
-                              end_time = 10,
-                              N = 1000) {
-  incidences <- matrix(nrow = end_time, ncol = N)
+branching_process <- function(
+  initial_cases = 1,
+  R0 = 3,
+  dispersion = 1,
+  serial_interval = distcrete::distcrete(
+    "gamma",
+    interval = 1,
+    shape = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$shape,
+    scale = epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$scale,
+    w = 0
+  ),
+  days_simulation = 10,
+  simulations = 1000
+  ) {
+
+  incidences <- matrix(nrow = days_simulation, ncol = simulations)
   incidences[1, ] <- initial_cases
-  for (day in 2:end_time) {
+  for (day in 2:days_simulation) {
     if (day == 2) {
       FI <- incidences[1:(day - 1), ] * rev(serial_interval$d(1:(day - 1))) * R0
     } else {
       FI <- colSums(incidences[1:(day - 1), ] * rev(serial_interval$d(1:(day - 1)))) * R0
     }
-    new <- rnbinom(N, mu = FI, size = dispersion)
+    new <- stats::rnbinom(simulations, mu = FI, size = dispersion)
     incidences[day, ] <- new
   }
+  class(incidences) <- append(class(incidences),"bp-incidence")
   return(incidences)
 }
 
 
-#' Fit parameters
+#' Fit parameters on cumulative incidence using approximate Bayesian computation (ABC)
 #'
+#'
+#' @param cases_min a
+#' @param cases_max a
+#' @param param_list a
+#' @param simulations Number of simulations
 #' @export
-fit_params_bp <- function(cases_min, cases_max, param_list, N = 100) {
+fit_params_bp <- function(cases_min, cases_max, param_list, simulations = 100) {
+  cumulative <- NULL
   run_bp <- function(param) {
-    incidences <- branching_process(param$initial_cases,
-      param$R0,
-      param$dispersion,
-      param$serial_interval,
-      param$end_time,
-      N = N
+    force(param)
+    incidences <- branching_process(
+      initial_cases = param$initial_cases,
+      R0 = param$R0,
+      dispersion = param$dispersion,
+      serial_interval = param$serial_interval,
+      days_simulation = param$days_simulation,
+      simulations = simulations
     )
     cum <- colSums(incidences)
     df <- data.table(
-      cummulative = cum,
+      cumulative = cum,
       R0 = param$R0,
       dispersion = param$dispersion,
       initial_cases = param$initial_cases,
@@ -49,16 +73,15 @@ fit_params_bp <- function(cases_min, cases_max, param_list, N = 100) {
       serial_interval = param$serial_interval$parameters$shape
     )
 
-
     return(df)
   }
-  #  results_list <- lapply(param_list,run_bp)
-  results_list <- parallel::mclapply(param_list, run_bp, mc.cores = 4)
+  # results_list <- lapply(param_list,run_bp)
+  results_list <- future.apply::future_lapply(param_list, run_bp)
   results <- rbindlist(results_list)
 
+  fitting_results <- results[cumulative >= cases_min & cumulative < cases_max]
 
-  fitting_results <- results[cummulative >= cases_min & cummulative < cases_max]
-
+  class(fitting_results) <- append(class(fitting_results),"bp-fit")
   return(fitting_results)
 }
 
@@ -68,10 +91,15 @@ fit_params_bp <- function(cases_min, cases_max, param_list, N = 100) {
 
 #' plot_quantiles
 #'
+#' @param da a
+#' @param x a
+#' @param max_v a
+#' @param min a
 #' @import ggplot2
-#'
 #' @export
-plot_quantiles <- function(da, x = NULL, max_v = NULL, min = 0) {
+plot_quantiles_bp <- function(da, x = NULL, max_v = NULL, min = 0) {
+  stopifnot(inherits(da,c("bp-incidence","bp-cumulative")))
+
   med <- matrixStats::rowQuantiles(da, p = c(0.05, 0.5, 0.95))
   if (is.null(x)) {
     x <- 1:nrow(med)
@@ -87,11 +115,21 @@ plot_quantiles <- function(da, x = NULL, max_v = NULL, min = 0) {
 
 #' summarize_bp
 #'
+#' @param incidences A `bp` class
 #' @export
 summarize_bp <- function(incidences) {
-  return(list(
+  stopifnot(inherits(incidences,"bp-incidence"))
+
+  cumulative <- apply(incidences, 2, cumsum)
+  class(cumulative) <- append(class(incidences),"bp-cumulative")
+
+  retval <- list(
     incidence = incidences,
-    cummulative = apply(incidences, 2, cumsum),
+    cumulative = cumulative,
     p_no_spread = sum(colSums(incidences) == 1) / ncol(incidences)
-  ))
+  )
+
+  class(retval) <- append(class(retval),"bp-summary")
+
+  return(retval)
 }

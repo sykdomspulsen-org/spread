@@ -6,6 +6,9 @@
 \usage{
 summarize_bp(incidences)
 }
+\arguments{
+\item{incidences}{A `bp` class}
+}
 \description{
 summarize_bp
 }

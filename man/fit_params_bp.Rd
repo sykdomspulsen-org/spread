@@ -2,10 +2,19 @@
 % Please edit documentation in R/branching_process.R
 \name{fit_params_bp}
 \alias{fit_params_bp}
-\title{Fit parameters}
+\title{Fit parameters on cumulative incidence using approximate Bayesian computation (ABC)}
 \usage{
-fit_params_bp(cases_min, cases_max, param_list, N = 100)
+fit_params_bp(cases_min, cases_max, param_list, simulations = 100)
+}
+\arguments{
+\item{cases_min}{a}
+
+\item{cases_max}{a}
+
+\item{param_list}{a}
+
+\item{simulations}{Number of simulations}
 }
 \description{
-Fit parameters
+Fit parameters on cumulative incidence using approximate Bayesian computation (ABC)
 }

@@ -1,7 +1,7 @@
 ---
 title: "Simple Branching Process model"
 author: "Gunnar Rø"
-date: "`r Sys.Date()`"
+date: "2020-01-31"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{branching_process}
@@ -42,25 +42,22 @@ incidences <- spread::branching_process(initial_cases=1,
                          R0=1.4,
                          dispersion=1,
                          serial_interval=si,
-                         end_time=30,
-                         N=1000)
+                         days_simulation=30,
+                         simulations=1000)
 summary <- spread::summarize_bp(incidences)
-spread::plot_quantiles(incidences) + ggtitle("Estimated daily incidence") + xlab("Days") + ylab("Incidence")
-spread::plot_quantiles(summary$cummulative) + ggtitle("Estimated cummulative case counts")  + xlab("Days") + ylab("Cummulative Cases")
+spread::plot_quantiles_bp(incidences) + ggtitle("Estimated daily incidence") + xlab("Days") + ylab("Incidence")
+spread::plot_quantiles_bp(summary$cumulative) + ggtitle("Estimated cumulative case counts")  + xlab("Days") + ylab("cumulative Cases")
 
 ggplot() + geom_histogram(aes(x=colSums(incidences))) +theme_minimal() +ggtitle("Distribution of number of cases after 30 days") + xlab("N cases after 30 days") 
 
-print(median(summary$cummulative[30,]))
+print(median(summary$cumulative[30,]))
 print(summary$p_no_spread)
 
 ``` 
-The median number of cases is around 50, witha probability of no spread is around 6%. 
 
+The median number of cases is around 50, with a probability of no spread is around 6%. 
 
-
-
-
-# Estimating parameters via rejection ABC
+# Estimating parameters via approximate Bayesian computation (ABC)
 
 We can also estimate the R0 if we know the number of cases after a time t. Here we will assume that there are between 2000 and 4000 cases after 56 days. One can also here vary the other parameters to include uncertainty in them
 
@@ -78,10 +75,16 @@ for(R0 in seq(from=1, to=10, by=0.05)){
       R0=R0,
       dispersion=1,
       serial_interval=si,
-      end_time=56
+      days_simulation=56
     )
 }
 
-r <- spread::fit_params_bp(2000,3000, params, N=1000)
+r <- spread::fit_params_bp(
+  cases_min = 2000,
+  cases_max = 3000, 
+  param_list = params, 
+  simulations=1000
+  )
 print(HDInterval::hdi(r$R0))
 ```
+
