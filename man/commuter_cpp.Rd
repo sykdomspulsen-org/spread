@@ -6,7 +6,7 @@
 \usage{
 commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma,
   asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
-  M = 56L)
+  M = 56L, verbose = 1L)
 }
 \arguments{
 \item{seiiar_home}{Data frame}
@@ -26,6 +26,8 @@ commuter_cpp(seiiar_home, seiiar_commuters, beta, a, gamma,
 \item{N}{Int = 1 int, Number of repetitions}
 
 \item{M}{Int, Number of days}
+
+\item{verbose}{Bool}
 }
 \description{
 commuter

@@ -1,6 +1,6 @@
 Package: spread
 Title: Infectious Disease Spread Models
-Version: 2020.1.24
+Version: 2020.1.30
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
@@ -15,7 +15,9 @@ Imports:
     stringr,
     readxl,
     matrixStats,
-    zoo
+    zoo,
+    foreach,
+    magrittr
 Suggests:
     testthat,
     knitr,

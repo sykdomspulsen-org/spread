@@ -611,6 +611,7 @@ void Graph::copy_graph(Graph G){
 //' @param asymptomaticRelativeInfectiousness Float, Relative infectiousness of asymptomatic infectious
 //' @param N Int = 1 int, Number of repetitions
 //' @param M Int, Number of days
+//' @param verbose Bool
 //' @export
 // [[Rcpp::export]]
 DataFrame commuter_cpp(
@@ -622,7 +623,8 @@ DataFrame commuter_cpp(
     float asymptomaticProb,
     float asymptomaticRelativeInfectiousness,
     int N=1,
-    int M=56) {
+    int M=56,
+    bool verbose=1) {
 
   int n=0; //Number of locations
 
@@ -654,7 +656,7 @@ DataFrame commuter_cpp(
   IntegerVector commuters_Ia = seiiar_commuters[5] ;
   IntegerVector commuters_R = seiiar_commuters[6] ;
 
-  Rcout << "Starting to add edges, printing every 1000 edge" << endl;
+  if(verbose) Rcout << "Starting to add edges, printing every 1000 edge" << endl;
   for (int i = 0; i < seiiar_commuters.rows(); i++) {
     string name_from = std::string(names_from[i]);
     string name_to = std::string(names_to[i]);
@@ -669,14 +671,14 @@ DataFrame commuter_cpp(
       // name_from, name_to, S, E, I, Ia, R
       G.add_edge(name_from, name_to, c_S, c_E, c_I, c_Ia, c_R);
 
-      if(safecount % 1000 == 0){
+      if(verbose & (safecount % 1000 == 0)){
         Rcout << safecount << " ";
         Rcout.flush();
       }
       n_edges += 1;
     }
   }
-  Rcout << "Found " << n_edges << " edges" << endl;
+  if(verbose) Rcout << "Found " << n_edges << " edges" << endl;
 
 
   G.inform_locations_of_edges();
@@ -733,8 +735,8 @@ DataFrame commuter_cpp(
     }
   }
 
-  Rcout << "Running " << N << " simulations of " << M << " days" << endl << endl;
-  Progress p(N*M, true);
+  if(verbose) Rcout << "Running " << N << " simulations of " << M << " days" << endl << endl;
+  Progress p(N*M, verbose);
   for(int i_sim = 0; i_sim < N; ++i_sim){
 
     for (int i = 0; i < n; ++i){
@@ -859,7 +861,7 @@ DataFrame commuter_cpp(
     //Rcout << "Finished simulation " << i_sim+1 << "/" << N << endl;
   }
 
-  Rcout << endl << "Finished all simulations" << endl;
+  if(verbose) Rcout << endl << "Finished all simulations" << endl;
 
   StringVector res_names(n*2*M);
   IntegerVector res_week(n*2*M);
@@ -912,8 +914,8 @@ DataFrame commuter_cpp(
 
 /*** R
 x <- spread:::commuter_convert_seiiar(
-  seiiar=spread::norway_seiiar_oslo_2017,
-  commuters=spread::norway_commuters_2017
+  seiiar=spread::norway_seiiar_oslo_2017_b2020,
+  commuters=spread::norway_commuters_2017_b2020
 )
 
 d <- commuter_cpp(

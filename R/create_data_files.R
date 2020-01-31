@@ -1,3 +1,30 @@
+#' A fake commuter dataset for Norway as a single entity in 2017
+#'
+#' For use with single_entity_seiiar_2017
+#'
+#' @format
+#' \describe{
+#' \item{from}{Location code.}
+#' \item{to}{Location name.}
+#' \item{n}{Number of people.}
+#' }
+"single_entity_fake_commuters_2017"
+
+#' SEIIaR data.frame for Norway as a single entity with no one infected and everyone susceptible (2020 borders)
+#'
+#' For use with single_entity_fake_commuters_2017
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{S}{Number of susceptible people.}
+#' \item{E}{Number of exposed people.}
+#' \item{I}{Number of infectious and symptomatic people.}
+#' \item{Ia}{Number of infectious and asymptomatic people.}
+#' \item{R}{Number of recovered people.}
+#' }
+"single_entity_seiiar_2017"
+
 #' Daily number of commuters from/to municipalities in Norway in 2017 (2020 borders)
 #'
 #' @format
@@ -196,6 +223,9 @@ create_data_files_norway_2017 <- function(base_loc) {
   location_code <- NULL
   S <- NULL
   vax <- NULL
+  E <- NULL
+  Ia <- NULL
+  R <- NULL
 
   x <- create_blank_norway_2017()
 
@@ -222,4 +252,21 @@ create_data_files_norway_2017 <- function(base_loc) {
   norway_seiiar_measles_oslo_2017_b2020[location_code == "municip0301", I := 10]
   norway_seiiar_measles_oslo_2017_b2020[location_code == "municip0301", S := S - I]
   save(norway_seiiar_measles_oslo_2017_b2020, file = file.path(base_loc, "norway_seiiar_measles_oslo_2017_b2020.rda"), compress = "xz")
+
+  # norway as a single entity
+  single_entity_fake_commuters_2017 <- data.table(from = "norge", to = "x", n = 1)
+  save(single_entity_fake_commuters_2017, file = file.path(base_loc, "single_entity_fake_commuters_2017.rda"), compress = "xz")
+
+  single_entity_seiiar_2017 <- spread::norway_seiiar_noinfected_2017_b2020[, .(
+    location_code = "norge",
+    S = sum(S),
+    E = sum(E),
+    I = sum(I),
+    Ia = sum(Ia),
+    R = sum(R)
+  )]
+  single_entity_seiiar_2017 <- rbind(single_entity_seiiar_2017, single_entity_seiiar_2017)
+  single_entity_seiiar_2017[2, location_code := "x"]
+  single_entity_seiiar_2017[2, S := 1]
+  save(single_entity_seiiar_2017, file = file.path(base_loc, "single_entity_seiiar_2017.rda"), compress = "xz")
 }

@@ -8,7 +8,8 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017_b2020,
   commuters = spread::norway_commuters_2017_b2020, r0 = NULL,
   beta = NULL, latent_period = 1.9, infectious_period = 3,
   asymptomatic_prob = 0, asymptomatic_relative_infectiousness = 0,
-  days_simulation = 7 * 8, N = 1)
+  days_simulation = 7 * 8, N = 1, simulations = 1, verbose = TRUE,
+  seed = NULL, aggregate_location = FALSE)
 }
 \arguments{
 \item{seiiar}{Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population}
@@ -29,7 +30,25 @@ commuter(seiiar = spread::norway_seiiar_oslo_2017_b2020,
 
 \item{days_simulation}{Int, Number of days to simulate}
 
-\item{N}{Int = 1 int, Number of repetitions}
+\item{N}{Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.}
+
+\item{simulations}{Int, Number of simulations (all returned). This is generally used to generate stochastic results.}
+
+\item{verbose}{boolean}
+
+\item{seed}{seed}
+
+\item{aggregate_location}{Do you want to aggregate over all location_codes?}
+}
+\value{
+\describe{
+\item{year}{The middle year of a 5 year range (e.g. 2011 is the average of data from 2009-2013).}
+\item{location_code}{The location code.}
+\item{age}{The population age.}
+\item{vax}{The vaccine.}
+\item{proportion}{Proportion of people who are vaccinated.}
+\item{imputed}{FALSE if real data. TRUE if it is the national average.}
+}
 }
 \description{
 This model is a stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered)
@@ -56,7 +75,10 @@ spread::commuter(
   infectious_period = 5,
   asymptomatic_prob = 0,
   asymptomatic_relative_infectiousness = 0,
-  days_simulation = 7*9,
-  N = 1
+  days_simulation = 7 * 9,
+  N = 1,
+  simulations = 1,
+  verbose = TRUE,
+  seed = 4
 )
 }

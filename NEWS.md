@@ -1,3 +1,30 @@
+# spread 2020.1.30
+
+Included option for "aggregate_location" in commuter function. This will automatically aggregate the results over all locations, resulting in a smaller memory footprint. Useful when `simulations` is a large number.
+
+# spread 2020.1.28
+
+Included option for "simulations" (number of simulations to be repeated) in commuter function via a `foreach` loop, allowing for simulations to be run in parallel if desired (backend must be registered externally to package).
+
+# spread 2020.1.27
+
+Included option for "verbose" in commuter function.
+
+Exported functions:
+
+- commuter
+- convert_blank_seiiar_with_vax
+
+Exported datasets:
+
+- norway_commuters_2017_b2020
+- norway_seiiar_noinfected_2017_b2020
+- norway_seiiar_oslo_2017_b2020
+- norway_seiiar_measles_noinfected_2017_b2020
+- norway_seiiar_measles_oslo_2017_b2020
+- single_entity_fake_commuters_2017.rda (new)
+- single_entity_seiiar_2017.rda (new)
+
 # spread 2020.1.23
 
 Upgraded to 2020 borders.
