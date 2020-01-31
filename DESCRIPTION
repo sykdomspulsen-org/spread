@@ -14,6 +14,7 @@ Imports:
     fhidata (>= 2019.1.23),
     stringr,
     readxl,
+    matrixStats,
     zoo,
     foreach,
     magrittr
@@ -22,7 +23,10 @@ Suggests:
     knitr,
     ggplot2,
     glue,
-    rmarkdown
+    rmarkdown,
+    distcrete,
+    HDInterval,
+    epitrix
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
