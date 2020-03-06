@@ -10,7 +10,7 @@
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.
 #' @examples
-#' spread::commuter(
+#' spread::asymmetric_mobility(
 #'   seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
 #'   mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
 #'   betas = spread::asymmetric_mobility_dummy_betas,
