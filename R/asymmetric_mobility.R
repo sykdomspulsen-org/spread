@@ -30,8 +30,7 @@ asymmetric_mobility <- function(
                                 infectious_period = 3.0,
                                 asymptomatic_prob = 0,
                                 asymptomatic_relative_infectiousness = 0,
-                                N = 1
-                                ) {
+                                N = 1) {
   stopifnot(length(mobility_matrix) == length(betas))
 
   a <- 1 / latent_period
@@ -50,35 +49,29 @@ asymmetric_mobility <- function(
     M = days_simulation
   )
   retval <- retval[
-    time==4
-    ,.(
-      b_S=b_S,
-      b_E=b_E,
-      b_I=b_I,
-      b_Ia=b_Ia,
-      b_R=b_R,
-      c_S=c_S,
-      c_E=c_E,
-      c_I=c_I,
-      c_Ia=c_Ia,
-      c_R=c_R,
-      c_incidence=sum(c_incidence)
+    time == 4,
+    .(
+      b_S = b_S,
+      b_E = b_E,
+      b_I = b_I,
+      b_Ia = b_Ia,
+      b_R = b_R,
+      c_S = c_S,
+      c_E = c_E,
+      c_I = c_I,
+      c_Ia = c_Ia,
+      c_R = c_R,
+      c_incidence = sum(c_incidence)
     ),
-    keyby=.(
+    keyby = .(
       location_code,
       week,
       day
     )
   ]
   retval <- copy(retval)
-  retval[,time:="23:59"]
-  setcolorder(retval,c("location_code","week","day","time"))
+  retval[, time := "23:59"]
+  setcolorder(retval, c("location_code", "week", "day", "time"))
 
   return(retval)
 }
-
-
-
-
-
-
