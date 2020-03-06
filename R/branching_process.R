@@ -107,7 +107,11 @@ plot_quantiles_bp <- function(da, x = NULL, max_v = NULL, min = 0) {
   } else {
     max_v <- max(med[, 3])
   }
-  ggplot() + geom_line(aes(x = x, y = med[, 2], group = 1)) + geom_ribbon(aes(x = x, ymin = med[, 1], ymax = med[, 3], group = 1), alpha = 0.3) + ylim(min, max_v) + theme_minimal()
+  ggplot() +
+    geom_line(aes(x = x, y = med[, 2], group = 1)) +
+    geom_ribbon(aes(x = x, ymin = med[, 1], ymax = med[, 3], group = 1), alpha = 0.3) +
+    ylim(min, max_v) +
+    theme_minimal()
 }
 
 

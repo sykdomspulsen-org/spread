@@ -302,28 +302,28 @@ create_data_files_norway_2017 <- function(base_loc) {
 #'
 "asymmetric_mobility_dummy_betas"
 
-create_asymmetric_mobility_dummy_files <- function(base_loc){
+create_asymmetric_mobility_dummy_files <- function(base_loc) {
   seiiar_pop <- data.table::data.table(
-    "location_code" = c("a","b","c"),
-    "S" = c(1000,1000,2000),
-    "E" = c(0,0,0),
-    "I" = c(50,0,0),
-    "Ia" = c(0,0,0),
-    "R" = c(0,0,0)
+    "location_code" = c("a", "b", "c"),
+    "S" = c(1000, 1000, 2000),
+    "E" = c(0, 0, 0),
+    "I" = c(50, 0, 0),
+    "Ia" = c(0, 0, 0),
+    "R" = c(0, 0, 0)
   )
 
   temp <- data.table::data.table(
-    from = c("a","a","b","b","c","c"),
-    to = c("b","c","a","c","a","b"),
-    n = c(50,10,10,10,10,10)
+    from = c("a", "a", "b", "b", "c", "c"),
+    to = c("b", "c", "a", "c", "a", "b"),
+    n = c(50, 10, 10, 10, 10, 10)
   )
-  mobility_matrix <- vector("list",length=20)
-  for(i in seq_along(mobility_matrix)){
+  mobility_matrix <- vector("list", length = 20)
+  for (i in seq_along(mobility_matrix)) {
     mobility_matrix[[i]] <- data.table::copy(temp)
-    data.table::setnames(mobility_matrix[[i]],c("from","to","n"))
+    data.table::setnames(mobility_matrix[[i]], c("from", "to", "n"))
   }
 
-  betas <- rep(0.6,20)
+  betas <- rep(0.6, 20)
 
   asymmetric_mobility_dummy_seiiar_pop <- seiiar_pop
   save(asymmetric_mobility_dummy_seiiar_pop, file = file.path(base_loc, "asymmetric_mobility_dummy_seiiar_pop.rda"), compress = "xz")

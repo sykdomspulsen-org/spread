@@ -1,6 +1,6 @@
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("\nPACKAGE: spread")
-  packageStartupMessage("Version: 2020.01.31 at 11:34")
+  packageStartupMessage("Version: 2020.03.06 at 07:08")
   packageStartupMessage("\nCommuter model and C++ code developed by Solveig Engebretsen and Andreas Nyg\u00E5rd Osnes")
   packageStartupMessage("Asymmetric mobility model and C++ code developed by Solveig Engebretsen")
   packageStartupMessage("Commuter ported to RCPP by Richard White")

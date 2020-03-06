@@ -23,20 +23,19 @@
 #' @import data.table
 #' @export
 asymmetric_mobility <- function(
-  seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
-  mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
-  betas = spread::asymmetric_mobility_dummy_betas,
-  latent_period = 1.9,
-  infectious_period = 3.0,
-  asymptomatic_prob = 0,
-  asymptomatic_relative_infectiousness = 0,
-  N = 1) {
-
+                                seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
+                                mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
+                                betas = spread::asymmetric_mobility_dummy_betas,
+                                latent_period = 1.9,
+                                infectious_period = 3.0,
+                                asymptomatic_prob = 0,
+                                asymptomatic_relative_infectiousness = 0,
+                                N = 1) {
   stopifnot(length(mobility_matrix) == length(betas))
 
   a <- 1 / latent_period
   gamma <- 1 / infectious_period
-  days_simulation <- length(betas)/4
+  days_simulation <- length(betas) / 4
 
   retval <- asymmetric_mobility_cpp(
     seiiar_pop = seiiar_pop,
