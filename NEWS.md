@@ -1,3 +1,7 @@
+# spread 2020.3.5
+
+Initial commit of asymmetric_mobility
+
 # spread 2020.1.31
 
 Included branching process functions from GunnarOyvindIsaksson.Ro@fhi.no

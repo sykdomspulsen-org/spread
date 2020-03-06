@@ -270,3 +270,67 @@ create_data_files_norway_2017 <- function(base_loc) {
   single_entity_seiiar_2017[2, S := 1]
   save(single_entity_seiiar_2017, file = file.path(base_loc, "single_entity_seiiar_2017.rda"), compress = "xz")
 }
+
+#' A fake population for asymmetric mobility
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{S}{Number of susceptible people.}
+#' \item{E}{Number of exposed people.}
+#' \item{I}{Number of infectious and symptomatic people.}
+#' \item{Ia}{Number of infectious and asymptomatic people.}
+#' \item{R}{Number of recovered people.}
+#' }
+"asymmetric_mobility_dummy_seiiar_pop"
+
+#' Fake mobility matrixes for asymmetric mobility
+#'
+#' A list of 20 matrices (1 for each time period)
+#'
+#' @format
+#' \describe{
+#' \item{from}{Location code.}
+#' \item{to}{Location code.}
+#' \item{n}{Number of people.}
+#' }
+"asymmetric_mobility_dummy_mobility_matrix"
+
+#' Fake betas for asymmetric mobility
+#'
+#' A vector of 20 betas (1 for each time period)
+#'
+"asymmetric_mobility_dummy_betas"
+
+create_asymmetric_mobility_dummy_files <- function(base_loc){
+  seiiar_pop <- data.table::data.table(
+    "location_code" = c("a","b","c"),
+    "S" = c(1000,1000,2000),
+    "E" = c(0,0,0),
+    "I" = c(50,0,0),
+    "Ia" = c(0,0,0),
+    "R" = c(0,0,0)
+  )
+
+  temp <- data.table::data.table(
+    from = c("a","a","b","b","c","c"),
+    to = c("b","c","a","c","a","b"),
+    n = c(50,10,10,10,10,10)
+  )
+  mobility_matrix <- vector("list",length=20)
+  for(i in seq_along(mobility_matrix)){
+    mobility_matrix[[i]] <- data.table::copy(temp)
+    data.table::setnames(mobility_matrix[[i]],c("from","to","n"))
+  }
+
+  betas <- rep(0.6,20)
+
+  asymmetric_mobility_dummy_seiiar_pop <- seiiar_pop
+  save(asymmetric_mobility_dummy_seiiar_pop, file = file.path(base_loc, "asymmetric_mobility_dummy_seiiar_pop.rda"), compress = "xz")
+
+  asymmetric_mobility_dummy_mobility_matrix <- mobility_matrix
+  save(asymmetric_mobility_dummy_mobility_matrix, file = file.path(base_loc, "asymmetric_mobility_dummy_mobility_matrix.rda"), compress = "xz")
+
+  asymmetric_mobility_dummy_betas <- betas
+  save(asymmetric_mobility_dummy_betas, file = file.path(base_loc, "asymmetric_mobility_dummy_betas.rda"), compress = "xz")
+}

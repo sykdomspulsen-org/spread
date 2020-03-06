@@ -5,6 +5,25 @@
 
 using namespace Rcpp;
 
+// asymmetric_mobility_cpp
+DataFrame asymmetric_mobility_cpp(DataFrame seiiar_pop, List mobility_matrix, NumericVector betas, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
+RcppExport SEXP _spread_asymmetric_mobility_cpp(SEXP seiiar_popSEXP, SEXP mobility_matrixSEXP, SEXP betasSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type seiiar_pop(seiiar_popSEXP);
+    Rcpp::traits::input_parameter< List >::type mobility_matrix(mobility_matrixSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type betas(betasSEXP);
+    Rcpp::traits::input_parameter< float >::type a(aSEXP);
+    Rcpp::traits::input_parameter< float >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< float >::type asymptomaticProb(asymptomaticProbSEXP);
+    Rcpp::traits::input_parameter< float >::type asymptomaticRelativeInfectiousness(asymptomaticRelativeInfectiousnessSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
 // commuter_cpp
 DataFrame commuter_cpp(DataFrame seiiar_home, DataFrame seiiar_commuters, float beta, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M, bool verbose);
 RcppExport SEXP _spread_commuter_cpp(SEXP seiiar_homeSEXP, SEXP seiiar_commutersSEXP, SEXP betaSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP, SEXP verboseSEXP) {
@@ -27,6 +46,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_spread_asymmetric_mobility_cpp", (DL_FUNC) &_spread_asymmetric_mobility_cpp, 9},
     {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 10},
     {NULL, NULL, 0}
 };
