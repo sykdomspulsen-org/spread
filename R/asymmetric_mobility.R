@@ -18,8 +18,7 @@
 #'   infectious_period = 3.0,
 #'   asymptomatic_prob = 0,
 #'   asymptomatic_relative_infectiousness = 0,
-#'   N = 1,
-#'   simulations = 1
+#'   N = 1
 #' )
 #' @import data.table
 #' @export
@@ -31,8 +30,7 @@ asymmetric_mobility <- function(
   infectious_period = 3.0,
   asymptomatic_prob = 0,
   asymptomatic_relative_infectiousness = 0,
-  N = 1,
-  simulations = 1) {
+  N = 1) {
 
   stopifnot(length(mobility_matrix) == length(betas))
 

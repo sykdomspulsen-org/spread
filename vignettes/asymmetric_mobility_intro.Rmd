@@ -1,0 +1,67 @@
+---
+title: "asymmetric_mobility_intro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{asymmetric_mobility_intro}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(spread)
+```
+
+## Required data
+
+The initial values for all geographic locations.
+
+```{r}
+spread::asymmetric_mobility_dummy_seiiar_pop
+```
+
+A list containing 1 mobility matrix per time period (4 time periods per day, 5 days = 20 time periods).
+
+The mobility matrix must contain all non-diagonal links (i.e. every geographical location combination must be included, except for people "staying at home")
+
+```{r}
+length(spread::asymmetric_mobility_dummy_mobility_matrix)
+spread::asymmetric_mobility_dummy_mobility_matrix[[1]]
+```
+
+One beta per time period.
+
+```{r}
+spread::asymmetric_mobility_dummy_betas
+```
+
+## Example
+
+```{r}
+d <- spread::asymmetric_mobility(
+  seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
+  mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
+  betas = spread::asymmetric_mobility_dummy_betas,
+  latent_period = 1.9,
+  infectious_period = 3.0,
+  asymptomatic_prob = 0,
+  asymptomatic_relative_infectiousness = 0,
+  N = 1
+)
+```
+
+`b_*` variables represent the status of people belonging to a particular geographical location.
+
+`c_*` variables represent the current status of all the people existing in that geographical location at that time point.
+
+```{r}
+print(d)
+```

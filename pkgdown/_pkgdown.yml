@@ -6,10 +6,12 @@ navbar:
       href: index.html
     - text: "Articles"
       menu:
-      - text: "Commuter Model"
+      - text: "Commuter Model Intro"
         href: articles/commuter_model.html
-      - text: "Vax Data for Commuter Model"
+      - text: "Commuter Model With Vax Data"
         href: articles/including_vax.html
+      - text: "Asymmetric Mobility Intro"
+        href: articles/asymmetric_mobility_intro.html
       - text: "Simple Branching Process Model"
         href: articles/branching_process.html
     - text: "Reference"
