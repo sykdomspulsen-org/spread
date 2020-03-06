@@ -373,7 +373,7 @@ DataFrame asymmetric_mobility_cpp(
 
 	for (int i = 0; i < seiiar_pop.rows(); i++) {
 	  string name = std::string(names[i]);
-	  G.add_node(name, 0);
+	  G.add_node(name, pop_S[i]+pop_E[i]+pop_I[i]+pop_Ia[i]+pop_R[i]);
 	  n+= 1;
 	}
 
@@ -519,7 +519,7 @@ DataFrame asymmetric_mobility_cpp(
 
 		// Seed the epidemic
 		for(int i = 0; i < n; ++i){
-		  G_current.locations[i].S = pop_S[i];
+		  G_current.locations[i].S -= pop_E[i] + pop_I[i] + pop_Ia[i] + pop_R[i];
 		  G_current.locations[i].E = pop_E[i];
 		  G_current.locations[i].I = pop_I[i];
 		  G_current.locations[i].Ia = pop_Ia[i];
@@ -982,7 +982,7 @@ DataFrame asymmetric_mobility_cpp(
       res_names[index] = names[i];
       res_week[index] = k/(7*4)+1;
       res_day[index] = k/4+1;
-      res_time[index] = (k%4)*6;
+      res_time[index] = (k%4)+1;
 
       res_B_S[index] = values[i][k][0]*1.0/N;
       res_B_E[index] = values[i][k][1]*1.0/N;
@@ -1060,7 +1060,7 @@ seiiar_pop <- data.table::data.table(
   "location_code" = c("a","b","c"),
   "S" = c(1000,1000,2000),
   "E" = c(0,0,0),
-  "I" = c(50,0,0),
+  "I" = c(0,0,0),
   "Ia" = c(0,0,0),
   "R" = c(0,0,0)
 )
@@ -1068,7 +1068,7 @@ seiiar_pop <- data.table::data.table(
 temp <- data.table::data.table(
   from = c("a","a","b","b","c","c"),
   to = c("b","c","a","c","a","b"),
-  n = c(50,10,10,10,10,10)
+  n = c(10,10,10,10,10,10)
 )
 mobility_matrix <- vector("list",length=20)
 for(i in seq_along(mobility_matrix)){
@@ -1090,4 +1090,10 @@ d <- asymmetric_mobility_cpp(
 )
 d
 */
+
+
+
+
+
+
 
