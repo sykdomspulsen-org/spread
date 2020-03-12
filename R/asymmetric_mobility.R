@@ -3,6 +3,7 @@
 #' For more information, look at \code{vignette("commuter_model","spread")}
 #' @param seiiar_pop Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
+#' @param seed_matrix matrix of seeding cases per date
 #' @param betas Vector (1 entry for each time period). Float, infection parameter, 0.6
 #' @param latent_period Float, 1.9
 #' @param infectious_period Float, 3
@@ -25,6 +26,7 @@
 asymmetric_mobility <- function(
                                 seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
                                 mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
+                                seed_matrix= NULL ,
                                 betas = spread::asymmetric_mobility_dummy_betas,
                                 latent_period = 1.9,
                                 infectious_period = 3.0,
@@ -40,6 +42,7 @@ asymmetric_mobility <- function(
   retval <- asymmetric_mobility_cpp(
     seiiar_pop = seiiar_pop,
     mobility_matrix = mobility_matrix,
+    seed_matrix=seed_matrix,
     betas = betas,
     a = a,
     gamma = gamma,
