@@ -332,6 +332,7 @@ void AMGraph::count_everyone(string msg){
 //' asymmetric_mobility_cpp
 //' @param seiiar_pop Data.frame
 //' @param mobility_matrix List of data.frames
+//' @param seed_matrix matrix of seeding cases per date
 //' @param betas Vector of floats, infection parameter, 0.6
 //' @param a Float, 1/latent period, 1/1.9
 //' @param gamma Float, 1/infectious period, 1/3
@@ -341,9 +342,10 @@ void AMGraph::count_everyone(string msg){
 //' @param M Int, Number of days
 //' @export
 // [[Rcpp::export]]
-DataFrame asymmetric_mobility_cpp(
+  DataFrame asymmetric_mobility_cpp(
     DataFrame seiiar_pop,
     List mobility_matrix,
+    NumericMatrix seed_matrix,
     NumericVector betas,
     float a,
     float gamma,
@@ -353,7 +355,6 @@ DataFrame asymmetric_mobility_cpp(
     int M=56
 ){
 	int n=0; //Number of locations
-
   // return a new data frame
   DataFrame empty = DataFrame::create(
     _["empty"]= 1
@@ -520,13 +521,21 @@ DataFrame asymmetric_mobility_cpp(
 		// Seed the epidemic
 		for(int i = 0; i < n; ++i){
 		  G_current.locations[i].S -= pop_E[i] + pop_I[i] + pop_Ia[i] + pop_R[i];
-		  G_current.locations[i].E = pop_E[i];
-		  G_current.locations[i].I = pop_I[i];
+		  G_current.locations[i].E  = pop_E[i];
+		  G_current.locations[i].I  = pop_I[i];
 		  G_current.locations[i].Ia = pop_Ia[i];
-		  G_current.locations[i].R = pop_R[i];
+		  G_current.locations[i].R  = pop_R[i];
 		}
 
 	for(int i_t = 0; i_t < 4 * M; ++i_t){
+	  if (i_t%4 == 0){
+	    for (int i = 0; i < n; ++i){
+	      if (G_current.locations[i].S != 0){
+	        G_current.locations[i].S -= seed_matrix(i_t/4, i);
+	        G_current.locations[i].I += seed_matrix(i_t/4, i);
+	      }
+	    }
+	  }
 		for (int i = 0; i < n; ++i){
 			int de2 = 0;
 			G_current.locations[i].seir_step(betas[i_t], a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, de2);
@@ -870,10 +879,18 @@ DataFrame asymmetric_mobility_cpp(
 						delete[] R_probs;
 
 						if(S_tmp + E_tmp + I_tmp + Ia_tmp + R_tmp < leftover){
-							G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp;
-							Rcout << " Added extra people in " << tmpstr << " index " << name1_index << endl;
-							Rcout << " Name1 index " << name1_index << " Name2 index " << name2_index << endl;
-							Rcout << " Number added " << leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp << endl;
+						  if( G_current.locations[name2_index].visitorsS[name1_index]  +
+                  G_current.locations[name2_index].visitorsE[name1_index]  +
+                  G_current.locations[name2_index].visitorsI[name1_index]  +
+                  G_current.locations[name2_index].visitorsIa[name1_index] +
+                  G_current.locations[name2_index].visitorsR[name1_index] < Nk)
+						  {
+							  G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp;
+						    Rcout << "---------------" << endl;
+							  Rcout << " Added extra people in " << tmpstr << " index " << name1_index << endl;
+							  Rcout << " Name1 index " << name1_index << " Name2 index " << name2_index << endl;
+							  Rcout << " Number added " << leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp << endl;
+							}
 						}
 					}
 				}
@@ -1077,18 +1094,18 @@ for(i in seq_along(mobility_matrix)){
 }
 
 betas <- rep(0.6,20)
-d <- asymmetric_mobility_cpp(
-  seiiar_pop = seiiar_pop,
-  mobility_matrix = mobility_matrix,
-  betas=betas,
-  a=1,
-  gamma=1,
-  asymptomaticProb = 0,
-  asymptomaticRelativeInfectiousness = 0,
-  N=1,
-  M=5
-)
-d
+# d <- asymmetric_mobility_cpp(
+#   seiiar_pop = seiiar_pop,
+#   mobility_matrix = mobility_matrix,
+#   betas=betas,
+#   a=1,
+#   gamma=1,
+#   asymptomaticProb = 0,
+#   asymptomaticRelativeInfectiousness = 0,
+#   N=1,
+#   M=5
+# )
+# d
 */
 
 
