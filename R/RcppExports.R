@@ -4,6 +4,7 @@
 #' asymmetric_mobility_cpp
 #' @param seiiar_pop Data.frame
 #' @param mobility_matrix List of data.frames
+#' @param seed_matrix matrix of seeding cases per date
 #' @param betas Vector of floats, infection parameter, 0.6
 #' @param a Float, 1/latent period, 1/1.9
 #' @param gamma Float, 1/infectious period, 1/3
@@ -12,8 +13,8 @@
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
 #' @export
-asymmetric_mobility_cpp <- function(seiiar_pop, mobility_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_asymmetric_mobility_cpp`, seiiar_pop, mobility_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+asymmetric_mobility_cpp <- function(seiiar_pop, mobility_matrix, seed_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
+    .Call(`_spread_asymmetric_mobility_cpp`, seiiar_pop, mobility_matrix, seed_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
 }
 
 #' commuter
