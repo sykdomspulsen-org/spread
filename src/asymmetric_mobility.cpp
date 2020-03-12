@@ -1094,18 +1094,18 @@ for(i in seq_along(mobility_matrix)){
 }
 
 betas <- rep(0.6,20)
-# d <- asymmetric_mobility_cpp(
-#   seiiar_pop = seiiar_pop,
-#   mobility_matrix = mobility_matrix,
-#   betas=betas,
-#   a=1,
-#   gamma=1,
-#   asymptomaticProb = 0,
-#   asymptomaticRelativeInfectiousness = 0,
-#   N=1,
-#   M=5
-# )
-# d
+d <- asymmetric_mobility_cpp(
+  seiiar_pop = seiiar_pop,
+  mobility_matrix = mobility_matrix,
+  betas=betas,
+  a=1,
+  gamma=1,
+  asymptomaticProb = 0,
+  asymptomaticRelativeInfectiousness = 0,
+  N=1,
+  M=5
+)
+d
 */
 
 
