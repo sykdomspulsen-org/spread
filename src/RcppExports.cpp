@@ -6,13 +6,14 @@
 using namespace Rcpp;
 
 // asymmetric_mobility_cpp
-DataFrame asymmetric_mobility_cpp(DataFrame seiiar_pop, List mobility_matrix, NumericVector betas, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
-RcppExport SEXP _spread_asymmetric_mobility_cpp(SEXP seiiar_popSEXP, SEXP mobility_matrixSEXP, SEXP betasSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
+DataFrame asymmetric_mobility_cpp(DataFrame seiiar_pop, List mobility_matrix, NumericMatrix seed_matrix, NumericVector betas, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
+RcppExport SEXP _spread_asymmetric_mobility_cpp(SEXP seiiar_popSEXP, SEXP mobility_matrixSEXP, SEXP seed_matrixSEXP, SEXP betasSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type seiiar_pop(seiiar_popSEXP);
     Rcpp::traits::input_parameter< List >::type mobility_matrix(mobility_matrixSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type seed_matrix(seed_matrixSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type betas(betasSEXP);
     Rcpp::traits::input_parameter< float >::type a(aSEXP);
     Rcpp::traits::input_parameter< float >::type gamma(gammaSEXP);
@@ -20,7 +21,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type asymptomaticRelativeInfectiousness(asymptomaticRelativeInfectiousnessSEXP);
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
+    rcpp_result_gen = Rcpp::wrap(asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, seed_matrix, betas, a, gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -46,7 +47,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spread_asymmetric_mobility_cpp", (DL_FUNC) &_spread_asymmetric_mobility_cpp, 9},
+    {"_spread_asymmetric_mobility_cpp", (DL_FUNC) &_spread_asymmetric_mobility_cpp, 10},
     {"_spread_commuter_cpp", (DL_FUNC) &_spread_commuter_cpp, 10},
     {NULL, NULL, 0}
 };
