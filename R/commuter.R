@@ -10,6 +10,8 @@ commuter_calculate_beta_from_r0 <- function(
   return(beta)
 }
 
+
+
 commuter_convert_seiiar <- function(
                                     seiiar = spread::norway_seiiar_oslo_2017_b2020,
                                     commuters = spread::norway_commuters_2017_b2020) {

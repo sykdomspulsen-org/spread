@@ -10,7 +10,7 @@
 using namespace Rcpp;
 using namespace std;
 
-default_random_engine generator(time(0));
+default_random_engine generator1(time(0));
 
 void cumulative_sumN(double **outarray, double **array, int n){
   /// REMEMBER to delete outarray after use
@@ -69,7 +69,7 @@ void se1e2iiar_sim(int &ds, int &de1e2, int &de1ia, int &de2i, int &dia, int &di
 }
 
 
-void rng_mvhyper(const int n[], int sum, int k, int **x){
+void rng_mvhyperN(const int n[], int sum, int k, int **x){
   int m = 6;
   int n_otr;
   unsigned int n1;
@@ -784,7 +784,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                 p[4] = G_prev.locations[name1_index].Ia;
                 p[5] = G_prev.locations[name1_index].R;
                 // Draw the number of travellers from each compartment
-                rng_mvhyper(p, sum, Nk - Nk_prev, &x);
+                rng_mvhyperN(p, sum, Nk - Nk_prev, &x);
                 G_current.locations[name2_index].visitorsS[name1_index] += x[0];
                 G_current.locations[name1_index].S -= x[0];
                 G_prev.locations[name1_index].S -= x[0];
@@ -867,7 +867,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
 
               // Draw the number of travellers from each compartment
               if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp > leftover){
-                rng_mvhyper(p, S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp, leftover, &x);
+                rng_mvhyperN(p, S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp, leftover, &x);
               }
               else{
                 x = p;
@@ -1053,7 +1053,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
             p[5] = G_prev.locations[name1_index].visitorsR[name2_index];
             sum = p[0] + p[1] + p[2] + p[3] + p[4] + p[5];
             // Draw the number of travellers from each compartment
-            rng_mvhyper(p, sum, Nk, &x);
+            rng_mvhyperN(p, sum, Nk, &x);
             G_current.locations[name2_index].S += x[0];
             G_current.locations[name2_index].E1 += x[1];
             G_current.locations[name2_index].E2 += x[2];

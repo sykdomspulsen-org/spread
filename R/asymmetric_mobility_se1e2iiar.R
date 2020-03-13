@@ -87,3 +87,23 @@ asymmetric_mobility_se1e2iiar <- function(
 
   return(retval)
 }
+
+
+se1e2iiaR_calculate_beta_from_r0 <- function(
+  r0,
+  a2 = a2,
+  gamma = gamma,
+  presymptomaticRelativeInfectiousness = presymptomatic_relative_infectiousness,
+  asymptomaticProb = asymptomatic_prob,
+  asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness) {
+
+  denominator <- presymptomaticRelativeInfectiousness*(1-asymptomaticProb)/a2 +
+                 (1 - asymptomaticProb)/gamma +
+                (asymptomaticRelativeInfectiousness*asymptomaticProb)/gamma
+
+  beta <- r0 /denominator
+  beta <- round(beta, 3)
+
+  return(beta)
+}
+
