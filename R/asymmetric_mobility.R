@@ -1,27 +1,26 @@
 convert_dynamic_seeds_to_seed_matrix <- function(
-  dynamic_seeds,
-  location_codes,
-  days
-){
+                                                 dynamic_seeds,
+                                                 location_codes,
+                                                 days) {
   skeleton <- data.table(expand.grid(
-    location_code=location_codes,
+    location_code = location_codes,
     day = days,
     stringsAsFactors = FALSE
   ))
 
-  if(!is.null(dynamic_seeds)){
+  if (!is.null(dynamic_seeds)) {
     retval <- merge(
       skeleton,
       dynamic_seeds,
-      by=c("location_code","day"),
-      all.x=T
+      by = c("location_code", "day"),
+      all.x = T
     )
-    retval[is.na(n),n:=0]
+    retval[is.na(n), n := 0]
   } else {
     retval <- skeleton
-    retval[,n:=0]
+    retval[, n := 0]
   }
-  retval <- dcast.data.table(retval, day~location_code, value.var="n")
+  retval <- dcast.data.table(retval, day ~ location_code, value.var = "n")
   retval <- as.matrix(retval)
   retval
 }
@@ -62,32 +61,31 @@ asymmetric_mobility <- function(
                                 asymptomatic_prob = 0,
                                 asymptomatic_relative_infectiousness = 0,
                                 N = 1) {
-
   stopifnot(length(mobility_matrix) == length(betas))
 
   a <- 1 / latent_period
   gamma <- 1 / infectious_period
   days_simulation <- length(betas) / 4
 
-  if(!inherits(seiiar_pop, "data.table")){
+  if (!inherits(seiiar_pop, "data.table")) {
     seiiar_pop <- data.table(seiiar_pop)
   }
   stopifnot(identical(
     names(seiiar_pop),
     c("location_code", "S", "E", "I", "Ia", "R")
   ))
-  data.table::setorder(seiiar_pop,location_code)
+  data.table::setorder(seiiar_pop, location_code)
 
   stopifnot(inherits(mobility_matrix, "list"))
-  for(i in seq_along(mobility_matrix)){
-    if(!inherits(mobility_matrix[[i]], "data.table")){
+  for (i in seq_along(mobility_matrix)) {
+    if (!inherits(mobility_matrix[[i]], "data.table")) {
       mobility_matrix[[i]] <- data.table(mobility_matrix[[i]])
     }
     stopifnot(identical(
       names(mobility_matrix[[i]]),
-      c("from","to","n")
+      c("from", "to", "n")
     ))
-    data.table::setorder(mobility_matrix[[i]],from,to)
+    data.table::setorder(mobility_matrix[[i]], from, to)
   }
 
   # create seed_matrix from dynamic_seeds
@@ -102,7 +100,7 @@ asymmetric_mobility <- function(
   retval <- asymmetric_mobility_cpp(
     seiiar_pop = seiiar_pop,
     mobility_matrix = mobility_matrix,
-    seed_matrix=seed_matrix,
+    seed_matrix = seed_matrix,
     betas = betas,
     a = a,
     gamma = gamma,

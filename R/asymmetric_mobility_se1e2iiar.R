@@ -29,18 +29,17 @@
 #' @import data.table
 #' @export
 asymmetric_mobility_se1e2iiar <- function(
-  se1e2iiar_pop = spread::asymmetric_mobility_dummy_se1e2iiar_pop,
-  mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
-  dynamic_seeds = NULL,
-  betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
-  latent_period = 2.0,
-  presymptomatic_period = 3.0,
-  infectious_period = 5.0,
-  presymptomatic_relative_infectiousness = 1.25,
-  asymptomatic_prob = 0.4,
-  asymptomatic_relative_infectiousness = 0.5,
-  N = 1) {
-
+                                          se1e2iiar_pop = spread::asymmetric_mobility_dummy_se1e2iiar_pop,
+                                          mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
+                                          dynamic_seeds = NULL,
+                                          betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
+                                          latent_period = 2.0,
+                                          presymptomatic_period = 3.0,
+                                          infectious_period = 5.0,
+                                          presymptomatic_relative_infectiousness = 1.25,
+                                          asymptomatic_prob = 0.4,
+                                          asymptomatic_relative_infectiousness = 0.5,
+                                          N = 1) {
   stopifnot(length(mobility_matrix) == length(betas))
 
   a1 <- 1 / latent_period
@@ -48,25 +47,25 @@ asymmetric_mobility_se1e2iiar <- function(
   gamma <- 1 / infectious_period
   days_simulation <- length(betas) / 4
 
-  if(!inherits(se1e2iiar_pop, "data.table")){
+  if (!inherits(se1e2iiar_pop, "data.table")) {
     se1e2iiar_pop <- data.table(se1e2iiar_pop)
   }
   stopifnot(identical(
     names(se1e2iiar_pop),
     c("location_code", "S", "E1", "E2", "I", "Ia", "R")
   ))
-  data.table::setorder(se1e2iiar_pop,location_code)
+  data.table::setorder(se1e2iiar_pop, location_code)
 
   stopifnot(inherits(mobility_matrix, "list"))
-  for(i in seq_along(mobility_matrix)){
-    if(!inherits(mobility_matrix[[i]], "data.table")){
+  for (i in seq_along(mobility_matrix)) {
+    if (!inherits(mobility_matrix[[i]], "data.table")) {
       mobility_matrix[[i]] <- data.table(mobility_matrix[[i]])
     }
     stopifnot(identical(
       names(mobility_matrix[[i]]),
-      c("from","to","n")
+      c("from", "to", "n")
     ))
-    data.table::setorder(mobility_matrix[[i]],from,to)
+    data.table::setorder(mobility_matrix[[i]], from, to)
   }
 
   # create seed_matrix from dynamic_seeds
@@ -81,7 +80,7 @@ asymmetric_mobility_se1e2iiar <- function(
   retval <- asymmetric_mobility_se1e2iiar_cpp(
     se1e2iiar_pop = se1e2iiar_pop,
     mobility_matrix = mobility_matrix,
-    seed_matrix=seed_matrix,
+    seed_matrix = seed_matrix,
     betas = betas,
     a1 = a1,
     a2 = a2,
@@ -114,7 +113,7 @@ asymmetric_mobility_se1e2iiar <- function(
       week,
       day
     )
-    ]
+  ]
   retval <- copy(retval)
   retval[, time := "23:59"]
   setcolorder(retval, c("location_code", "week", "day", "time"))
@@ -124,20 +123,18 @@ asymmetric_mobility_se1e2iiar <- function(
 
 
 se1e2iiaR_calculate_beta_from_r0 <- function(
-  r0,
-  a2 = a2,
-  gamma = gamma,
-  presymptomaticRelativeInfectiousness = presymptomatic_relative_infectiousness,
-  asymptomaticProb = asymptomatic_prob,
-  asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness) {
+                                             r0,
+                                             a2 = a2,
+                                             gamma = gamma,
+                                             presymptomaticRelativeInfectiousness = presymptomatic_relative_infectiousness,
+                                             asymptomaticProb = asymptomatic_prob,
+                                             asymptomaticRelativeInfectiousness = asymptomatic_relative_infectiousness) {
+  denominator <- presymptomaticRelativeInfectiousness * (1 - asymptomaticProb) / a2 +
+    (1 - asymptomaticProb) / gamma +
+    (asymptomaticRelativeInfectiousness * asymptomaticProb) / gamma
 
-  denominator <- presymptomaticRelativeInfectiousness*(1-asymptomaticProb)/a2 +
-                 (1 - asymptomaticProb)/gamma +
-                (asymptomaticRelativeInfectiousness*asymptomaticProb)/gamma
-
-  beta <- r0 /denominator
+  beta <- r0 / denominator
   beta <- round(beta, 3)
 
   return(beta)
 }
-

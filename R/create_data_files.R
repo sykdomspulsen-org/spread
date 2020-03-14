@@ -346,8 +346,8 @@ create_asymmetric_mobility_dummy_files <- function(base_loc) {
 
   asymmetric_mobility_dummy_dynamic_seeds <- data.table::data.table(
     "location_code" = c("a"),
-    "day" = c(3,7),
-    "n" = c(3,5)
+    "day" = c(3, 7),
+    "n" = c(3, 5)
   )
   save(asymmetric_mobility_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_dummy_dynamic_seeds.rda"), compress = "xz")
 }
@@ -432,8 +432,8 @@ create_asymmetric_mobility_se1e2iiar_dummy_files <- function(base_loc) {
 
   asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds <- data.table::data.table(
     "location_code" = c("a"),
-    "day" = c(3,7),
-    "n" = c(3,5)
+    "day" = c(3, 7),
+    "n" = c(3, 5)
   )
   save(asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds.rda"), compress = "xz")
 }
