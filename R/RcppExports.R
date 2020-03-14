@@ -2,9 +2,12 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' asymmetric_mobility_cpp
+#'
+#' Raw CPP function. Should not be called directly.
+#'
 #' @param seiiar_pop Data.frame
 #' @param mobility_matrix List of data.frames
-#' @param seed_matrix matrix of seeding cases per date
+#' @param seed_matrix matrix of seeding cases per date (row) per geographical location (column)
 #' @param betas Vector of floats, infection parameter, 0.6
 #' @param a Float, 1/latent period, 1/1.9
 #' @param gamma Float, 1/infectious period, 1/3
@@ -18,21 +21,24 @@ asymmetric_mobility_cpp <- function(seiiar_pop, mobility_matrix, seed_matrix, be
 }
 
 #' asymmetric_mobility_se1e2iiar_cpp
-#' @param seiiar_pop Data.frame
+#'
+#' Raw CPP function. Should not be called directly.
+#'
+#' @param se1e2iiar_pop Data.frame
 #' @param mobility_matrix List of data.frames
-#' @param seed_matrix matrix of seeding cases per date
+#' @param seed_matrix matrix of seeding cases per date per geographical location
 #' @param betas Vector of floats, infection parameter, 0.6
 #' @param a1 Float, 1/latent period, 1/2.0
 #' @param a2 Float, 1/presymptomatic period, 1/3.0
 #' @param gamma Float, 1/infectious period, 1/5.0
-#' @param presymptomaticRelativeInfectiousness
+#' @param presymptomaticRelativeInfectiousness Float, Relative infectiousness of presymptomatic infectious
 #' @param asymptomaticProb Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomaticRelativeInfectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
 #' @export
-asymmetric_mobility_se1e2iiar_cpp <- function(seiiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_asymmetric_mobility_se1e2iiar_cpp`, seiiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+asymmetric_mobility_se1e2iiar_cpp <- function(se1e2iiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
+    .Call(`_spread_asymmetric_mobility_se1e2iiar_cpp`, se1e2iiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
 }
 
 #' commuter

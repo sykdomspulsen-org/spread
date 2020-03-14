@@ -1,24 +1,27 @@
 #' asymmetric mobility SE1E2IIaR
 #'
 #' For more information, look at \code{vignette("commuter_model","spread")}
-#' @param seiiar_pop Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population
+#' @param se1e2iiar_pop Data frame containing `location_code`, `S`, `E1`, `E2`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
-#' @param seed_matrix matrix of seeding cases per date
+#' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
 #' @param betas Vector (1 entry for each time period). Float, infection parameter, 0.6
 #' @param latent_period Float, 2.0
 #' @param presymptomatic_period Float 3.0
 #' @param infectious_period Float, 5.0
-#' @param presymptomatic_relative_infectiousnes Float, relative infectiousness of presymptomatic
+#' @param presymptomatic_relative_infectiousness Float, relative infectiousness of presymptomatic
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.
 #' @examples
 #' spread::asymmetric_mobility_se1e2iiar(
-#'   seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
-#'   mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
-#'   betas = spread::asymmetric_mobility_dummy_betas,
-#'   latent_period = 1.9,
-#'   infectious_period = 3.0,
+#'   se1e2iiar_pop = spread::asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop,
+#'   mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
+#'   dynamic_seeds = spread::asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds,
+#'   betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,
+#'   latent_period = 2.0,
+#'   presymptomatic_period = 3.0,
+#'   infectious_period = 5.0,
+#'   presymptomatic_relative_infectiousness = 1,
 #'   asymptomatic_prob = 0,
 #'   asymptomatic_relative_infectiousness = 0,
 #'   N = 1
@@ -26,9 +29,9 @@
 #' @import data.table
 #' @export
 asymmetric_mobility_se1e2iiar <- function(
-  seiiar_pop = spread::asymmetric_mobility_dummy_se1e2iiar_pop,
+  se1e2iiar_pop = spread::asymmetric_mobility_dummy_se1e2iiar_pop,
   mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
-  seed_matrix= NULL,
+  dynamic_seeds = NULL,
   betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
   latent_period = 2.0,
   presymptomatic_period = 3.0,
@@ -37,6 +40,7 @@ asymmetric_mobility_se1e2iiar <- function(
   asymptomatic_prob = 0.4,
   asymptomatic_relative_infectiousness = 0.5,
   N = 1) {
+
   stopifnot(length(mobility_matrix) == length(betas))
 
   a1 <- 1 / latent_period
@@ -44,8 +48,38 @@ asymmetric_mobility_se1e2iiar <- function(
   gamma <- 1 / infectious_period
   days_simulation <- length(betas) / 4
 
+  if(!inherits(se1e2iiar_pop, "data.table")){
+    se1e2iiar_pop <- data.table(se1e2iiar_pop)
+  }
+  stopifnot(identical(
+    names(se1e2iiar_pop),
+    c("location_code", "S", "E1", "E2", "I", "Ia", "R")
+  ))
+  data.table::setorder(se1e2iiar_pop,location_code)
+
+  stopifnot(inherits(mobility_matrix, "list"))
+  for(i in seq_along(mobility_matrix)){
+    if(!inherits(mobility_matrix[[i]], "data.table")){
+      mobility_matrix[[i]] <- data.table(mobility_matrix[[i]])
+    }
+    stopifnot(identical(
+      names(mobility_matrix[[i]]),
+      c("from","to","n")
+    ))
+    data.table::setorder(mobility_matrix[[i]],from,to)
+  }
+
+  # create seed_matrix from dynamic_seeds
+  location_codes <- se1e2iiar_pop$location_code
+  days <- seq_along(mobility_matrix)
+  seed_matrix <- convert_dynamic_seeds_to_seed_matrix(
+    dynamic_seeds = dynamic_seeds,
+    location_codes = location_codes,
+    days = days
+  )
+
   retval <- asymmetric_mobility_se1e2iiar_cpp(
-    seiiar_pop = seiiar_pop,
+    se1e2iiar_pop = se1e2iiar_pop,
     mobility_matrix = mobility_matrix,
     seed_matrix=seed_matrix,
     betas = betas,

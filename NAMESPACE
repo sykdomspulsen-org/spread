@@ -3,6 +3,8 @@
 export("%>%")
 export(asymmetric_mobility)
 export(asymmetric_mobility_cpp)
+export(asymmetric_mobility_se1e2iiar)
+export(asymmetric_mobility_se1e2iiar_cpp)
 export(branching_process)
 export(commuter)
 export(commuter_cpp)

@@ -4,14 +4,16 @@
 \alias{asymmetric_mobility_cpp}
 \title{asymmetric_mobility_cpp}
 \usage{
-asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, betas, a, gamma,
-  asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
+asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, seed_matrix, betas, a,
+  gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
   M = 56L)
 }
 \arguments{
 \item{seiiar_pop}{Data.frame}
 
 \item{mobility_matrix}{List of data.frames}
+
+\item{seed_matrix}{matrix of seeding cases per date (row) per geographical location (column)}
 
 \item{betas}{Vector of floats, infection parameter, 0.6}
 
@@ -28,5 +30,5 @@ asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, betas, a, gamma,
 \item{M}{Int, Number of days}
 }
 \description{
-asymmetric_mobility_cpp
+Raw CPP function. Should not be called directly.
 }

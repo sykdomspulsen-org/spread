@@ -330,9 +330,12 @@ void AMGraph::count_everyone(string msg){
 }
 
 //' asymmetric_mobility_cpp
+//'
+//' Raw CPP function. Should not be called directly.
+//'
 //' @param seiiar_pop Data.frame
 //' @param mobility_matrix List of data.frames
-//' @param seed_matrix matrix of seeding cases per date
+//' @param seed_matrix matrix of seeding cases per date (row) per geographical location (column)
 //' @param betas Vector of floats, infection parameter, 0.6
 //' @param a Float, 1/latent period, 1/1.9
 //' @param gamma Float, 1/infectious period, 1/3
@@ -1093,10 +1096,13 @@ for(i in seq_along(mobility_matrix)){
   data.table::setnames(mobility_matrix[[i]],c("from","to","n"))
 }
 
+seed_matrix <- matrix(0, nrow = 10, ncol = 3)
+
 betas <- rep(0.6,20)
 d <- asymmetric_mobility_cpp(
   seiiar_pop = seiiar_pop,
   mobility_matrix = mobility_matrix,
+  seed_matrix = seed_matrix,
   betas=betas,
   a=1,
   gamma=1,

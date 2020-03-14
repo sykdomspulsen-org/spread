@@ -302,6 +302,16 @@ create_data_files_norway_2017 <- function(base_loc) {
 #'
 "asymmetric_mobility_dummy_betas"
 
+#' Fake dynamic seeds for asymmetric mobility
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{day}{Day seeding occurs.}
+#' \item{n}{Number of people.}
+#' }
+"asymmetric_mobility_dummy_dynamic_seeds"
+
 create_asymmetric_mobility_dummy_files <- function(base_loc) {
   seiiar_pop <- data.table::data.table(
     "location_code" = c("a", "b", "c"),
@@ -333,12 +343,19 @@ create_asymmetric_mobility_dummy_files <- function(base_loc) {
 
   asymmetric_mobility_dummy_betas <- betas
   save(asymmetric_mobility_dummy_betas, file = file.path(base_loc, "asymmetric_mobility_dummy_betas.rda"), compress = "xz")
+
+  asymmetric_mobility_dummy_dynamic_seeds <- data.table::data.table(
+    "location_code" = c("a"),
+    "day" = c(3,7),
+    "n" = c(3,5)
+  )
+  save(asymmetric_mobility_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_dummy_dynamic_seeds.rda"), compress = "xz")
 }
 
 
 
 
-#' A fake population for asymmetric mobility SE1E2IIaR
+#' A fake population for asymmetric mobility se1e2iiar
 #'
 #' @format
 #' \describe{
@@ -350,9 +367,9 @@ create_asymmetric_mobility_dummy_files <- function(base_loc) {
 #' \item{Ia}{Number of infectious and asymptomatic people.}
 #' \item{R}{Number of recovered people.}
 #' }
-"asymmetric_mobility_dummy_se1e2iiar_pop"
+"asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop"
 
-#' Fake mobility matrixes for asymmetric mobility SE1E2IIaR
+#' Fake mobility matrixes for asymmetric mobility se1e2iiar
 #'
 #' A list of 20 matrices (1 for each time period)
 #'
@@ -362,16 +379,26 @@ create_asymmetric_mobility_dummy_files <- function(base_loc) {
 #' \item{to}{Location code.}
 #' \item{n}{Number of people.}
 #' }
-"asymmetric_mobility_dummy_se1e2iiar_mobility_matrix"
+"asymmetric_mobility_se1e2iiar_dummy_mobility_matrix"
 
-#' Fake betas for asymmetric mobility
+#' Fake betas for asymmetric mobility se1e2iiar
 #'
 #' A vector of 20 betas (1 for each time period)
 #'
-"asymmetric_mobility_dummy_se1e2iiar_betas"
+"asymmetric_mobility_se1e2iiar_dummy_betas"
 
-create_asymmetric_mobility_dummy_se1e2iiar_files <- function(base_loc) {
-  seiiar_pop <- data.table::data.table(
+#' Fake dynamic seeds for asymmetric mobility se1e2iiar
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{day}{Day seeding occurs.}
+#' \item{n}{Number of people.}
+#' }
+"asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds"
+
+create_asymmetric_mobility_se1e2iiar_dummy_files <- function(base_loc) {
+  se1e2iiar_pop <- data.table::data.table(
     "location_code" = c("a", "b", "c"),
     "S" = c(1000, 1000, 2000),
     "E1" = c(0, 0, 0),
@@ -394,12 +421,19 @@ create_asymmetric_mobility_dummy_se1e2iiar_files <- function(base_loc) {
 
   betas <- rep(0.6, 20)
 
-  asymmetric_mobility_dummy_se1e2iiar_pop <- seiiar_pop
-  save(asymmetric_mobility_dummy_se1e2iiar_pop, file = file.path(base_loc, "asymmetric_mobility_dummy_se1e2iiar_pop.rda"), compress = "xz")
+  asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop <- se1e2iiar_pop
+  save(asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop.rda"), compress = "xz")
 
-  asymmetric_mobility_dummy_se1e2iiar_mobility_matrix <- mobility_matrix
-  save(asymmetric_mobility_dummy_se1e2iiar_mobility_matrix, file = file.path(base_loc, "asymmetric_mobility_dummy_se1e2iiar_mobility_matrix.rda"), compress = "xz")
+  asymmetric_mobility_se1e2iiar_dummy_mobility_matrix <- mobility_matrix
+  save(asymmetric_mobility_se1e2iiar_dummy_mobility_matrix, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_mobility_matrix.rda"), compress = "xz")
 
-  asymmetric_mobility_dummy_se1e2iiar_betas <- betas
-  save(asymmetric_mobility_dummy_se1e2iiar_betas, file = file.path(base_loc, "asymmetric_mobility_dummy_se1e2iiar_betas.rda"), compress = "xz")
+  asymmetric_mobility_se1e2iiar_dummy_betas <- betas
+  save(asymmetric_mobility_se1e2iiar_dummy_betas, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_betas.rda"), compress = "xz")
+
+  asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds <- data.table::data.table(
+    "location_code" = c("a"),
+    "day" = c(3,7),
+    "n" = c(3,5)
+  )
+  save(asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds.rda"), compress = "xz")
 }

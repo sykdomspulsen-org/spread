@@ -424,14 +424,17 @@ void AMNGraph::count_everyone(string msg){
 }
 
 //' asymmetric_mobility_se1e2iiar_cpp
-//' @param seiiar_pop Data.frame
+//'
+//' Raw CPP function. Should not be called directly.
+//'
+//' @param se1e2iiar_pop Data.frame
 //' @param mobility_matrix List of data.frames
-//' @param seed_matrix matrix of seeding cases per date
+//' @param seed_matrix matrix of seeding cases per date per geographical location
 //' @param betas Vector of floats, infection parameter, 0.6
 //' @param a1 Float, 1/latent period, 1/2.0
 //' @param a2 Float, 1/presymptomatic period, 1/3.0
 //' @param gamma Float, 1/infectious period, 1/5.0
-//' @param presymptomaticRelativeInfectiousness
+//' @param presymptomaticRelativeInfectiousness Float, Relative infectiousness of presymptomatic infectious
 //' @param asymptomaticProb Float, Proportion/probability of asymptomatic given infectious
 //' @param asymptomaticRelativeInfectiousness Float, Relative infectiousness of asymptomatic infectious
 //' @param N Int = 1 int, Number of repetitions
@@ -439,7 +442,7 @@ void AMNGraph::count_everyone(string msg){
 //' @export
 // [[Rcpp::export]]
 DataFrame asymmetric_mobility_se1e2iiar_cpp(
-    DataFrame seiiar_pop,
+    DataFrame se1e2iiar_pop,
     List mobility_matrix,
     NumericMatrix seed_matrix,
     NumericVector betas,
@@ -458,20 +461,20 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     _["empty"]= 1
   );
 
-  StringVector names = seiiar_pop[0] ;
-  IntegerVector pop_S = seiiar_pop[1] ;
-  IntegerVector pop_E1 = seiiar_pop[2] ;
-  IntegerVector pop_E2 = seiiar_pop[3] ;
-  IntegerVector pop_I = seiiar_pop[4] ;
-  IntegerVector pop_Ia = seiiar_pop[5] ;
-  IntegerVector pop_R = seiiar_pop[6] ;
+  StringVector names = se1e2iiar_pop[0] ;
+  IntegerVector pop_S = se1e2iiar_pop[1] ;
+  IntegerVector pop_E1 = se1e2iiar_pop[2] ;
+  IntegerVector pop_E2 = se1e2iiar_pop[3] ;
+  IntegerVector pop_I = se1e2iiar_pop[4] ;
+  IntegerVector pop_Ia = se1e2iiar_pop[5] ;
+  IntegerVector pop_R = se1e2iiar_pop[6] ;
 
   AMNGraph G;
   string tmpstr;
   string tmpstr2;
   int pop;
 
-  for (int i = 0; i < seiiar_pop.rows(); i++) {
+  for (int i = 0; i < se1e2iiar_pop.rows(); i++) {
     string name = std::string(names[i]);
     G.add_node(name, pop_S[i]+pop_E1[i] + pop_E2[i] +pop_I[i]+pop_Ia[i]+pop_R[i]);
     n+= 1;
@@ -1233,7 +1236,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
 
 
 /*** R
-seiiar_pop <- data.table::data.table(
+se1e2iiar_pop <- data.table::data.table(
   "location_code" = c("a","b","c"),
   "S" = c(1000,1000,2000),
   "E1" = c(0,0,0),
@@ -1254,11 +1257,13 @@ for(i in seq_along(mobility_matrix)){
   data.table::setnames(mobility_matrix[[i]],c("from","to","n"))
 }
 
+seed_matrix <- matrix(0, nrow = 10, ncol = 3)
+
 betas <- rep(0.6,10 * 4)
 d <- asymmetric_mobility_se1e2iiar_cpp(
-  seiiar_pop = seiiar_pop,
+  se1e2iiar_pop = se1e2iiar_pop,
   mobility_matrix = mobility_matrix,
-  seed_matrix = matrix(0, nrow = 10, ncol = 3),
+  seed_matrix = seed_matrix,
   betas=betas,
   a1=1/2.0,
   a2 = 1/3.0,

@@ -7,6 +7,7 @@
 
   asymmetric_mobility(seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
   mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
+  dynamic_seeds = NULL,
   betas = spread::asymmetric_mobility_dummy_betas, latent_period = 1.9,
   infectious_period = 3, asymptomatic_prob = 0,
   asymptomatic_relative_infectiousness = 0, N = 1)
@@ -15,6 +16,8 @@
 \item{seiiar_pop}{Data frame containing `location_code`, `S`, `E`, `I`, `Ia`, and `R` for the entire population}
 
 \item{mobility_matrix}{List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.}
+
+\item{dynamic_seeds}{Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)}
 
 \item{betas}{Vector (1 entry for each time period). Float, infection parameter, 0.6}
 
@@ -35,6 +38,7 @@ For more information, look at \code{vignette("commuter_model","spread")}
 spread::asymmetric_mobility(
   seiiar_pop = spread::asymmetric_mobility_dummy_seiiar_pop,
   mobility_matrix = spread::asymmetric_mobility_dummy_mobility_matrix,
+  dynamic_seeds = spread::asymmetric_mobility_dummy_dynamic_seeds,
   betas = spread::asymmetric_mobility_dummy_betas,
   latent_period = 1.9,
   infectious_period = 3.0,
