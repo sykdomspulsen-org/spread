@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 #include "solveig_shared.h"
 
+// [[Rcpp::plugins(cpp11)]]
+
  //~ * Compile with:
 //~ g++ -O3 -Wall -I/usr/local/Cellar/gsl/1.16/include -c commuter_mobphone.cpp
 //~ * g++ -O3 commuter_mobphone.o -lgsl
