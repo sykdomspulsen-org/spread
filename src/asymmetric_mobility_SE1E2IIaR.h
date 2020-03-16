@@ -38,7 +38,7 @@ public:
   AMNLocation(string name_, int Shome);
 
   void print();
-  void seir_step(float beta, float a1, float a2, float gamma, float presymptomaticRelativeInfectiousness, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int &de2);
+  void seir_step(float beta, float a1, float a2, float gamma, float presymptomaticRelativeInfectiousness, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int &de2, int &dea);
 };
 
 
