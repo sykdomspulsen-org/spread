@@ -91,6 +91,15 @@ asymmetric_mobility_se1e2iiar <- function(
     N = N,
     M = days_simulation
   )
+  retval_incidence <- retval[,.(
+    c_incidence = sum(c_incidence)
+  ),
+  keyby=.(
+    location_code,
+    week,
+    day
+  )]
+
   retval <- retval[
     time == 4,
     .(
@@ -105,14 +114,19 @@ asymmetric_mobility_se1e2iiar <- function(
       c_E2 = c_E2,
       c_I = c_I,
       c_Ia = c_Ia,
-      c_R = c_R,
-      c_incidence = sum(c_incidence)
+      c_R = c_R
     ),
     keyby = .(
       location_code,
       week,
       day
     )
+  ]
+  retval[retval_incidence,on=c(
+    "location_code",
+    "week",
+    "day"
+  ), c_incidence:=c_incidence
   ]
   retval <- copy(retval)
   retval[, time := "23:59"]

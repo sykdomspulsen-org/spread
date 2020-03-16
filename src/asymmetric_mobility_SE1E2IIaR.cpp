@@ -639,6 +639,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
           if (G_current.locations[i].S != 0){
             G_current.locations[i].S -= seed_matrix(i_t/4, i);
             G_current.locations[i].I += seed_matrix(i_t/4, i);
+            values[i][i_t][12] += seed_matrix(i_t/4, i);
           }
         }
       }
