@@ -134,7 +134,8 @@ void AMNLocation::seir_step(
     float presymptomaticRelativeInfectiousness,
     float asymptomaticProb,
     float asymptomaticRelativeInfectiousness,
-    int &de2){ // Return symptomatic incidence
+    int &de2,
+    int &dea){ // Return symptomatic and asymptomatic incidence
   int S_tmp = S;
   int E1_tmp = E1;
   int E2_tmp = E2;
@@ -185,6 +186,7 @@ void AMNLocation::seir_step(
   // Run the SEIR step
   se1e2iiar_sim(ds, de1e2, de1ia, de2i, dia, di, S_tmp, E1_tmp, E2_tmp, Ia_tmp, I_tmp, beta, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, pop_tmp, 6.0/24.0);
   de2 = de2i;
+  dea = de1ia; 
   //Distribute the transitions
   double *probs = new double[num + 1];
   double *probs_cum = new double[num + 1];
@@ -561,6 +563,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 5 = 6, 7 = E1, 8 = E2,  9 = I, 10 = Ia, 11 = R, for currently in kommune.
   /// 12 = symptomatic incidence occurring in a kommune;
+  /// 13 = asymptomatic incidence occuring in a kommune; 
   for(int i = 0; i < n; ++i){
     values[i] = new int*[M * 4]; // 4 * M, stored for all 6-hour intervals.
     peak_date[i] = new int[N];
@@ -583,6 +586,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       values[i][k][10] = 0;
       values[i][k][11] = 0;
       values[i][k][12] = 0;
+      values[i][k][13] = 0;
     }
   }
 
@@ -645,7 +649,8 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       }
       for (int i = 0; i < n; ++i){
         int de2 = 0;
-        G_current.locations[i].seir_step(betas[i_t], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2);
+        int dea = 0;
+        G_current.locations[i].seir_step(betas[i_t], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
         values[i][i_t][0] += G_current.locations[i].S;
         values[i][i_t][1] += G_current.locations[i].E1;
         values[i][i_t][2] += G_current.locations[i].E2;
@@ -665,6 +670,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
         }
 
         values[i][i_t][12] += de2;
+        values[i][i_t][13] += dea; 
         bonds[i_sim][i_t] += G_current.locations[i].I + G_current.locations[i].Ia;
 
         int num = G_current.locations[i].visitorsS.size();
@@ -1134,6 +1140,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 6 = S, 7 = E1, 8 = E2, 9 = I, 10 = Ia, 11 = R, for currently in kommune.
   /// 12 = symptomatic incidence occurring in a kommune;
+  /// 13 = asymptomatic incidence occurring in a kommune;
 
   StringVector res_names(n*4*M);
   IntegerVector res_week(n*4*M);
@@ -1152,6 +1159,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   IntegerVector res_C_Ia(n*4*M);
   IntegerVector res_C_R(n*4*M);
   IntegerVector res_INCIDENCE(n*4*M);
+  IntegerVector res_as_incidence(n*4*M);
 
   int index=0;
   for(int i=0; i < n; ++i){
@@ -1176,6 +1184,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       res_C_R[index] = values[i][k][11]*1.0/N;
 
       res_INCIDENCE[index] = values[i][k][12]*1.0/N;
+      res_as_incidence[index] = values[i][k][13]*1.0/N;
 
       index++;
     }
@@ -1199,7 +1208,8 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     _["c_I"]= res_C_I,
     _["c_Ia"]= res_C_Ia,
     _["c_R"]= res_C_R,
-    _["c_incidence"]= res_INCIDENCE
+    _["c_incidence"]= res_INCIDENCE,
+    _["c_as_incidence"]= res_as_incidence
   );
 
 
