@@ -37,6 +37,29 @@
 
 \item{N}{Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.}
 }
+\value{
+A data.table containing the following variables:
+\describe{
+\item{location_code}{Location code}
+\item{week}{Week number}
+\item{day}{Day number}
+\item{time}{Time of reporting (23:59)}
+\item{b_S}{Susceptibles belonging to location code}
+\item{b_E1}{E1s belonging to location code}
+\item{b_E2}{E2s belonging to location code}
+\item{b_I}{Infectious (symptomatic) belonging to location code}
+\item{b_Ia}{Infectious (asymptomatic) belonging to location code}
+\item{b_R}{Recovered belonging to location code}
+\item{c_S}{Susceptibles currently in this location code}
+\item{c_E1}{E1s currently in this location code}
+\item{c_E2}{E2s currently in this location code}
+\item{c_I}{Infectious (symptomatic) currently in this location code}
+\item{c_Ia}{Infectious (asymptomatic) currently in this location code}
+\item{c_R}{Recovered currently in this location code}
+\item{c_symp_incidence}{Transition from E2 to I currently in this location code}
+\item{c_asymp_incidence}{Transition from E1 to Ia currently in this location code}
+}
+}
 \description{
 For more information, look at \code{vignette("commuter_model","spread")}
 }

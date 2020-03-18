@@ -1,6 +1,7 @@
 #' asymmetric mobility SE1E2IIaR
 #'
 #' For more information, look at \code{vignette("commuter_model","spread")}
+#'
 #' @param se1e2iiar_pop Data frame containing `location_code`, `S`, `E1`, `E2`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
 #' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
@@ -12,6 +13,27 @@
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
 #' @param asymptomatic_relative_infectiousness Float, Relative infectiousness of asymptomatic infectious
 #' @param N Int = 1 int, Number of internal simulations (average taken). This is generally used for parameter fitting.
+#' @return A data.table containing the following variables:
+#' \describe{
+#' \item{location_code}{Location code}
+#' \item{week}{Week number}
+#' \item{day}{Day number}
+#' \item{time}{Time of reporting (23:59)}
+#' \item{b_S}{Susceptibles belonging to location code}
+#' \item{b_E1}{E1s belonging to location code}
+#' \item{b_E2}{E2s belonging to location code}
+#' \item{b_I}{Infectious (symptomatic) belonging to location code}
+#' \item{b_Ia}{Infectious (asymptomatic) belonging to location code}
+#' \item{b_R}{Recovered belonging to location code}
+#' \item{c_S}{Susceptibles currently in this location code}
+#' \item{c_E1}{E1s currently in this location code}
+#' \item{c_E2}{E2s currently in this location code}
+#' \item{c_I}{Infectious (symptomatic) currently in this location code}
+#' \item{c_Ia}{Infectious (asymptomatic) currently in this location code}
+#' \item{c_R}{Recovered currently in this location code}
+#' \item{c_symp_incidence}{Transition from E2 to I currently in this location code}
+#' \item{c_asymp_incidence}{Transition from E1 to Ia currently in this location code}
+#' }
 #' @examples
 #' spread::asymmetric_mobility_se1e2iiar(
 #'   se1e2iiar_pop = spread::asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop,
