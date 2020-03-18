@@ -186,7 +186,7 @@ void AMNLocation::seir_step(
   // Run the SEIR step
   se1e2iiar_sim(ds, de1e2, de1ia, de2i, dia, di, S_tmp, E1_tmp, E2_tmp, Ia_tmp, I_tmp, beta, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, pop_tmp, 6.0/24.0);
   de2 = de2i;
-  dea = de1ia; 
+  dea = de1ia;
   //Distribute the transitions
   double *probs = new double[num + 1];
   double *probs_cum = new double[num + 1];
@@ -563,7 +563,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 5 = 6, 7 = E1, 8 = E2,  9 = I, 10 = Ia, 11 = R, for currently in kommune.
   /// 12 = symptomatic incidence occurring in a kommune;
-  /// 13 = asymptomatic incidence occuring in a kommune; 
+  /// 13 = asymptomatic incidence occuring in a kommune;
   for(int i = 0; i < n; ++i){
     values[i] = new int*[M * 4]; // 4 * M, stored for all 6-hour intervals.
     peak_date[i] = new int[N];
@@ -670,7 +670,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
         }
 
         values[i][i_t][12] += de2;
-        values[i][i_t][13] += dea; 
+        values[i][i_t][13] += dea;
         bonds[i_sim][i_t] += G_current.locations[i].I + G_current.locations[i].Ia;
 
         int num = G_current.locations[i].visitorsS.size();
@@ -1208,8 +1208,8 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     _["c_I"]= res_C_I,
     _["c_Ia"]= res_C_Ia,
     _["c_R"]= res_C_R,
-    _["c_incidence"]= res_INCIDENCE,
-    _["c_as_incidence"]= res_as_incidence
+    _["c_symp_incidence"]= res_INCIDENCE,
+    _["c_asymp_incidence"]= res_as_incidence
   );
 
 
