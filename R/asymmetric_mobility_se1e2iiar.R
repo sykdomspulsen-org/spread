@@ -92,11 +92,10 @@ asymmetric_mobility_se1e2iiar <- function(
 
   # create seed_matrix from dynamic_seeds
   location_codes <- se1e2iiar_pop$location_code
-  days <- seq_along(mobility_matrix)
   seed_matrix <- convert_dynamic_seeds_to_seed_matrix(
     dynamic_seeds = dynamic_seeds,
     location_codes = location_codes,
-    days = days
+    days = 1:days_simulation
   )
 
   retval <- asymmetric_mobility_se1e2iiar_cpp(
