@@ -21,6 +21,7 @@ convert_dynamic_seeds_to_seed_matrix <- function(
     retval[, n := 0]
   }
   retval <- dcast.data.table(retval, day ~ location_code, value.var = "n")
+  retval[, day := NULL]
   retval <- as.matrix(retval)
   retval
 }
