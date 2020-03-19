@@ -1,3 +1,7 @@
+# spread 2020.3.19
+
+typo in variable name
+
 # spread 2020.3.18
 
 Including asymptomatic incidence in asymmetric_mobility_se1e2iiar

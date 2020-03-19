@@ -155,7 +155,7 @@ asymmetric_mobility_se1e2iiar <- function(
     "location_code",
     "week",
     "day"
-  ), c_saymp_incidence := c_asymp_incidence]
+  ), c_asymp_incidence := c_asymp_incidence]
   retval <- copy(retval)
   retval[, time := "23:59"]
   setcolorder(retval, c("location_code", "week", "day", "time"))
