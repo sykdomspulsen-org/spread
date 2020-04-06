@@ -4,11 +4,16 @@
 \alias{branching_process}
 \title{Samples from a branching process model with a constant reproduction number}
 \usage{
-branching_process(initial_cases = 1, R0 = 3, dispersion = 1,
+branching_process(
+  initial_cases = 1,
+  R0 = 3,
+  dispersion = 1,
   serial_interval = distcrete::distcrete("gamma", interval = 1, shape =
-  epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$shape, scale =
-  epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$scale, w = 0),
-  days_simulation = 10, simulations = 1000)
+    epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$shape, scale =
+    epitrix::gamma_mucv2shapescale(mu = 8.4, cv = 3.4/8.4)$scale, w = 0),
+  days_simulation = 10,
+  simulations = 1000
+)
 }
 \arguments{
 \item{initial_cases}{Number of initial cases}

@@ -4,11 +4,13 @@
 \name{norway_commuters_2017_b2020}
 \alias{norway_commuters_2017_b2020}
 \title{Daily number of commuters from/to municipalities in Norway in 2017 (2020 borders)}
-\format{\describe{
+\format{
+\describe{
 \item{from}{Location code.}
 \item{to}{Location name.}
 \item{n}{Number of people.}
-}}
+}
+}
 \source{
 \url{https://www.ssb.no/statbank/table/03321}
 }
