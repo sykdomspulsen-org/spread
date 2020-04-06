@@ -62,7 +62,7 @@ asymmetric_mobility_se1e2iiar <- function(
                                           asymptomatic_prob = 0.4,
                                           asymptomatic_relative_infectiousness = 0.5,
                                           N = 1) {
-  stopifnot(length(mobility_matrix) >= nrow(betas))
+  stopifnot(length(mobility_matrix) >= length(unique(betas$day)))
 
   a1 <- 1 / latent_period
   a2 <- 1 / presymptomatic_period

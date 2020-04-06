@@ -5,7 +5,7 @@
 \alias{asymmetric_mobility_se1e2iiar_dummy_betas}
 \title{Fake betas for asymmetric mobility se1e2iiar}
 \format{
-An object of class \code{numeric} of length 20.
+An object of class \code{data.table} (inherits from \code{data.frame}) with 60 rows and 4 columns.
 }
 \usage{
 asymmetric_mobility_se1e2iiar_dummy_betas
