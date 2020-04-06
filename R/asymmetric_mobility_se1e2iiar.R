@@ -5,9 +5,9 @@
 #' @param se1e2iiar_pop Data frame containing `location_code`, `S`, `E1`, `E2`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
 #' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
-#' @param betas Vector (1 entry for each time period). Float, infection parameter, 0.6
-#' @param latent_period Float, 2.0
-#' @param presymptomatic_period Float 3.0
+#' @param betas Matrix which is number of locations times number of time points (1 entry for each location for each time period). Float, infection parameter, 0.6
+#' @param latent_period Float, 3.0
+#' @param presymptomatic_period Float 2.0
 #' @param infectious_period Float, 5.0
 #' @param presymptomatic_relative_infectiousness Float, relative infectiousness of presymptomatic
 #' @param asymptomatic_prob Float, Proportion/probability of asymptomatic given infectious
@@ -40,8 +40,8 @@
 #'   mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
 #'   dynamic_seeds = spread::asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds,
 #'   betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,
-#'   latent_period = 2.0,
-#'   presymptomatic_period = 3.0,
+#'   latent_period = 3.0,
+#'   presymptomatic_period = 2.0,
 #'   infectious_period = 5.0,
 #'   presymptomatic_relative_infectiousness = 1,
 #'   asymptomatic_prob = 0,
@@ -55,8 +55,8 @@ asymmetric_mobility_se1e2iiar <- function(
                                           mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
                                           dynamic_seeds = NULL,
                                           betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
-                                          latent_period = 2.0,
-                                          presymptomatic_period = 3.0,
+                                          latent_period = 3.0,
+                                          presymptomatic_period = 2.0,
                                           infectious_period = 5.0,
                                           presymptomatic_relative_infectiousness = 1.25,
                                           asymptomatic_prob = 0.4,
@@ -67,7 +67,7 @@ asymmetric_mobility_se1e2iiar <- function(
   a1 <- 1 / latent_period
   a2 <- 1 / presymptomatic_period
   gamma <- 1 / infectious_period
-  days_simulation <- length(betas) / 4
+  days_simulation <- dim(betas)[2] / 4
 
   if (!inherits(se1e2iiar_pop, "data.table")) {
     se1e2iiar_pop <- data.table(se1e2iiar_pop)

@@ -447,7 +447,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     DataFrame se1e2iiar_pop,
     List mobility_matrix,
     NumericMatrix seed_matrix,
-    NumericVector betas,
+    NumericMatrix betas, // Matrix number of locations * number of timesteps
     float a1,
     float a2,
     float gamma,
@@ -650,7 +650,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       for (int i = 0; i < n; ++i){
         int de2 = 0;
         int dea = 0;
-        G_current.locations[i].seir_step(betas[i_t], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
+        G_current.locations[i].seir_step(betas[i, i_t], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
         values[i][i_t][0] += G_current.locations[i].S;
         values[i][i_t][1] += G_current.locations[i].E1;
         values[i][i_t][2] += G_current.locations[i].E2;
@@ -1270,7 +1270,7 @@ for(i in seq_along(mobility_matrix)){
 
 seed_matrix <- matrix(0, nrow = 10, ncol = 3)
 
-betas <- rep(0.6,10 * 4)
+betas <- matrix(c(rep(0.6, 10 * 4), rep(0.4, 10 * 2), rep(0.2, 10 * 2), rep(0.7, 10 * 3), rep(0.4, 10)), nrow = 3, byrow = T)
 d <- asymmetric_mobility_se1e2iiar_cpp(
   se1e2iiar_pop = se1e2iiar_pop,
   mobility_matrix = mobility_matrix,

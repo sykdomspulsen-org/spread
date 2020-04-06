@@ -26,6 +26,19 @@ convert_dynamic_seeds_to_seed_matrix <- function(
   retval
 }
 
+convert_beta_to_matrix <- function(
+  betas,
+  location_codes,
+  days,
+  times) {
+  retval <- dcast.data.table(betas, day + time ~ location_code, value.var = "beta")
+  retval[, day := NULL]
+  retval[, time := NULL]
+  retval <- as.matrix(retval)
+  retval
+}
+
+
 #' asymmetric mobility
 #'
 #' For more information, look at \code{vignette("commuter_model","spread")}
