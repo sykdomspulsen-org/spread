@@ -432,7 +432,7 @@ void AMNGraph::count_everyone(string msg){
 //' @param se1e2iiar_pop Data.frame
 //' @param mobility_matrix List of data.frames
 //' @param seed_matrix matrix of seeding cases per date per geographical location
-//' @param betas Vector of floats, infection parameter, 0.6
+//' @param betas matrix of floats, number of time intervals times number of locations, infection parameter, 0.6
 //' @param a1 Float, 1/latent period, 1/2.0
 //' @param a2 Float, 1/presymptomatic period, 1/3.0
 //' @param gamma Float, 1/infectious period, 1/5.0
@@ -447,7 +447,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     DataFrame se1e2iiar_pop,
     List mobility_matrix,
     NumericMatrix seed_matrix,
-    NumericVector betas,
+    NumericMatrix betas, 
     float a1,
     float a2,
     float gamma,
@@ -650,7 +650,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       for (int i = 0; i < n; ++i){
         int de2 = 0;
         int dea = 0;
-        G_current.locations[i].seir_step(betas[i_t], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
+        G_current.locations[i].seir_step(betas[i_t, i], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
         values[i][i_t][0] += G_current.locations[i].S;
         values[i][i_t][1] += G_current.locations[i].E1;
         values[i][i_t][2] += G_current.locations[i].E2;
@@ -1270,7 +1270,15 @@ for(i in seq_along(mobility_matrix)){
 
 seed_matrix <- matrix(0, nrow = 10, ncol = 3)
 
-betas <- rep(0.6,10 * 4)
+dayEach <- rep(1:10, each = 4)
+timeEach <- rep(c(0, 6, 12, 18), 10)
+location_codes <- c(rep("a", 10 * 4), rep("b", 10 * 4), rep("c", 10 * 4))
+betas <- c(rep(0.6, 10 * 4), rep(0.4, 10 * 2), rep(0.2, 10 * 2), rep(0.7, 10 * 3), rep(0.4, 10))
+days <- rep(dayEach, 3)
+times <- rep(timeEach, 3)
+betaDF <- data.frame("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
+betas <- convert_beta_to_matrix(betaDF, location_codes = c("a", "b", "c"), days = 1:10, times = c(0, 6, 12, 18))
+
 d <- asymmetric_mobility_se1e2iiar_cpp(
   se1e2iiar_pop = se1e2iiar_pop,
   mobility_matrix = mobility_matrix,

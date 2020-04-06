@@ -4,11 +4,13 @@
 \name{asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds}
 \alias{asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds}
 \title{Fake dynamic seeds for asymmetric mobility se1e2iiar}
-\format{\describe{
+\format{
+\describe{
 \item{location_code}{Location code.}
 \item{day}{Day seeding occurs.}
 \item{n}{Number of people.}
-}}
+}
+}
 \usage{
 asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds
 }

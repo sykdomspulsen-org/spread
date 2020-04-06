@@ -4,10 +4,20 @@
 \alias{asymmetric_mobility_se1e2iiar_cpp}
 \title{asymmetric_mobility_se1e2iiar_cpp}
 \usage{
-asymmetric_mobility_se1e2iiar_cpp(se1e2iiar_pop, mobility_matrix,
-  seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness,
-  asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
-  M = 56L)
+asymmetric_mobility_se1e2iiar_cpp(
+  se1e2iiar_pop,
+  mobility_matrix,
+  seed_matrix,
+  betas,
+  a1,
+  a2,
+  gamma,
+  presymptomaticRelativeInfectiousness,
+  asymptomaticProb,
+  asymptomaticRelativeInfectiousness,
+  N = 1L,
+  M = 56L
+)
 }
 \arguments{
 \item{se1e2iiar_pop}{Data.frame}
@@ -16,7 +26,7 @@ asymmetric_mobility_se1e2iiar_cpp(se1e2iiar_pop, mobility_matrix,
 
 \item{seed_matrix}{matrix of seeding cases per date per geographical location}
 
-\item{betas}{Vector of floats, infection parameter, 0.6}
+\item{betas}{matrix of floats, number of time intervals times number of locations, infection parameter, 0.6}
 
 \item{a1}{Float, 1/latent period, 1/2.0}
 

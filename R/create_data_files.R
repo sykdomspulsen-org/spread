@@ -383,7 +383,7 @@ create_asymmetric_mobility_dummy_files <- function(base_loc) {
 
 #' Fake betas for asymmetric mobility se1e2iiar
 #'
-#' A vector of 20 betas (1 for each time period)
+#' A data table of 60 betas (1 for each time period for each of the three locations)
 #'
 "asymmetric_mobility_se1e2iiar_dummy_betas"
 
@@ -419,7 +419,13 @@ create_asymmetric_mobility_se1e2iiar_dummy_files <- function(base_loc) {
     data.table::setnames(mobility_matrix[[i]], c("from", "to", "n"))
   }
 
-  betas <- rep(0.6, 20)
+  dayEach <- rep(1:5, each = 4)
+  timeEach <- rep(c(0, 6, 12, 18), 5)
+  location_codes <- c(rep("a", 5 * 4), rep("b", 5 * 4), rep("c", 5 * 4))
+  betas <- c(rep(0.6, 5 * 4), rep(0.4, 5 * 2), rep(0.2, 5 * 2), rep(0.7, 5 * 3), rep(0.4, 5))
+  days <- rep(dayEach, 3)
+  times <- rep(timeEach, 3)
+  betas <- data.table("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
 
   asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop <- se1e2iiar_pop
   save(asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop.rda"), compress = "xz")

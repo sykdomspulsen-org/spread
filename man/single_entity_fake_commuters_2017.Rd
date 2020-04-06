@@ -4,11 +4,13 @@
 \name{single_entity_fake_commuters_2017}
 \alias{single_entity_fake_commuters_2017}
 \title{A fake commuter dataset for Norway as a single entity in 2017}
-\format{\describe{
+\format{
+\describe{
 \item{from}{Location code.}
 \item{to}{Location name.}
 \item{n}{Number of people.}
-}}
+}
+}
 \usage{
 single_entity_fake_commuters_2017
 }

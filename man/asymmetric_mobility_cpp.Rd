@@ -4,9 +4,18 @@
 \alias{asymmetric_mobility_cpp}
 \title{asymmetric_mobility_cpp}
 \usage{
-asymmetric_mobility_cpp(seiiar_pop, mobility_matrix, seed_matrix, betas, a,
-  gamma, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L,
-  M = 56L)
+asymmetric_mobility_cpp(
+  seiiar_pop,
+  mobility_matrix,
+  seed_matrix,
+  betas,
+  a,
+  gamma,
+  asymptomaticProb,
+  asymptomaticRelativeInfectiousness,
+  N = 1L,
+  M = 56L
+)
 }
 \arguments{
 \item{seiiar_pop}{Data.frame}

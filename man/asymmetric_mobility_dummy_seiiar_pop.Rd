@@ -4,14 +4,16 @@
 \name{asymmetric_mobility_dummy_seiiar_pop}
 \alias{asymmetric_mobility_dummy_seiiar_pop}
 \title{A fake population for asymmetric mobility}
-\format{\describe{
+\format{
+\describe{
 \item{location_code}{Location code.}
 \item{S}{Number of susceptible people.}
 \item{E}{Number of exposed people.}
 \item{I}{Number of infectious and symptomatic people.}
 \item{Ia}{Number of infectious and asymptomatic people.}
 \item{R}{Number of recovered people.}
-}}
+}
+}
 \usage{
 asymmetric_mobility_dummy_seiiar_pop
 }

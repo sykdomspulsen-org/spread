@@ -27,7 +27,7 @@ asymmetric_mobility_cpp <- function(seiiar_pop, mobility_matrix, seed_matrix, be
 #' @param se1e2iiar_pop Data.frame
 #' @param mobility_matrix List of data.frames
 #' @param seed_matrix matrix of seeding cases per date per geographical location
-#' @param betas Vector of floats, infection parameter, 0.6
+#' @param betas matrix of floats, number of time intervals times number of locations, infection parameter, 0.6
 #' @param a1 Float, 1/latent period, 1/2.0
 #' @param a2 Float, 1/presymptomatic period, 1/3.0
 #' @param gamma Float, 1/infectious period, 1/5.0
