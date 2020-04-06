@@ -76,7 +76,7 @@ asymmetric_mobility_se1e2iiar <- function(
     names(betas),
     c("location_code", "day", "time", "beta")
   ))
-  
+
   if (!inherits(se1e2iiar_pop, "data.table")) {
     se1e2iiar_pop <- data.table(se1e2iiar_pop)
   }
@@ -105,7 +105,7 @@ asymmetric_mobility_se1e2iiar <- function(
     location_codes = location_codes,
     days = 1:days_simulation
   )
-  
+
   # create beta_matrix from betas data frame
   location_codes <- se1e2iiar_pop$location_code
   beta_matrix <- convert_beta_to_matrix(
@@ -114,7 +114,7 @@ asymmetric_mobility_se1e2iiar <- function(
     days = 1:days_simulation,
     times = c(0, 6, 12, 18)
   )
-  
+
 
   retval <- asymmetric_mobility_se1e2iiar_cpp(
     se1e2iiar_pop = se1e2iiar_pop,

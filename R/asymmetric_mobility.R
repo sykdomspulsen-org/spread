@@ -27,10 +27,10 @@ convert_dynamic_seeds_to_seed_matrix <- function(
 }
 
 convert_beta_to_matrix <- function(
-  betas,
-  location_codes,
-  days,
-  times) {
+                                   betas,
+                                   location_codes,
+                                   days,
+                                   times) {
   retval <- dcast.data.table(data.table(betas), day + time ~ location_code, value.var = "beta")
   retval[, day := NULL]
   retval[, time := NULL]
