@@ -5,7 +5,7 @@
 #' @param se1e2iiar_pop Data frame containing `location_code`, `S`, `E1`, `E2`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
 #' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
-#' @param betas Matrix which is number of locations times number of time points (1 entry for each location for each time period). Float, infection parameter, 0.6
+#' @param betas Data frame with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6
 #' @param latent_period Float, 3.0
 #' @param presymptomatic_period Float 2.0
 #' @param infectious_period Float, 5.0
@@ -62,13 +62,21 @@ asymmetric_mobility_se1e2iiar <- function(
                                           asymptomatic_prob = 0.4,
                                           asymptomatic_relative_infectiousness = 0.5,
                                           N = 1) {
-  stopifnot(length(mobility_matrix) == length(betas))
+  stopifnot(length(mobility_matrix) >= nrow(betas))
 
   a1 <- 1 / latent_period
   a2 <- 1 / presymptomatic_period
   gamma <- 1 / infectious_period
-  days_simulation <- dim(betas)[2] / 4
+  days_simulation <- length(unique(betas$day))
 
+  if (!inherits(betas, "data.table")) {
+    betas <- data.table(betas)
+  }
+  stopifnot(identical(
+    names(betas),
+    c("location_code", "day", "time", "beta")
+  ))
+  
   if (!inherits(se1e2iiar_pop, "data.table")) {
     se1e2iiar_pop <- data.table(se1e2iiar_pop)
   }
@@ -97,12 +105,22 @@ asymmetric_mobility_se1e2iiar <- function(
     location_codes = location_codes,
     days = 1:days_simulation
   )
+  
+  # create beta_matrix from betas data frame
+  location_codes <- se1e2iiar_pop$location_code
+  beta_matrix <- convert_beta_to_matrix(
+    betas = betas,
+    location_codes = location_codes,
+    days = 1:days_simulation,
+    times = c(0, 6, 12, 18)
+  )
+  
 
   retval <- asymmetric_mobility_se1e2iiar_cpp(
     se1e2iiar_pop = se1e2iiar_pop,
     mobility_matrix = mobility_matrix,
     seed_matrix = seed_matrix,
-    betas = betas,
+    betas = beta_matrix,
     a1 = a1,
     a2 = a2,
     gamma = gamma,
