@@ -650,7 +650,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       for (int i = 0; i < n; ++i){
         int de2 = 0;
         int dea = 0;
-        G_current.locations[i].seir_step(betas[i_t, i], a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
+        G_current.locations[i].seir_step(betas(i_t, i), a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, de2, dea);
         values[i][i_t][0] += G_current.locations[i].S;
         values[i][i_t][1] += G_current.locations[i].E1;
         values[i][i_t][2] += G_current.locations[i].E2;
@@ -1276,7 +1276,8 @@ location_codes <- c(rep("a", 10 * 4), rep("b", 10 * 4), rep("c", 10 * 4))
 betas <- c(rep(0.6, 10 * 4), rep(0.4, 10 * 2), rep(0.2, 10 * 2), rep(0.7, 10 * 3), rep(0.4, 10))
 days <- rep(dayEach, 3)
 times <- rep(timeEach, 3)
-betaDF <- data.frame("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
+betaDF <- data.table("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
+betaDF = betaDF[order(betaDF$day), ]
 betas <- convert_beta_to_matrix(betaDF, location_codes = c("a", "b", "c"), days = 1:10, times = c(0, 6, 12, 18))
 
 d <- asymmetric_mobility_se1e2iiar_cpp(
