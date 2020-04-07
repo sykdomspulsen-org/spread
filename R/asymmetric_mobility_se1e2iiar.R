@@ -5,7 +5,7 @@
 #' @param se1e2iiar_pop Data frame containing `location_code`, `S`, `E1`, `E2`, `I`, `Ia`, and `R` for the entire population
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
 #' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
-#' @param betas Data frame with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6
+#' @param betas Data table with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6
 #' @param latent_period Float, 3.0
 #' @param presymptomatic_period Float 2.0
 #' @param infectious_period Float, 5.0
