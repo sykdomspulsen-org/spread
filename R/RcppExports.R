@@ -37,8 +37,8 @@ asymmetric_mobility_cpp <- function(seiiar_pop, mobility_matrix, seed_matrix, be
 #' @param N Int = 1 int, Number of repetitions
 #' @param M Int, Number of days
 #' @export
-asymmetric_mobility_se1e2iiar_cpp <- function(se1e2iiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
-    .Call(`_spread_asymmetric_mobility_se1e2iiar_cpp`, se1e2iiar_pop, mobility_matrix, seed_matrix, betas, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
+asymmetric_mobility_se1e2iiar_cpp <- function(se1e2iiar_pop, mobility_matrix, seed_matrix, betas, inputSeed, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N = 1L, M = 56L) {
+    .Call(`_spread_asymmetric_mobility_se1e2iiar_cpp`, se1e2iiar_pop, mobility_matrix, seed_matrix, betas, inputSeed, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, N, M)
 }
 
 #' commuter

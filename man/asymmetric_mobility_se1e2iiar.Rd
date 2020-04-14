@@ -9,6 +9,7 @@ asymmetric_mobility_se1e2iiar(
   mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
   dynamic_seeds = NULL,
   betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
+  inputSeed = as.numeric(Sys.time()),
   latent_period = 3,
   presymptomatic_period = 2,
   infectious_period = 5,
@@ -25,7 +26,9 @@ asymmetric_mobility_se1e2iiar(
 
 \item{dynamic_seeds}{Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)}
 
-\item{betas}{Data frame with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6}
+\item{betas}{Data table with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6}
+
+\item{inputSeed}{Integer with seed for cpp code}
 
 \item{latent_period}{Float, 3.0}
 
@@ -73,6 +76,7 @@ spread::asymmetric_mobility_se1e2iiar(
   mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
   dynamic_seeds = spread::asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds,
   betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,
+  inputSeed = 123,
   latent_period = 3.0,
   presymptomatic_period = 2.0,
   infectious_period = 5.0,
