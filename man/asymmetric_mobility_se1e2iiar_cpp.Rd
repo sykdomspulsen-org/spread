@@ -9,6 +9,7 @@ asymmetric_mobility_se1e2iiar_cpp(
   mobility_matrix,
   seed_matrix,
   betas,
+  inputSeed,
   a1,
   a2,
   gamma,
