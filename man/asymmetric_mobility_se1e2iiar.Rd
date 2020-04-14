@@ -5,10 +5,10 @@
 \title{asymmetric mobility SE1E2IIaR}
 \usage{
 asymmetric_mobility_se1e2iiar(
-  se1e2iiar_pop = spread::asymmetric_mobility_dummy_se1e2iiar_pop,
-  mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
+  se1e2iiar_pop = spread::asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_pop,
+  mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
   dynamic_seeds = NULL,
-  betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
+  betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,
   inputSeed = as.numeric(Sys.time()),
   latent_period = 3,
   presymptomatic_period = 2,
