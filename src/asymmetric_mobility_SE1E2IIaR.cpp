@@ -10,7 +10,6 @@
 using namespace Rcpp;
 using namespace std;
 
-default_random_engine generator1(time(0));
 
 void cumulative_sumN(double **outarray, double **array, int n){
   /// REMEMBER to delete outarray after use
@@ -447,7 +446,8 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     DataFrame se1e2iiar_pop,
     List mobility_matrix,
     NumericMatrix seed_matrix,
-    NumericMatrix betas, 
+    NumericMatrix betas,
+    int inputSeed,
     float a1,
     float a2,
     float gamma,
@@ -597,7 +597,8 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     }
   }
 
-  unsigned int Seed2 = time(0); // for random seed.
+  unsigned int Seed2 = inputSeed; // for random seed.
+  srand(Seed2);
   /*
    //extern const gsl_rng_type *gsl_rng_default;
    default_random_engine generator(time(0));
@@ -1285,6 +1286,7 @@ d <- asymmetric_mobility_se1e2iiar_cpp(
   mobility_matrix = mobility_matrix,
   seed_matrix = seed_matrix,
   betas=betas,
+  inputSeed = 3,
   a1=1/2.0,
   a2 = 1/3.0,
   gamma= 1/5.0,
