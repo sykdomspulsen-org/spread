@@ -6,6 +6,7 @@
 #' @param mobility_matrix List (1 entry for each time period) with each entry containing a data frame with `from`, `to`, `n` for the number of people who travel. Each data frame must be complete.
 #' @param dynamic_seeds Data.table containing `location_code`, `day`, and `n` for dynamic seeding (or `NULL`)
 #' @param betas Data table with `locaton code`, `day`, `time`, `beta` (1 entry for each location for each time period). Float, infection parameter, 0.6
+#' @param inputSeed Integer with seed for cpp code
 #' @param latent_period Float, 3.0
 #' @param presymptomatic_period Float 2.0
 #' @param infectious_period Float, 5.0
@@ -40,6 +41,7 @@
 #'   mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
 #'   dynamic_seeds = spread::asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds,
 #'   betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,
+#'   inputSeed = 123,
 #'   latent_period = 3.0,
 #'   presymptomatic_period = 2.0,
 #'   infectious_period = 5.0,
@@ -55,6 +57,7 @@ asymmetric_mobility_se1e2iiar <- function(
                                           mobility_matrix = spread::asymmetric_mobility_dummy_se1e2iiar_mobility_matrix,
                                           dynamic_seeds = NULL,
                                           betas = spread::asymmetric_mobility_dummy_se1e2iiar_betas,
+                                          inputSeed = as.numeric(Sys.time()),
                                           latent_period = 3.0,
                                           presymptomatic_period = 2.0,
                                           infectious_period = 5.0,
@@ -121,6 +124,7 @@ asymmetric_mobility_se1e2iiar <- function(
     mobility_matrix = mobility_matrix,
     seed_matrix = seed_matrix,
     betas = beta_matrix,
+    inputSeed = inputSeed,
     a1 = a1,
     a2 = a2,
     gamma = gamma,
