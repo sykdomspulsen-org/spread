@@ -4,9 +4,7 @@
 \name{asymmetric_mobility_dummy_betas}
 \alias{asymmetric_mobility_dummy_betas}
 \title{Fake betas for asymmetric mobility}
-\format{
-An object of class \code{numeric} of length 20.
-}
+\format{An object of class \code{numeric} of length 20.}
 \usage{
 asymmetric_mobility_dummy_betas
 }
