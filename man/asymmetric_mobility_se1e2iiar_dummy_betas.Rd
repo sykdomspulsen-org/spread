@@ -7,8 +7,12 @@
 \format{An object of class \code{data.table} (inherits from \code{data.frame}) with 60 rows and 4 columns.}
 \usage{
 asymmetric_mobility_se1e2iiar_dummy_betas
+
+asymmetric_mobility_se1e2iiar_dummy_betas
 }
 \description{
+A data table of 60 betas (1 for each time period for each of the three locations)
+
 A data table of 60 betas (1 for each time period for each of the three locations)
 }
 \keyword{datasets}

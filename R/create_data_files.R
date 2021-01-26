@@ -443,3 +443,107 @@ create_asymmetric_mobility_se1e2iiar_dummy_files <- function(base_loc) {
   )
   save(asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_dynamic_seeds.rda"), compress = "xz")
 }
+
+
+
+
+
+
+#' A fake population for asymmetric mobility se1e2iiar 2 strains
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{S}{Number of susceptible people.}
+#' \item{E1}{Number of exposed, asymptomatic people, not infectious.}
+#' \item{E2}{Number of exposed, presymptomatic people, infectious.}
+#' \item{I}{Number of infectious and symptomatic people.}
+#' \item{Ia}{Number of infectious and asymptomatic people.}
+#' \item{R}{Number of recovered people.}
+#' \item{E1_b}{Number of exposed, asymptomatic people, not infectious of strain B.}
+#' \item{E2_b}{Number of exposed, presymptomatic people, infectious of strain B.}
+#' \item{I_b}{Number of infectious and symptomatic people of strain B.}
+#' \item{Ia_b}{Number of infectious and asymptomatic people of strain B.}
+#' }
+"asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop"
+
+#' Fake mobility matrixes for asymmetric mobility se1e2iiar
+#'
+#' A list of 20 matrices (1 for each time period)
+#'
+#' @format
+#' \describe{
+#' \item{from}{Location code.}
+#' \item{to}{Location code.}
+#' \item{n}{Number of people.}
+#' }
+"asymmetric_mobility_se1e2iiar_dummy_mobility_matrix"
+
+#' Fake betas for asymmetric mobility se1e2iiar
+#'
+#' A data table of 60 betas (1 for each time period for each of the three locations)
+#'
+"asymmetric_mobility_se1e2iiar_dummy_betas"
+
+#' Fake dynamic seeds for asymmetric mobility se1e2iiar
+#'
+#' @format
+#' \describe{
+#' \item{location_code}{Location code.}
+#' \item{day}{Day seeding occurs.}
+#' \item{n}{Number of people.}
+#' \item{n_b}{Number of people strain B.}
+#' }
+"asymmetric_mobility_se1e2iiar_2strains_dummy_dynamic_seeds"
+
+create_asymmetric_mobility_se1e2iiar_2strains_dummy_files <- function(base_loc) {
+  se1e2iiar_2strains_pop <- data.table::data.table(
+    "location_code" = c("a", "b", "c"),
+    "S" = c(1000, 1000, 2000),
+    "E1" = c(0, 0, 0),
+    "E2" = c(0, 0, 0),
+    "I" = c(50, 0, 0),
+    "Ia" = c(0, 0, 0),
+    "R" = c(0, 0, 0),
+    "E1_b" = c(0, 0, 0),
+    "E2_b" = c(0, 0, 0),
+    "I_b" = c(50, 0, 0),
+    "Ia_b" = c(0, 0, 0)
+  )
+
+  temp <- data.table::data.table(
+    from = c("a", "a", "b", "b", "c", "c"),
+    to = c("b", "c", "a", "c", "a", "b"),
+    n = c(50, 10, 10, 10, 10, 10)
+  )
+  mobility_matrix <- vector("list", length = 20)
+  for (i in seq_along(mobility_matrix)) {
+    mobility_matrix[[i]] <- data.table::copy(temp)
+    data.table::setnames(mobility_matrix[[i]], c("from", "to", "n"))
+  }
+
+  dayEach <- rep(1:5, each = 4)
+  timeEach <- rep(c(0, 6, 12, 18), 5)
+  location_codes <- c(rep("a", 5 * 4), rep("b", 5 * 4), rep("c", 5 * 4))
+  betas <- c(rep(0.6, 5 * 4), rep(0.4, 5 * 2), rep(0.2, 5 * 2), rep(0.7, 5 * 3), rep(0.4, 5))
+  days <- rep(dayEach, 3)
+  times <- rep(timeEach, 3)
+  betas <- data.table("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
+
+  asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop <- se1e2iiar_2strains_pop
+  save(asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop.rda"), compress = "xz")
+
+  asymmetric_mobility_se1e2iiar_dummy_mobility_matrix <- mobility_matrix
+  save(asymmetric_mobility_se1e2iiar_dummy_mobility_matrix, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_mobility_matrix.rda"), compress = "xz")
+
+  asymmetric_mobility_se1e2iiar_dummy_betas <- betas
+  save(asymmetric_mobility_se1e2iiar_dummy_betas, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_dummy_betas.rda"), compress = "xz")
+
+  asymmetric_mobility_se1e2iiar_2strains_dummy_dynamic_seeds <- data.table::data.table(
+    "location_code" = c("a"),
+    "day" = c(3, 7, 8),
+    "n" = c(3, 5, 0),
+    "n_b" = c(1, 0, 5)
+  )
+  save(asymmetric_mobility_se1e2iiar_2strains_dummy_dynamic_seeds, file = file.path(base_loc, "asymmetric_mobility_se1e2iiar_2strains_dummy_dynamic_seeds.rda"), compress = "xz")
+}

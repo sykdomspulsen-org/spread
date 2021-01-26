@@ -11,8 +11,12 @@
 }}
 \usage{
 asymmetric_mobility_se1e2iiar_dummy_mobility_matrix
+
+asymmetric_mobility_se1e2iiar_dummy_mobility_matrix
 }
 \description{
+A list of 20 matrices (1 for each time period)
+
 A list of 20 matrices (1 for each time period)
 }
 \keyword{datasets}
