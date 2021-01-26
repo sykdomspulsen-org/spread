@@ -118,9 +118,15 @@ asymmetric_mobility_se1e2iiar_2strains <- function(
 
   # create seed_matrix from dynamic_seeds
   location_codes <- se1e2iiar_2strains_pop$location_code
-  dynamic_seeds_a = dynamic_seeds[!"n_b"]
-  dynamic_seeds_b = dynamic_seeds[!"n"]
-  names(dynamic_seeds_b)[names(dynamic_seeds_b) == "n_b"] = "n"
+  if(!is.null(dynamic_seeds)){
+    dynamic_seeds_a <- data.table::copy(dynamic_seeds)[,"n_b":=NULL]
+    dynamic_seeds_b <- data.table::copy(dynamic_seeds)[,"n":=NULL]
+    names(dynamic_seeds_b)[names(dynamic_seeds_b) == "n_b"] = "n"
+  }
+  else{
+    dynamic_seeds_a = NULL
+    dynamic_seeds_b = NULL
+  }
   seed_matrix <- convert_dynamic_seeds_to_seed_matrix(
     dynamic_seeds = dynamic_seeds_a,
     location_codes = location_codes,
@@ -134,7 +140,7 @@ asymmetric_mobility_se1e2iiar_2strains <- function(
   )
 
   # create beta_matrix from betas data frame
-  location_codes <- se1e2iiar_pop$location_code
+  location_codes <- se1e2iiar_2strains_pop$location_code
   beta_matrix <- convert_beta_to_matrix(
     betas = betas,
     location_codes = location_codes,
@@ -160,6 +166,7 @@ asymmetric_mobility_se1e2iiar_2strains <- function(
     N = N,
     M = days_simulation
   )
+  retval = cbind(retval[[1]], retval[[2]])
   retval_incidence <- retval[, .(
     c_symp_incidence_a = sum(c_symp_incidence_a),
     c_asymp_incidence_a = sum(c_asymp_incidence_a),
@@ -240,5 +247,4 @@ asymmetric_mobility_se1e2iiar_2strains <- function(
   setcolorder(retval, c("location_code", "week", "day", "time"))
 
   return(retval)
-}
 }
