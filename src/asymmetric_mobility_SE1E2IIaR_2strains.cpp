@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace std;
 
 
-void cumulative_sumN(double **outarray, double **array, int n){
+void cumulative_sum2strains(double **outarray, double **array, int n){
   /// REMEMBER to delete outarray after use
   (*outarray)[0] = (*array)[0];
   for(int i=1; i < n; ++i){
@@ -37,6 +37,7 @@ void se1e2iiar_sim(int &ds, int &de1e2, int &de1ia, int &de2i, int &dia, int &di
   // di are the infectious symptomatic going to recovered
   // with _b are the ones who are infected with strain b.
   int de = 0;
+  int de_b = 0;
   if(I != 0 || Ia != 0 || E1 != 0 || E2 != 0 || I_b != 0 || Ia_b != 0 || E1_b != 0 || E2_b != 0){
     if(E1 == 0){
       de = 0;
@@ -48,26 +49,57 @@ void se1e2iiar_sim(int &ds, int &de1e2, int &de1ia, int &de2i, int &dia, int &di
         de1e2 = de-de1ia;
       }
     }
+    if(E1_b == 0){
+      de_b = 0;
+    }
+    else{
+      de_b = R::rbinom(E1_b, a1 * delta_t);
+      if(de_b != 0){
+        de1ia_b = R::rbinom(de_b, asymptomaticProb);
+        de1e2_b = de_b-de1ia_b;
+      }
+    }
     if(E2 == 0){
       de2i = 0;
     }
     else{
       de2i = R::rbinom(E2, a2 * delta_t);
     }
+    if(E2_b == 0){
+      de2i_b = 0;
+    }
+    else{
+      de2i_b = R::rbinom(E2_b, a2 * delta_t);
+    }
+
     if(I == 0){
       di = 0;
     }
     else{
       di = R::rbinom(I, gamma*delta_t);
     }
+    if(I_b == 0){
+      di_b = 0;
+    }
+    else{
+      di_b = R::rbinom(I_b, gamma*delta_t);
+    }
+
     if(Ia == 0){
       dia = 0;
     }
     else{
       dia = R::rbinom(Ia, gamma*delta_t);
     }
+    if(Ia_b == 0){
+      dia_b = 0;
+    }
+    else{
+      dia_b = R::rbinom(Ia_b, gamma*delta_t);
+    }
+
     double inf_a = beta*delta_t*I/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia/pop + presymptomaticRelativeInfectiousness * beta * delta_t * E2 / pop;
-    double inf_b = relativeInfectiousnessB (beta*delta_t*I_b/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia_b/pop + presymptomaticRelativeInfectiousness * beta * delta_t * E2_b / pop);
+    double inf_b = relativeInfectiousnessB * (beta*delta_t*I_b/pop + asymptomaticRelativeInfectiousness*beta*delta_t*Ia_b/pop + presymptomaticRelativeInfectiousness * beta * delta_t * E2_b / pop);
     double p_b = (inf_b)/(inf_a + inf_b);
     ds = R::rbinom(S, inf_a + inf_b);
     ds_b = R::rbinom(ds, p_b);
@@ -76,7 +108,7 @@ void se1e2iiar_sim(int &ds, int &de1e2, int &de1ia, int &de2i, int &dia, int &di
 }
 
 
-void rng_mvhyperN(const int n[], int sum, int k, int **x){
+void rng_mvhyper2strains(const int n[], int sum, int k, int **x){
   int m = 10;
   int n_otr;
   unsigned int n1;
@@ -152,8 +184,8 @@ void AMNLocation2strains::seir_step(
     float asymptomaticRelativeInfectiousness,
     int &de2,
     int &dea,
-    int &de2_b
-  int &dea_b){ // Return symptomatic and asymptomatic incidence
+    int &de2_b,
+    int &dea_b){ // Return symptomatic and asymptomatic incidence
   int S_tmp = S;
   int E1_tmp = E1;
   int E2_tmp = E2;
@@ -219,7 +251,7 @@ void AMNLocation2strains::seir_step(
   Ia_b_probs[num] = Ia_b;
   E1_b_probs[num] = E1_b;
   E2_b_probs[num] = E2_b;
-  int ds; int de1e2; int de1ia; int de2i; int dia; int di; int ds_b; int de1e2_b; int de1ia_b; int de2i_b; int dia_b; ind di_b;
+  int ds; int de1e2; int de1ia; int de2i; int dia; int di; int ds_b; int de1e2_b; int de1ia_b; int de2i_b; int dia_b; int di_b;
 
   // Run the SEIR step
   se1e2iiar_sim(ds, de1e2, de1ia, de2i, dia, di, ds_b, de1e2_b, de1ia_b, de2i_b, dia_b, di_b, S_tmp, E1_tmp, E2_tmp, Ia_tmp, I_tmp, E1_b_tmp, E2_b_tmp, Ia_b_tmp, I_b_tmp, beta, a1, a2, gamma, relativeInfectiousnessB, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, pop_tmp, 6.0/24.0);
@@ -238,7 +270,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -266,7 +298,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -294,7 +326,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -320,7 +352,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -346,7 +378,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -374,7 +406,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -402,7 +434,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num+1);
+    cumulative_sum2strains(&probs_cum, &probs, num+1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -430,7 +462,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num+1);
+    cumulative_sum2strains(&probs_cum, &probs, num+1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -457,7 +489,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num+1);
+    cumulative_sum2strains(&probs_cum, &probs, num+1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -484,7 +516,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0 / RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num+1);
+    cumulative_sum2strains(&probs_cum, &probs, num+1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -511,7 +543,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0/RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -538,7 +570,7 @@ void AMNLocation2strains::seir_step(
     while(randomnumber == 0 || randomnumber == 1){
       randomnumber = rand() * 1.0/RAND_MAX;
     }
-    cumulative_sumN(&probs_cum, &probs, num + 1);
+    cumulative_sum2strains(&probs_cum, &probs, num + 1);
     for(int h = 0; h < num + 1; ++h){
       if(randomnumber < probs_cum[h]){
         index = h;
@@ -579,7 +611,7 @@ AMNGraph2strains::AMNGraph2strains(){
 }
 
 void AMNGraph2strains::add_node(string name, int Shome){
-  AMNLocation newlocation(name, Shome);
+  AMNLocation2strains newlocation(name, Shome);
   locations.push_back(newlocation);
 }
 
@@ -659,7 +691,7 @@ void AMNGraph2strains::count_everyone(string msg){
 //' @param M Int, Number of days
 //' @export
 // [[Rcpp::export]]
-DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
+List asymmetric_mobility_se1e2iiar_2strains_cpp(
     DataFrame se1e2iiar_2strains_pop,
     List mobility_matrix,
     NumericMatrix seed_matrix,
@@ -803,7 +835,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
     I_this[i] = new int[4 * M];
     final_size[i] = new int[N];
     for(int k = 0; k < 4 * M; ++k){
-      values[i][k] = new int[13];
+      values[i][k] = new int[26];
       values[i][k][0] = 0;
       values[i][k][1] = 0;
       values[i][k][2] = 0;
@@ -921,7 +953,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
         values[i][i_t][17] += G_current.locations[i].E2_b;
         values[i][i_t][18] += G_current.locations[i].I_b;
         values[i][i_t][19] += G_current.locations[i].Ia_b;
-        I_this[i][i_t] += G_current.locations[i].I G_current.locations[i].I_b;
+        I_this[i][i_t] += G_current.locations[i].I + G_current.locations[i].I_b;
 
         if(i_t == (4 * M-1)){
           final_size[i][i_sim] += G_current.locations[i].R;
@@ -1093,7 +1125,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   p[8] = G_prev.locations[name1_index].I_b;
                   p[9] = G_prev.locations[name1_index].Ia_b;
                   // Draw the number of travellers from each compartment
-                  rng_mvhyperN(p, sum, Nk - Nk_prev, &x);
+                  rng_mvhyper2strains(p, sum, Nk - Nk_prev, &x);
                   G_current.locations[name2_index].visitorsS[name1_index] += x[0];
                   G_current.locations[name1_index].S -= x[0];
                   G_prev.locations[name1_index].S -= x[0];
@@ -1156,9 +1188,9 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                 G_current.locations[name2_index].visitorsI_b[name1_index] += G_prev.locations[name1_index].I_b;
                 G_current.locations[name1_index].I_b -= G_prev.locations[name1_index].I_b;
                 G_prev.locations[name1_index].I_b = 0;
-                G_current.locations[name2_index].visitorsIa[name1_index] += G_prev.locations[name1_index].Ia;
-                G_current.locations[name1_index].Ia -= G_prev.locations[name1_index].Ia;
-                G_prev.locations[name1_index].Ia = 0;
+                G_current.locations[name2_index].visitorsIa_b[name1_index] += G_prev.locations[name1_index].Ia_b;
+                G_current.locations[name1_index].Ia_b -= G_prev.locations[name1_index].Ia_b;
+                G_prev.locations[name1_index].Ia_b = 0;
 
                 int num = G_prev.locations[name1_index].visitorsS.size();
 
@@ -1216,7 +1248,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
 
                 // Draw the number of travellers from each compartment
                 if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp > leftover){
-                  rng_mvhyperN(p, S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp, leftover, &x);
+                  rng_mvhyper2strains(p, S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp, leftover, &x);
                 }
                 else{
                   x = p;
@@ -1234,7 +1266,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1257,7 +1289,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1280,7 +1312,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1303,7 +1335,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1326,7 +1358,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1349,7 +1381,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1372,7 +1404,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1395,7 +1427,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1418,7 +1450,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1441,7 +1473,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
                   while(randomnumber == 0 || randomnumber == 1){
                     randomnumber = rand()*1.0/RAND_MAX;
                   }
-                  cumulative_sumN(&probs_cum, &probs, num);
+                  cumulative_sum2strains(&probs_cum, &probs, num);
                   for(int h = 0; h < num; ++h){
                     if(randomnumber < probs_cum[h]){
                       index = h;
@@ -1506,7 +1538,7 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
               p[9] = G_prev.locations[name1_index].visitorsIa_b[name2_index];
               sum = p[0] + p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7] + p[8] + p[9];
               // Draw the number of travellers from each compartment
-              rng_mvhyperN(p, sum, Nk, &x);
+              rng_mvhyper2strains(p, sum, Nk, &x);
               G_current.locations[name2_index].S += x[0];
               G_current.locations[name2_index].E1 += x[1];
               G_current.locations[name2_index].E2 += x[2];
@@ -1680,8 +1712,10 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
     }
   }
 
-  // return a new data frame
-  DataFrame df = DataFrame::create(
+
+
+  // return two data frames, as max 20 columns
+  DataFrame df1 = DataFrame::create(
     _["location_code"]= res_names,
     _["week"]=res_week,
     _["day"]=res_day,
@@ -1701,7 +1735,12 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
     _["c_E2"]= res_C_E2,
     _["c_I"]= res_C_I,
     _["c_Ia"]= res_C_Ia,
-    _["c_R"]= res_C_R,
+    _["c_R"]= res_C_R
+  );
+
+
+  // return a new data frame
+  DataFrame df2 = DataFrame::create(
     _["c_E1_b"]= res_C_E1_b,
     _["c_E2_b"]= res_C_E2_b,
     _["c_I_b"]= res_C_I_b,
@@ -1714,9 +1753,8 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
     _["c_asymp_incidence"]= res_as_incidence
   );
 
-
-  df.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
-
+  df1.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
+  df2.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
 
   for(int i = 0; i < n; ++i){
     for(int k = 0; k < 4 * M; ++k){
@@ -1743,13 +1781,12 @@ DataFrame asymmetric_mobility_se1e2iiar_2strains_cpp(
   delete[] bonds;
 
 
-  return(df);
-
+  return(Rcpp::List::create(Rcpp::Named("df1") = df1, Rcpp::Named("df2") = df2));
 }
 
 
 /*** R
-se1e2iiar_pop <- data.table::data.table(
+se1e2iiar_2strains_pop <- data.table::data.table(
   "location_code" = c("a","b","c"),
   "S" = c(1000,1000,2000),
   "E1" = c(0,0,0),
