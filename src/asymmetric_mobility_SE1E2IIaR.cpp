@@ -92,7 +92,7 @@ void rng_mvhyperN(const int n[], int sum, int k, int **x){
     //res = gsl_ran_hypergeometric(r, n1, n2, t);
     (*x)[i] = res;
   }
-  
+
   (*x)[m-1]=k-(*x)[m-2];
 }
 
@@ -143,7 +143,7 @@ void AMNLocation::seir_step(
   int R_tmp = R;
   double pop_tmp = S + E1 + E2 + Ia + I + R;
   int num = visitorsS.size();
-  
+
   //Vectors with the number of people in the respective compartment,
   //first the the visitors, and then the home population
   //used to distribute the transitions between compartments
@@ -156,7 +156,7 @@ void AMNLocation::seir_step(
   int *I_probs = new int[num + 1];
   int *Ia_probs = new int[num + 1];
   int *R_probs = new int[num + 1];
-  
+
   for (int i = 0; i < num; ++i){
     S_tmp += visitorsS[i];
     E1_tmp += visitorsE1[i];
@@ -165,7 +165,7 @@ void AMNLocation::seir_step(
     I_tmp += visitorsI[i];
     R_tmp += visitorsR[i];
     pop_tmp += visitorsS[i] + visitorsE1[i] + visitorsE2[i] + visitorsIa[i] + visitorsI[i] + visitorsR[i];
-    
+
     S_probs[i] = visitorsS[i];
     I_probs[i] = visitorsI[i];
     Ia_probs[i] = visitorsIa[i];
@@ -173,7 +173,7 @@ void AMNLocation::seir_step(
     E2_probs[i] = visitorsE2[i];
     R_probs[i] = visitorsR[i];
   }
-  
+
   S_probs[num] = S;
   I_probs[num] = I;
   Ia_probs[num] = Ia;
@@ -181,7 +181,7 @@ void AMNLocation::seir_step(
   E2_probs[num] = E2;
   R_probs[num] = R;
   int ds; int de1e2; int de1ia; int de2i; int dia; int di;
-  
+
   // Run the SEIR step
   se1e2iiar_sim(ds, de1e2, de1ia, de2i, dia, di, S_tmp, E1_tmp, E2_tmp, Ia_tmp, I_tmp, beta, a1, a2, gamma, presymptomaticRelativeInfectiousness, asymptomaticProb, asymptomaticRelativeInfectiousness, pop_tmp, 6.0/24.0);
   de2 = de2i;
@@ -214,12 +214,12 @@ void AMNLocation::seir_step(
       visitorsIa[index] -= 1;
       visitorsR[index] += 1;
     }
-    
+
     Ia_probs[index] -= 1;
     Ia_tmp -= 1;
   }
-  
-  
+
+
   for(int i = 0; i < di; ++i){
     for(int k = 0; k < num + 1; ++k) probs[k] = I_probs[k] * 1.0 / I_tmp; // Oneline for-loop
     randomnumber = rand() * 1.0 / RAND_MAX;
@@ -245,8 +245,8 @@ void AMNLocation::seir_step(
     I_probs[index] -= 1;
     I_tmp -= 1;
   }
-  
-  
+
+
   for(int i = 0; i < de2i; ++i){
     for(int k = 0; k < num + 1; ++k) probs[k] = E2_probs[k] * 1.0 / E2_tmp; // Oneline for-loop
     randomnumber = rand() * 1.0 / RAND_MAX;
@@ -269,12 +269,12 @@ void AMNLocation::seir_step(
       visitorsE2[index] -= 1;
       visitorsI[index] += 1;
     }
-    
+
     E2_probs[index] -= 1;
     E2_tmp -= 1;
-    
+
   }
-  
+
   for(int i = 0; i < de1e2; ++i){
     for(int k = 0; k < num + 1; ++k) probs[k] = E1_probs[k] * 1.0 / E1_tmp; // Oneline for-loop
     randomnumber = rand() * 1.0 / RAND_MAX;
@@ -293,7 +293,7 @@ void AMNLocation::seir_step(
       E1 -= 1;
       E2 += 1;
     }
-    
+
     else{
       visitorsE1[index] -= 1;
       visitorsE2[index] += 1;
@@ -301,7 +301,7 @@ void AMNLocation::seir_step(
     E1_probs[index] -= 1;
     E1_tmp -= 1;
   }
-  
+
   for(int i = 0; i < de1ia; ++i){
     for(int k = 0; k < num + 1; ++k) probs[k] = E1_probs[k] * 1.0 / E1_tmp; // Oneline for-loop
     randomnumber = rand() * 1.0 / RAND_MAX;
@@ -320,7 +320,7 @@ void AMNLocation::seir_step(
       E1 -= 1;
       Ia += 1;
     }
-    
+
     else{
       visitorsE1[index] -= 1;
       visitorsIa[index] += 1;
@@ -328,7 +328,7 @@ void AMNLocation::seir_step(
     E1_probs[index] -= 1;
     E1_tmp -= 1;
   }
-  
+
   for(int i = 0; i < ds; ++i){
     for(int k = 0; k < num + 1; ++k) probs[k] = S_probs[k] * 1.0 / S_tmp; // Oneline for-loop
     randomnumber = rand() * 1.0 / RAND_MAX;
@@ -347,7 +347,7 @@ void AMNLocation::seir_step(
       S -= 1;
       E1 += 1;
     }
-    
+
     else{
       visitorsS[index] -= 1;
       visitorsE1[index] += 1;
@@ -355,8 +355,8 @@ void AMNLocation::seir_step(
     S_probs[index] -= 1;
     S_tmp -= 1;
   }
-  
-  
+
+
   delete[] probs;
   delete[] probs_cum;
   delete[] S_probs;
@@ -386,7 +386,7 @@ void AMNGraph::print(){
     locations[i].print();
     Rcout.flush();
   }
-  
+
   Rcout << endl << endl;;
 }
 
@@ -400,14 +400,14 @@ void AMNGraph::copy_graph(AMNGraph G){
     locations[counter].visitorsI = it->visitorsI;
     locations[counter].visitorsIa = it->visitorsIa;
     locations[counter].visitorsR = it->visitorsR;
-    
+
     locations[counter].S = it->S;
     locations[counter].E1 = it->E1;
     locations[counter].E2 = it->E2;
     locations[counter].I = it->I;
     locations[counter].Ia = it->Ia;
     locations[counter].R = it->R;
-    
+
     counter += 1;
   }
 }
@@ -420,7 +420,7 @@ void AMNGraph::count_everyone(string msg){
       sum+= locations[i].visitorsS[j] + locations[i].visitorsE1[j] + locations[i].visitorsE2[j] + locations[i].visitorsI[j] + locations[i].visitorsIa[j] + locations[i].visitorsR[j];
     }
   }
-  
+
   Rcout << msg << ", SUM IS " << sum << endl;
 }
 
@@ -462,7 +462,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   DataFrame empty = DataFrame::create(
     _["empty"]= 1
   );
-  
+
   StringVector names = se1e2iiar_pop[0] ;
   IntegerVector pop_S = se1e2iiar_pop[1] ;
   IntegerVector pop_E1 = se1e2iiar_pop[2] ;
@@ -470,18 +470,18 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   IntegerVector pop_I = se1e2iiar_pop[4] ;
   IntegerVector pop_Ia = se1e2iiar_pop[5] ;
   IntegerVector pop_R = se1e2iiar_pop[6] ;
-  
+
   AMNGraph G;
   string tmpstr;
   string tmpstr2;
   int pop;
-  
+
   for (int i = 0; i < se1e2iiar_pop.rows(); i++) {
     string name = std::string(names[i]);
     G.add_node(name, pop_S[i]+pop_E1[i] + pop_E2[i] +pop_I[i]+pop_Ia[i]+pop_R[i]);
     n+= 1;
   }
-  
+
   // Add the visitors
   for (int i = 0; i < n; ++i){
     for (int j = 0; j < n; ++j){
@@ -493,25 +493,25 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       G.locations[i].visitorsR.push_back(0);
     }
   }
-  
+
   int S; int E1 = 0; int E2 = 0; int I = 0; int Ia = 0; int R = 0;
-  
+
   // Add the travellers for the first time step,
   // they are assumed to be susceptible
   int name1_index;
   int name2_index;
   int safecount = 0;
-  
+
   DataFrame mtrx = DataFrame(mobility_matrix[0]);
   StringVector mtrx_from = mtrx["from"];
   StringVector mtrx_to = mtrx["to"];
   NumericVector mtrx_n = mtrx["n"];
-  
+
   for (int i_m = 0; i_m < mtrx.rows(); i_m++) {
     tmpstr = mtrx_from[i_m];
     tmpstr2 = mtrx_to[i_m];
     S = mtrx_n[i_m];
-    
+
     safecount += 1;
     name1_index = -1;
     name2_index = -1;
@@ -533,32 +533,32 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       G.locations[name1_index].S -= S;
     }
   }
-  
+
   //The state in each location at each time point
   int ***values = new int**[n];
-  
+
   // Peak dates in each location
   int **peak_date = new int*[n];
-  
+
   // Peak number infected in each location
   int **peak_val = new int*[n];
-  
+
   //Initial dates in each location
   //defined as first day where the symptomatic prevalence has been
   //more than 1% for 7 consecutive days
   int **start_date = new int*[n];
-  
+
   //Dummy vector, to find peak and initial dates
   int **I_this = new int*[n];
-  
+
   //Final number infected in each location
   int **final_size = new int*[n];
-  
+
   //Save the prevalence curves (infectious + infectious asymptomatic) for each location
   // For each run, in order to make confidence curves over the N simulations
   int **bonds = new int*[N];
-  
-  
+
+
   /// Values has first index for position, second for time and third for value.
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 5 = 6, 7 = E1, 8 = E2,  9 = I, 10 = Ia, 11 = R, for currently in kommune.
@@ -589,14 +589,14 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       values[i][k][13] = 0;
     }
   }
-  
+
   for (int i = 0; i < N; ++i){
     bonds[i] = new int[4 * M]; //4 * M, stored for all 6-hour intervals.
     for (int j = 0; j < 4 * M; ++j){
       bonds[i][j] = 0;
     }
   }
-  
+
   unsigned int Seed2 = inputSeed; // for random seed.
   srand(Seed2);
   /*
@@ -613,10 +613,10 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   float sum;
   int Nk_prev; // Number of travellers and long term stayers on link on previous day.
   int leftover; // Number of people we have to take from the other kommuner
-  
+
   int p[6]; //To distribute travellers according to proportion in the six compartments
   int *x = new int [6];
-  
+
   for(int i_sim = 0; i_sim < N; ++i_sim){
     for (int i = 0; i < n; ++i){
       final_size[i][i_sim] = 0;
@@ -625,9 +625,9 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       }
     }
     AMNGraph G_current;
-    
+
     G_current.copy_graph(G);
-    
+
     // Seed the epidemic
     for(int i = 0; i < n; ++i){
       G_current.locations[i].S -= pop_E1[i] + pop_E2[i] + pop_I[i] + pop_Ia[i] + pop_R[i];
@@ -637,14 +637,14 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       G_current.locations[i].Ia = pop_Ia[i];
       G_current.locations[i].R  = pop_R[i];
     }
-    
+
     for(int i_t = 0; i_t < 4 * M; ++i_t){
       if (i_t%4 == 0){
         for (int i = 0; i < n; ++i){
           if (G_current.locations[i].S != 0){
             G_current.locations[i].S -= seed_matrix(i_t/4, i);
             G_current.locations[i].I += seed_matrix(i_t/4, i);
-            values[i][i_t][12] += seed_matrix(i_t/4, i);
+            //values[i][i_t][12] += seed_matrix(i_t/4, i); //Include if you want the seeding events counted as incidence.
           }
         }
       }
@@ -665,15 +665,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
         values[i][i_t][10] += G_current.locations[i].Ia;
         values[i][i_t][11] += G_current.locations[i].R;
         I_this[i][i_t] += G_current.locations[i].I;
-        
+
         if(i_t == (4 * M-1)){
           final_size[i][i_sim] += G_current.locations[i].R;
         }
-        
+
         values[i][i_t][12] += de2;
         values[i][i_t][13] += dea;
         bonds[i_sim][i_t] += G_current.locations[i].I + G_current.locations[i].Ia;
-        
+
         int num = G_current.locations[i].visitorsS.size();
         for (int j = 0; j < num; ++j){
           values[j][i_t][0] += G_current.locations[i].visitorsS[j];
@@ -692,24 +692,24 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
           values[i][i_t][11] += G_current.locations[i].visitorsR[j];
         }
       }
-      
+
       AMNGraph G_prev; // AMGraph at previous time point
       G_prev.copy_graph(G_current);
-      
+
       int safecount = 0;
-      
+
       if(i_t < (4 * M - 1)){
         mtrx = mobility_matrix[i_t + 1];
         mtrx_from = mtrx["from"];
         mtrx_to = mtrx["to"];
         mtrx_n = mtrx["n"];
-        
+
         for (int i_m = 0; i_m < mtrx.rows(); i_m++) {
-          
+
           tmpstr = mtrx_from[i_m];
           tmpstr2 = mtrx_to[i_m];
           S = mtrx_n[i_m];
-          
+
           int name1_index = -1;
           int name2_index = -1;
           safecount += 1;
@@ -740,14 +740,14 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
               G_current.locations[name2_index].I +=  G_prev.locations[name1_index].visitorsI[name2_index];
               G_current.locations[name2_index].Ia +=  G_prev.locations[name1_index].visitorsIa[name2_index];
               G_current.locations[name2_index].R +=  G_prev.locations[name1_index].visitorsR[name2_index];
-              
+
               G_current.locations[name1_index].visitorsS[name2_index] -= G_prev.locations[name1_index].visitorsS[name2_index];
               G_current.locations[name1_index].visitorsE1[name2_index] -= G_prev.locations[name1_index].visitorsE1[name2_index];
               G_current.locations[name1_index].visitorsE2[name2_index] -= G_prev.locations[name1_index].visitorsE2[name2_index];
               G_current.locations[name1_index].visitorsI[name2_index] -= G_prev.locations[name1_index].visitorsI[name2_index];
               G_current.locations[name1_index].visitorsIa[name2_index] -= G_prev.locations[name1_index].visitorsIa[name2_index];
               G_current.locations[name1_index].visitorsR[name2_index] -= G_prev.locations[name1_index].visitorsR[name2_index];
-              
+
               G_prev.locations[name1_index].visitorsS[name2_index] = 0;
               G_prev.locations[name1_index].visitorsE1[name2_index] = 0;
               G_prev.locations[name1_index].visitorsE2[name2_index] = 0;
@@ -755,7 +755,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
               G_prev.locations[name1_index].visitorsIa[name2_index] = 0;
               G_prev.locations[name1_index].visitorsR[name2_index] = 0;
             }
-            
+
             else if(Nk_prev < Nk){
               // We send everyone home, plus the additional people, selected at random from host population
               G_current.locations[name2_index].S +=  G_prev.locations[name1_index].visitorsS[name2_index];
@@ -764,23 +764,23 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
               G_current.locations[name2_index].I +=  G_prev.locations[name1_index].visitorsI[name2_index];
               G_current.locations[name2_index].Ia +=  G_prev.locations[name1_index].visitorsIa[name2_index];
               G_current.locations[name2_index].R +=  G_prev.locations[name1_index].visitorsR[name2_index];
-              
+
               G_current.locations[name1_index].visitorsS[name2_index] -= G_prev.locations[name1_index].visitorsS[name2_index];
               G_current.locations[name1_index].visitorsE1[name2_index] -= G_prev.locations[name1_index].visitorsE1[name2_index];
               G_current.locations[name1_index].visitorsE2[name2_index] -= G_prev.locations[name1_index].visitorsE2[name2_index];
               G_current.locations[name1_index].visitorsI[name2_index] -= G_prev.locations[name1_index].visitorsI[name2_index];
               G_current.locations[name1_index].visitorsIa[name2_index] -= G_prev.locations[name1_index].visitorsIa[name2_index];
               G_current.locations[name1_index].visitorsR[name2_index] -= G_prev.locations[name1_index].visitorsR[name2_index];
-              
+
               G_prev.locations[name1_index].visitorsS[name2_index] = 0;
               G_prev.locations[name1_index].visitorsE1[name2_index] = 0;
               G_prev.locations[name1_index].visitorsE2[name2_index] = 0;
               G_prev.locations[name1_index].visitorsI[name2_index] = 0;
               G_prev.locations[name1_index].visitorsIa[name2_index] = 0;
               G_prev.locations[name1_index].visitorsR[name2_index] = 0;
-              
+
               sum = G_prev.locations[name1_index].S + G_prev.locations[name1_index].E1 + G_prev.locations[name1_index].E2 + G_prev.locations[name1_index].I + G_prev.locations[name1_index].Ia + G_prev.locations[name1_index].R;
-              
+
               if(sum >= Nk - Nk_prev){
                 // Enough people present from home location in kommune
                 if (sum == G_prev.locations[name1_index].S){
@@ -838,22 +838,22 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                 G_current.locations[name2_index].visitorsR[name1_index] += G_prev.locations[name1_index].R;
                 G_current.locations[name1_index].R -= G_prev.locations[name1_index].R;
                 G_prev.locations[name1_index].R = 0;
-                
+
                 int num = G_prev.locations[name1_index].visitorsS.size();
-                
+
                 //Vectors with the number of people in the respective compartment,
                 //as visitors from each location
                 //used to distribute the extra travellers
                 // As there are not enough people from the home locations currently present in name1_index
                 int S_tmp = 0; int E1_tmp = 0; int E2_tmp = 0; int Ia_tmp = 0; int I_tmp = 0; int R_tmp = 0;
-                
+
                 int *S_probs = new int[num];
                 int *E1_probs = new int[num];
                 int *E2_probs = new int[num];
                 int *I_probs = new int[num];
                 int *Ia_probs = new int[num];
                 int *R_probs = new int[num];
-                
+
                 for(int j = 0; j < num; ++j){
                   S_tmp += G_prev.locations[name1_index].visitorsS[j];
                   E1_tmp += G_prev.locations[name1_index].visitorsE1[j];
@@ -861,7 +861,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                   Ia_tmp += G_prev.locations[name1_index].visitorsIa[j];
                   I_tmp += G_prev.locations[name1_index].visitorsI[j];
                   R_tmp += G_prev.locations[name1_index].visitorsR[j];
-                  
+
                   S_probs[j] = G_prev.locations[name1_index].visitorsS[j];
                   I_probs[j] = G_prev.locations[name1_index].visitorsI[j];
                   Ia_probs[j] = G_prev.locations[name1_index].visitorsIa[j];
@@ -869,14 +869,14 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                   E2_probs[j] = G_prev.locations[name1_index].visitorsE2[j];
                   R_probs[j] = G_prev.locations[name1_index].visitorsR[j];
                 }
-                
+
                 p[0] = S_tmp;
                 p[1] = E1_tmp;
                 p[2] = E2_tmp;
                 p[3] = I_tmp;
                 p[4] = Ia_tmp;
                 p[5] = R_tmp;
-                
+
                 // Draw the number of travellers from each compartment
                 if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp > leftover){
                   rng_mvhyperN(p, S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp, leftover, &x);
@@ -884,7 +884,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                 else{
                   x = p;
                 }
-                
+
                 //Distribute the travellers
                 double *probs = new double[num];
                 double *probs_cum = new double[num];
@@ -904,15 +904,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsS[index] -= 1;
                   G_prev.locations[name1_index].visitorsS[index] -= 1;
                   G_current.locations[name2_index].visitorsS[index] += 1;
-                  
+
                   S_probs[index] -= 1;
                   S_tmp -= 1;
                 }
-                
+
                 //Distribute exposed 1
                 for(int i = 0; i < x[1]; ++i){
                   for(int k = 0; k < num; ++k) probs[k] = E1_probs[k]*1.0/ E1_tmp; // Oneline for-loop
@@ -927,15 +927,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsE1[index] -= 1;
                   G_prev.locations[name1_index].visitorsE1[index] -= 1;
                   G_current.locations[name2_index].visitorsE1[index] += 1;
-                  
+
                   E1_probs[index] -= 1;
                   E1_tmp -= 1;
                 }
-                
+
                 //Distribute exposed 2
                 for(int i = 0; i < x[2]; ++i){
                   for(int k = 0; k < num; ++k) probs[k] = E2_probs[k]*1.0/ E2_tmp; // Oneline for-loop
@@ -950,15 +950,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsE2[index] -= 1;
                   G_prev.locations[name1_index].visitorsE2[index] -= 1;
                   G_current.locations[name2_index].visitorsE2[index] += 1;
-                  
+
                   E2_probs[index] -= 1;
                   E2_tmp -= 1;
                 }
-                
+
                 // Distribute infectious
                 for(int i = 0; i < x[3]; ++i){
                   for(int k = 0; k < num; ++k) probs[k] = I_probs[k] * 1.0/ I_tmp; // Oneline for-loop
@@ -973,15 +973,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsI[index] -= 1;
                   G_prev.locations[name1_index].visitorsI[index] -= 1;
                   G_current.locations[name2_index].visitorsI[index] += 1;
-                  
+
                   I_probs[index] -= 1;
                   I_tmp -= 1;
                 }
-                
+
                 // Distribute asymptomatic infectious
                 for(int i = 0; i < x[4]; ++i){
                   for(int k = 0; k < num; ++k) probs[k] = Ia_probs[k] * 1.0/ Ia_tmp; // Oneline for-loop
@@ -996,15 +996,15 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsIa[index] -= 1;
                   G_prev.locations[name1_index].visitorsIa[index] -= 1;
                   G_current.locations[name2_index].visitorsIa[index] += 1;
-                  
+
                   Ia_probs[index] -= 1;
                   Ia_tmp -= 1;
                 }
-                
+
                 // Distribute recovered
                 for(int i = 0; i < x[5]; ++i){
                   for(int k = 0; k < num; ++k) probs[k] = R_probs[k] * 1.0/ R_tmp; // Oneline for-loop
@@ -1019,25 +1019,25 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
                       break;
                     }
                   }
-                  
+
                   G_current.locations[name1_index].visitorsR[index] -= 1;
                   G_prev.locations[name1_index].visitorsR[index] -= 1;
                   G_current.locations[name2_index].visitorsR[index] += 1;
-                  
+
                   R_probs[index] -= 1;
                   R_tmp -= 1;
                 }
-                
+
                 delete[] probs;
                 delete[] probs_cum;
-                
+
                 delete[] S_probs;
                 delete[] E1_probs;
                 delete[] E2_probs;
                 delete[] I_probs;
                 delete[] Ia_probs;
                 delete[] R_probs;
-                
+
                 if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp < leftover){
                   if( G_current.locations[name2_index].visitorsS[name1_index]  +
                       G_current.locations[name2_index].visitorsE1[name1_index]  +
@@ -1072,14 +1072,14 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
               G_current.locations[name2_index].I += x[3];
               G_current.locations[name2_index].Ia += x[4];
               G_current.locations[name2_index].R += x[5];
-              
+
               G_current.locations[name1_index].visitorsS[name2_index]  -= x[0];
               G_current.locations[name1_index].visitorsE1[name2_index]  -= x[1];
               G_current.locations[name1_index].visitorsE2[name2_index]  -= x[2];
               G_current.locations[name1_index].visitorsI[name2_index]  -= x[3];
               G_current.locations[name1_index].visitorsIa[name2_index] -= x[4];
-              G_current.locations[name1_index].visitorsR[name2_index]  -= x[5]; 
-              
+              G_current.locations[name1_index].visitorsR[name2_index]  -= x[5];
+
               G_prev.locations[name1_index].visitorsS[name2_index]  -=  x[0];
               G_prev.locations[name1_index].visitorsE1[name2_index]  -=  x[1];
               G_prev.locations[name1_index].visitorsE2[name2_index]  -=  x[2];
@@ -1090,7 +1090,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
           }
         }
       }
-    }  
+    }
     // Initial dates and peak dates.
     float baseline;
     int pop = 0;
@@ -1104,7 +1104,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       startday = 0;
       count = 0;
       pop = G_current.locations[i].S +  G_current.locations[i].E1 + G_current.locations[i].E2 +  G_current.locations[i].I +  G_current.locations[i].Ia +  G_current.locations[i].R;
-      
+
       int num = G.locations[i].visitorsS.size();
       for (int j = 0; j < num; ++j){
         pop += G.locations[j].visitorsS[i];
@@ -1138,13 +1138,13 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       start_date[i][i_sim] = startday;
     }
   }
-  
+
   /// Values has first index for position, second for time and third for value.
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 6 = S, 7 = E1, 8 = E2, 9 = I, 10 = Ia, 11 = R, for currently in kommune.
   /// 12 = symptomatic incidence occurring in a kommune;
   /// 13 = asymptomatic incidence occurring in a kommune;
-  
+
   StringVector res_names(n*4*M);
   IntegerVector res_week(n*4*M);
   IntegerVector res_day(n*4*M);
@@ -1163,7 +1163,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   IntegerVector res_C_R(n*4*M);
   IntegerVector res_INCIDENCE(n*4*M);
   IntegerVector res_as_incidence(n*4*M);
-  
+
   int index=0;
   for(int i=0; i < n; ++i){
     for (int k = 0; k < 4 * M; ++k){
@@ -1171,28 +1171,28 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
       res_week[index] = k/(7*4)+1;
       res_day[index] = k/4+1;
       res_time[index] = (k%4)+1;
-      
+
       res_B_S[index] = values[i][k][0]*1.0/N;
       res_B_E1[index] = values[i][k][1]*1.0/N;
       res_B_E2[index] = values[i][k][2]*1.0/N;
       res_B_I[index] = values[i][k][3]*1.0/N;
       res_B_Ia[index] = values[i][k][4]*1.0/N;
       res_B_R[index] = values[i][k][5]*1.0/N;
-      
+
       res_C_S[index] = values[i][k][6]*1.0/N;
       res_C_E1[index] = values[i][k][7]*1.0/N;
       res_C_E2[index] = values[i][k][8]*1.0/N;
       res_C_I[index] = values[i][k][9]*1.0/N;
       res_C_Ia[index] = values[i][k][10]*1.0/N;
       res_C_R[index] = values[i][k][11]*1.0/N;
-      
+
       res_INCIDENCE[index] = values[i][k][12]*1.0/N;
       res_as_incidence[index] = values[i][k][13]*1.0/N;
-      
+
       index++;
     }
   }
-  
+
   // return a new data frame
   DataFrame df = DataFrame::create(
     _["location_code"]= res_names,
@@ -1214,11 +1214,11 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
     _["c_symp_incidence"]= res_INCIDENCE,
     _["c_asymp_incidence"]= res_as_incidence
   );
-  
-  
+
+
   df.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
-  
-  
+
+
   for(int i = 0; i < n; ++i){
     for(int k = 0; k < 4 * M; ++k){
       delete[] values[i][k];
@@ -1242,10 +1242,10 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   delete[] peak_val;
   delete[] final_size;
   delete[] bonds;
-  
-  
+
+
   return(df);
-  
+
 }
 
 
@@ -1259,7 +1259,7 @@ se1e2iiar_pop <- data.table::data.table(
     "Ia" = c(0,0,0),
     "R" = c(0,0,0)
 )
-  
+
   temp <- data.table::data.table(
       from = c("a","a","b","b","c","c"),
       to = c("b","c","a","c","a","b"),
@@ -1270,9 +1270,9 @@ se1e2iiar_pop <- data.table::data.table(
     mobility_matrix[[i]] <- data.table::copy(temp)
     data.table::setnames(mobility_matrix[[i]],c("from","to","n"))
   }
-  
+
   seed_matrix <- matrix(0, nrow = 10, ncol = 3)
-    
+
     dayEach <- rep(1:10, each = 4)
     timeEach <- rep(c(0, 6, 12, 18), 10)
     location_codes <- c(rep("a", 10 * 4), rep("b", 10 * 4), rep("c", 10 * 4))
@@ -1282,7 +1282,7 @@ se1e2iiar_pop <- data.table::data.table(
     betaDF <- data.table("location_code" = location_codes, "day" = days, "time" = times, "beta" = betas)
     betaDF = betaDF[order(betaDF$day), ]
   betas <- convert_beta_to_matrix(betaDF, location_codes = c("a", "b", "c"), days = 1:10, times = c(0, 6, 12, 18))
-    
+
     d <- asymmetric_mobility_se1e2iiar_cpp(
         se1e2iiar_pop = se1e2iiar_pop,
         mobility_matrix = mobility_matrix,
