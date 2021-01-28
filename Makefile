@@ -21,10 +21,18 @@ install_deps:
 	-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
 	-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
 
+.ONESHELL:
 build:
+	Rscript \
+		-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
+		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
 	R CMD build .
 
+.ONESHELL:
 check: build
+	Rscript \
+		-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
+		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
 	R CMD check --no-manual $(PKGNAME)_$(PKGVERS).tar.gz
 
 install: install_deps build
