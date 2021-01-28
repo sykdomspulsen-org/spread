@@ -29,7 +29,7 @@ build:
 	R CMD build .
 
 .ONESHELL:
-check: build
+check:
 	Rscript \
 		-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
 		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
