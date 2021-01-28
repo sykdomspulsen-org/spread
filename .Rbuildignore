@@ -10,3 +10,5 @@ cran-comments.md
 ^CRAN-RELEASE$
 ^doc$
 ^Meta$
+^Makefile$
+^Jenkinsfile$

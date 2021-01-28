@@ -5,7 +5,10 @@ Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
     person("Gunnar Rø", "Osnes", email = "GunnarOyvindIsaksson.Ro@fhi.no", role = c("aut")), 
-    person("Richard", "White", email = "w@rwhite.no", role = c("aut", "cre")))
+    person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0002-6747-1726")
+    )
+  )
 Description: A stochastic SEIIaR (susceptible, exposed, infectious, infectious asymptomatic, recovered) metapopulation model that including commuting. Each location has a local infection system, while the locations are connected by people who commute each day. The model differentiates between day and night. During the day you can infect/be infected in the location where you work, while during the night you can infect/be infected in the location where you live. It is the same commuters who travel back and forth each day. At the start of a day, all commuters are sent to their work location, where they mix for 12 hours. The commuters are then sent to their respective home locations, where they mix for 12 hours. The model is loosely based upon a published model by Engebretsen (2019) <doi:10.1371/journal.pcbi.1006879>.
 Depends: R (>= 3.5.0)
 Imports:
