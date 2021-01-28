@@ -8,6 +8,16 @@ pipeline {
         """
       }
     }
+    stage('Install dependencies') {
+      steps {
+        sh """
+          sudo podman run --rm \
+            -v $WORKSPACE:/rpkg \
+            fhix/dr:latest /bin/bash -c \
+            'cd /rpkg; make install_deps'
+        """
+      }
+    }
     stage('Build') {
       steps {
         sh """

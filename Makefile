@@ -16,16 +16,16 @@ fix_description_date:
 	echo "Date/Publication: $(DATETIMEUTC) UTC" >> DESCRIPTION
 	cat DESCRIPTION
 
+install_deps:
+	Rscript \
+	-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
+	-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
+
 build:
 	R CMD build .
 
 check: build
 	R CMD check --no-manual $(PKGNAME)_$(PKGVERS).tar.gz
-
-install_deps:
-	Rscript \
-	-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
-	-e 'remotes::install_deps(dependencies = TRUE)'
 
 install: install_deps build
 	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
