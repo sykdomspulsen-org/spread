@@ -35,6 +35,26 @@ check:
 		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
 	R CMD check --no-manual $(PKGNAME)_$(PKGVERS).tar.gz
 
+	cd *.Rcheck
+
+	if grep -Fq "WARNING" 00check.log
+	then
+		# code if found
+		exit 1
+	else
+		# code if not found
+		echo "NO WARNINGs"
+	fi
+
+	if grep -Fq "ERROR" 00check.log
+	then
+		# code if found
+		exit 1
+	else
+		# code if not found
+		echo "NO ERRORs"
+	fi
+
 install: install_deps build
 	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 
