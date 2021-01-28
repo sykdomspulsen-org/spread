@@ -4,13 +4,11 @@
 \name{asymmetric_mobility_dummy_mobility_matrix}
 \alias{asymmetric_mobility_dummy_mobility_matrix}
 \title{Fake mobility matrixes for asymmetric mobility}
-\format{
-\describe{
+\format{\describe{
 \item{from}{Location code.}
 \item{to}{Location code.}
 \item{n}{Number of people.}
-}
-}
+}}
 \usage{
 asymmetric_mobility_dummy_mobility_matrix
 }

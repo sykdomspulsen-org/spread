@@ -4,16 +4,14 @@
 \name{norway_seiiar_measles_noinfected_2017_b2020}
 \alias{norway_seiiar_measles_noinfected_2017_b2020}
 \title{SEIIaR data.frame for Norway with no one infected and real measles susceptibility (2020 borders)}
-\format{
-\describe{
+\format{\describe{
 \item{location_code}{Location code.}
 \item{S}{Number of susceptible people.}
 \item{E}{Number of exposed people.}
 \item{I}{Number of infectious and symptomatic people.}
 \item{Ia}{Number of infectious and asymptomatic people.}
 \item{R}{Number of recovered people.}
-}
-}
+}}
 \source{
 \url{http://khs.fhi.no/webview/}
 }
