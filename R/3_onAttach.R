@@ -1,8 +1,8 @@
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(paste(
-    "plnr",
-    utils::packageDescription("plnr")$Version,
-    "https://folkehelseinstituttet.github.io/plnr"
+    "spread",
+    utils::packageDescription("spread")$Version,
+    "https://folkehelseinstituttet.github.io/spread"
   ))
   packageStartupMessage("\nCommuter model and C++ code developed by Solveig Engebretsen and Andreas Nyg\u00E5rd Osnes")
   packageStartupMessage("Asymmetric mobility model and C++ code developed by Solveig Engebretsen")
