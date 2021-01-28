@@ -102,7 +102,7 @@ drat_prune_history:
 # this happens inside of docker
 .ONESHELL:
 pkgdown_build:
-	Rscript -e 'devtools::install("/rpkg", dependences = TRUE, upgrade = FALSE); pkgdown::build_site("/rpkg")'
+	Rscript -e 'devtools::install("/rpkg", dependencies = TRUE, upgrade = FALSE); pkgdown::build_site("/rpkg")'
 
 # this happens outside of docker:
 pkgdown_deploy:
