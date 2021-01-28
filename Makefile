@@ -5,8 +5,8 @@
 export PKGNAME=`sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION`
 export PKGVERS=`sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`
 export PKGTARBALL=$(PKGNAME)_$(PKGVERS).tar.gz
-export DATETIME=`date +%Y.%m.%d\ %H:%M:%S`
-export DATETIMEUTC=`date -u +%Y.%m.%d\ %H:%M:%S`
+export DATETIME=`date +%Y-%m-%d\ %H:%M:%S`
+export DATETIMEUTC=`date -u +%Y-%m-%d\ %H:%M:%S`
 export DATE=`date +%Y.%-m.%-d`
 
 all: check
