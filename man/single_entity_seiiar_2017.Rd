@@ -4,14 +4,16 @@
 \name{single_entity_seiiar_2017}
 \alias{single_entity_seiiar_2017}
 \title{SEIIaR data.frame for Norway as a single entity with no one infected and everyone susceptible (2020 borders)}
-\format{\describe{
+\format{
+\describe{
 \item{location_code}{Location code.}
 \item{S}{Number of susceptible people.}
 \item{E}{Number of exposed people.}
 \item{I}{Number of infectious and symptomatic people.}
 \item{Ia}{Number of infectious and asymptomatic people.}
 \item{R}{Number of recovered people.}
-}}
+}
+}
 \usage{
 single_entity_seiiar_2017
 }

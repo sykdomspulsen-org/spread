@@ -33,6 +33,8 @@ asymmetric_mobility_se1e2iiar_2strains_cpp(
 
 \item{betas}{matrix of floats, number of time intervals times number of locations, infection parameter, 0.6}
 
+\item{inputSeed}{Integer, input seed}
+
 \item{a1}{Float, 1/latent period, 1/2.0}
 
 \item{a2}{Float, 1/presymptomatic period, 1/3.0}

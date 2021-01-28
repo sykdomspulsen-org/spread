@@ -4,14 +4,16 @@
 \name{norway_seiiar_oslo_2017_b2020}
 \alias{norway_seiiar_oslo_2017_b2020}
 \title{SEIIaR data.frame for Norway with 10 people infected in Oslo and everyone susceptible (2020 borders)}
-\format{\describe{
+\format{
+\describe{
 \item{location_code}{Location code.}
 \item{S}{Number of susceptible people.}
 \item{E}{Number of exposed people.}
 \item{I}{Number of infectious and symptomatic people.}
 \item{Ia}{Number of infectious and asymptomatic people.}
 \item{R}{Number of recovered people.}
-}}
+}
+}
 \usage{
 norway_seiiar_oslo_2017_b2020
 }

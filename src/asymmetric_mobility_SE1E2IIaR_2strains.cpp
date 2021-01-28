@@ -680,6 +680,7 @@ void AMNGraph2strains::count_everyone(string msg){
 //' @param seed_matrix matrix of seeding cases of strain a per date per geographical location
 //' @param seed_matrix_b matrix of seeding cases of strain b per date per geographical location
 //' @param betas matrix of floats, number of time intervals times number of locations, infection parameter, 0.6
+//' @param inputSeed Integer, input seed
 //' @param a1 Float, 1/latent period, 1/2.0
 //' @param a2 Float, 1/presymptomatic period, 1/3.0
 //' @param gamma Float, 1/infectious period, 1/5.0
