@@ -4,8 +4,7 @@
 \name{asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop}
 \alias{asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop}
 \title{A fake population for asymmetric mobility se1e2iiar 2 strains}
-\format{
-\describe{
+\format{\describe{
 \item{location_code}{Location code.}
 \item{S}{Number of susceptible people.}
 \item{E1}{Number of exposed, asymptomatic people, not infectious.}
@@ -17,8 +16,7 @@
 \item{E2_b}{Number of exposed, presymptomatic people, infectious of strain B.}
 \item{I_b}{Number of infectious and symptomatic people of strain B.}
 \item{Ia_b}{Number of infectious and asymptomatic people of strain B.}
-}
-}
+}}
 \usage{
 asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop
 }

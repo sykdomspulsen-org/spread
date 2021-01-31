@@ -1199,7 +1199,7 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                 //as visitors from each location
                 //used to distribute the extra travellers
                 // As there are not enough people from the home locations currently present in name1_index
-                int S_tmp = 0; int E1_tmp = 0; int E2_tmp = 0; int Ia_tmp = 0; int I_tmp = 0; int R_tmp = 0; int E1_b_tmp; int E2_b_tmp; int Ia_b_tmp; int I_b_tmp;
+                int S_tmp = 0; int E1_tmp = 0; int E2_tmp = 0; int Ia_tmp = 0; int I_tmp = 0; int R_tmp = 0; int E1_b_tmp = 0; int E2_b_tmp = 0; int Ia_b_tmp = 0; int I_b_tmp = 0;
 
                 int *S_probs = new int[num];
                 int *E1_probs = new int[num];
@@ -1504,6 +1504,7 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                 delete[] I_b_probs;
                 delete[] Ia_b_probs;
 
+
                 if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp < leftover){
                   if( G_current.locations[name2_index].visitorsS[name1_index]  +
                       G_current.locations[name2_index].visitorsE1[name1_index]  +
@@ -1804,7 +1805,7 @@ se1e2iiar_2strains_pop <- data.table::data.table(
 temp <- data.table::data.table(
   from = c("a","a","b","b","c","c"),
   to = c("b","c","a","c","a","b"),
-  n = c(10,10,10,10,10,10)
+  n = c(10,10,10,10,10,3000)
 )
 mobility_matrix <- vector("list",length=10 * 4)
 for(i in seq_along(mobility_matrix)){
