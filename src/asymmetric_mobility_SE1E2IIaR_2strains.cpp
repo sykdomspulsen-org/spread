@@ -1200,6 +1200,7 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                 //used to distribute the extra travellers
                 // As there are not enough people from the home locations currently present in name1_index
                 int S_tmp = 0; int E1_tmp = 0; int E2_tmp = 0; int Ia_tmp = 0; int I_tmp = 0; int R_tmp = 0; int E1_b_tmp = 0; int E2_b_tmp = 0; int Ia_b_tmp = 0; int I_b_tmp = 0;
+                int S_tmp2 = 0; int E1_tmp2 = 0; int E2_tmp2 = 0; int Ia_tmp2 = 0; int I_tmp2 = 0; int R_tmp2 = 0; int E1_b_tmp2 = 0; int E2_b_tmp2 = 0; int Ia_b_tmp2 = 0; int I_b_tmp2 = 0;
 
                 int *S_probs = new int[num];
                 int *E1_probs = new int[num];
@@ -1246,6 +1247,17 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                 p[7] = E2_b_tmp;
                 p[8] = I_b_tmp;
                 p[9] = Ia_b_tmp;
+
+                S_tmp2 = S_tmp;
+                E1_tmp2 = E1_tmp;
+                E2_tmp2 = E2_tmp;
+                I_tmp2 = I_tmp;
+                Ia_tmp2 = Ia_tmp;
+                R_tmp2 = R_tmp;
+                E1_b_tmp2 = E1_b_tmp;
+                E2_b_tmp2 = E2_b_tmp;
+                I_b_tmp2 = I_b_tmp;
+                Ia_b_tmp2 = Ia_b_tmp;
 
                 // Draw the number of travellers from each compartment
                 if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp > leftover){
@@ -1505,7 +1517,7 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                 delete[] Ia_b_probs;
 
 
-                if(S_tmp + E1_tmp + E2_tmp + I_tmp + Ia_tmp + R_tmp + E1_b_tmp + E2_b_tmp + I_b_tmp + Ia_b_tmp < leftover){
+                if(S_tmp2 + E1_tmp2 + E2_tmp2 + I_tmp2 + Ia_tmp2 + R_tmp2 + E1_b_tmp2 + E2_b_tmp2 + I_b_tmp2 + Ia_b_tmp2 < leftover){
                   if( G_current.locations[name2_index].visitorsS[name1_index]  +
                       G_current.locations[name2_index].visitorsE1[name1_index]  +
                       G_current.locations[name2_index].visitorsE2[name1_index]  +
@@ -1517,11 +1529,11 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
                       G_current.locations[name2_index].visitorsI_b[name1_index]  +
                       G_current.locations[name2_index].visitorsIa_b[name1_index] < Nk)
                   {
-                    G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp - E1_tmp - E2_tmp - I_tmp - Ia_tmp - R_tmp - E1_b_tmp - E2_b_tmp - I_b_tmp - Ia_b_tmp;
+                    G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp2 - E1_tmp2 - E2_tmp2 - I_tmp2 - Ia_tmp2 - R_tmp2 - E1_b_tmp2 - E2_b_tmp2 - I_b_tmp2 - Ia_b_tmp2;
                     Rcout << "---------------" << endl;
                     Rcout << " Added extra people in " << tmpstr << " index " << name1_index << endl;
                     Rcout << " Name1 index " << name1_index << " Name2 index " << name2_index << endl;
-                    Rcout << " Number added " << leftover - S_tmp - E1_tmp - E2_tmp - I_tmp - Ia_tmp - R_tmp - E1_b_tmp - E2_b_tmp - I_b_tmp - Ia_b_tmp << endl;
+                    Rcout << " Number added " << leftover - S_tmp2 - E1_tmp2 - E2_tmp2 - I_tmp2 - Ia_tmp2 - R_tmp2 - E1_b_tmp2 - E2_b_tmp2 - I_b_tmp2 - Ia_b_tmp2 << endl;
                   }
                 }
               }
