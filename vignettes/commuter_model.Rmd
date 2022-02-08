@@ -109,7 +109,17 @@ d[location_code=="municip0301"]
 We can merge in information about counties, and create county level data:
 
 ```{r}
-d <- merge(d,fhidata::norway_locations_b2020, by.x="location_code",by.y="municip_code")
+d[
+  fhidata::norway_locations_hierarchy(from = "municip", to = "county"),
+  on = "location_code==from_code",
+  county_code := to_code
+]
+d[
+  fhidata::norway_locations_names(),
+  on = "county_code==location_code",
+  county_name := location_name     
+]
+
 county <- d[,.(
   S=sum(S),
   E=sum(E),
@@ -146,7 +156,7 @@ w[,facet:=glue::glue("Week {week}",week=week)]
 
 pd <- merge(
   w,
-  fhidata::norway_map_counties_b2020, 
+  fhimaps::norway_nuts3_map_b2020_default_dt, 
   by.x="county_code",
   by.y="location_code",
   allow.cartesian = T)
