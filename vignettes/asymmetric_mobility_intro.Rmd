@@ -1,5 +1,5 @@
 ---
-title: "asymmetric_mobility_intro"
+title: "Asymmetric Mobility Intro"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{asymmetric_mobility_intro}

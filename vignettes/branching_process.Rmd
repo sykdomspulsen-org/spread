@@ -1,10 +1,10 @@
 ---
-title: "Simple Branching Process model"
+title: "Simple Branching Process Model"
 author: "Gunnar Rø"
 date: "2020-01-31"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{branching_process}
+  %\VignetteIndexEntry{Simple Branching Process Model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

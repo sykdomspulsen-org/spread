@@ -1,10 +1,10 @@
 ---
-title: "Commuter Model"
+title: "Commuter Model Intro"
 author: "Richard White"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{commuter_model}
+  %\VignetteIndexEntry{Commuter Model Intro}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

@@ -1,8 +1,8 @@
 ---
-title: "Including vax"
+title: "Commuter Model With Vax Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{including_vax}
+  %\VignetteIndexEntry{Commuter Model With Vax Data}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
