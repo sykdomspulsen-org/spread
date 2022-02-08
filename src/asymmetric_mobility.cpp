@@ -719,6 +719,7 @@ void AMGraph::count_everyone(string msg){
 						//used to distribute the extra travellers
 						// As there are not enough people from the home locations currently present in name1_index
 						int S_tmp = 0; int E_tmp = 0; int Ia_tmp = 0; int I_tmp = 0; int R_tmp = 0;
+						int S_tmp2 = 0; int E_tmp2 = 0; int Ia_tmp2 = 0; int I_tmp2 = 0; int R_tmp2 = 0;
 
 						int *S_probs = new int[num];
 						int *E_probs = new int[num];
@@ -745,6 +746,12 @@ void AMGraph::count_everyone(string msg){
 						p[2] = I_tmp;
 						p[3] = Ia_tmp;
 						p[4] = R_tmp;
+
+						S_tmp2 = S_tmp;
+						E_tmp2 = E_tmp;
+						I_tmp2 = I_tmp;
+						Ia_tmp2 = Ia_tmp;
+						R_tmp2 = R_tmp;
 
 						// Draw the number of travellers from each compartment
 						if(S_tmp + E_tmp + I_tmp + Ia_tmp + R_tmp > leftover){
@@ -883,18 +890,18 @@ void AMGraph::count_everyone(string msg){
 						delete[] Ia_probs;
 						delete[] R_probs;
 
-						if(S_tmp + E_tmp + I_tmp + Ia_tmp + R_tmp < leftover){
+						if(S_tmp2 + E_tmp2 + I_tmp2 + Ia_tmp2 + R_tmp2 < leftover){
 						  if( G_current.locations[name2_index].visitorsS[name1_index]  +
                   G_current.locations[name2_index].visitorsE[name1_index]  +
                   G_current.locations[name2_index].visitorsI[name1_index]  +
                   G_current.locations[name2_index].visitorsIa[name1_index] +
                   G_current.locations[name2_index].visitorsR[name1_index] < Nk)
 						  {
-							  G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp;
+							  G_current.locations[name2_index].visitorsS[name1_index] += leftover - S_tmp2 - E_tmp2 - I_tmp2 - Ia_tmp2 - R_tmp2;
 						    Rcout << "---------------" << endl;
 							  Rcout << " Added extra people in " << tmpstr << " index " << name1_index << endl;
 							  Rcout << " Name1 index " << name1_index << " Name2 index " << name2_index << endl;
-							  Rcout << " Number added " << leftover - S_tmp - E_tmp - I_tmp - Ia_tmp - R_tmp << endl;
+							  Rcout << " Number added " << leftover - S_tmp2 - E_tmp2 - I_tmp2 - Ia_tmp2 - R_tmp2 << endl;
 							}
 						}
 					}
