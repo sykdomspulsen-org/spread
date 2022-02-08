@@ -4,41 +4,59 @@
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Writing-portable-packages
 export PKGNAME=`sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION`
 export PKGVERS=`sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`
-export PKGTARBALL=$(PKGNAME)_$(PKGVERS).tar.gz
 export DATETIME=`date +%Y-%m-%d\ %H:%M:%S`
 export DATETIMEUTC=`date -u +%Y-%m-%d\ %H:%M:%S`
 export DATE=`date +%Y.%-m.%-d`
 
-all: check
+#export PWD=$(abspath $(lastword $(MAKEFILE_LIST)))
 
-fix_description_date:
+all: build
+
+.ONESHELL:
+fix_description_version:
 	sed -i "s/^Version: .*/Version: $(DATE)/" DESCRIPTION
 	sed -i '/Date\/Publication:/d' DESCRIPTION # delete if exists
 	echo "Date/Publication: $(DATETIMEUTC) UTC" >> DESCRIPTION #append to bottom
-	cat DESCRIPTION
-
-install_deps:
-	Rscript \
-	-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
-	-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
+	sudo chmod -R 777 ..
 
 .ONESHELL:
-build:
-	Rscript \
-		-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
-		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
-	R CMD build .
+build_data:
+	sudo podman run --rm --privileged \
+		-v $(shell pwd):/rpkg \
+		docker.io/fhix/rfhiverse:latest /bin/bash -c \
+		'Rscript -e "devtools::load_all(\"/rpkg/\"); gen_data_all(\"/rpkg/data\")"'
+	sudo chmod -R 777 ..
 
 .ONESHELL:
-check:
-	Rscript \
-		-e 'if (!requireNamespace("remotes")) install.packages("remotes")' \
-		-e 'remotes::install_deps(dependencies = TRUE, upgrade = "never")'
-	R CMD check --no-manual $(PKGNAME)_$(PKGVERS).tar.gz
+build_package:
+	sudo rm -rf ../built
+	mkdir ../built
+	sudo podman run --rm --privileged \
+		-v $(shell pwd):/rpkg \
+		-v $(shell pwd)/../built:/built \
+		docker.io/fhix/rfhiverse:latest /bin/bash -c \
+		' \
+		cd /; \
+		R CMD build /rpkg; \
+		cp *.tar.gz /built/; \
+		'
+	sudo chown -R go ../built
+	sudo chmod -R 777 ..
 
-	cd *.Rcheck
+.ONESHELL:
+check_package:
+	sudo podman run --rm --privileged \
+		-v $(shell pwd):/rpkg \
+		-v $(shell pwd)/../built:/built \
+		docker.io/fhix/rfhiverse:latest /bin/bash -c \
+		' \
+		R CMD check --no-manual /built/*.tar.gz; \
+		mv *.Rcheck /built/; \
+		'
 
-	if grep -Fq "WARNING" 00check.log
+	sudo chmod -R 777 ..
+
+	if grep -Fq "WARNING" ../built/*.Rcheck/00check.log
 	then
 		# code if found
 		exit 1
@@ -47,7 +65,7 @@ check:
 		echo "NO WARNINGs"
 	fi
 
-	if grep -Fq "ERROR" 00check.log
+	if grep -Fq "ERROR" ../built/*.Rcheck/00check.log
 	then
 		# code if found
 		exit 1
@@ -56,32 +74,42 @@ check:
 		echo "NO ERRORs"
 	fi
 
-install: install_deps build
-	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
-
-# this happens outside docker
 .ONESHELL:
-drat_update:
-	cd /mnt/n/sykdomspulsen_config/drat
-	git config user.name "Sykdomspulsen"
-	git config user.email "sykdomspulsen@fhi.no"
-	git config push.default simple
-	git checkout gh-pages
-	git pull
+drat:
+	git -C .. clone git@github.com:folkehelseinstituttet/drat.git --branch gh-pages
+	sudo podman run --rm --privileged \
+		-v $(shell pwd):/rpkg \
+		-v $(shell pwd)/../built:/built \
+		-v $(shell pwd)/../drat:/drat \
+		docker.io/fhix/rfhiverse:latest /bin/bash -c 'Rscript -e "drat::insertPackage(fs::dir_ls(\"/built/\", regexp=\".tar.gz\$\"), repodir = \"/drat\")"'
 
-# this happens inside docker
-.ONESHELL:
-drat_insert:
-	Rscript -e 'drat::insertPackage(fs::dir_ls("/rpkg/", regexp=".tar.gz$\"), repodir = "/drat")'
+	sed -i "/## News/a - **$(PKGNAME) $(PKGVERS)** (linux) inserted at $(DATETIME)" ../drat/README.md
+	sed -i '1001,\\\$ d' ../drat/README.md # only keep first 1000 lines of readme
 
-# this happens outside of docker
+	git config --global user.email "sykdomspulsen@fhi.no"
+	git config --global user.name "sykdomspulsen"
+
+	git -C ../drat add -A
+	git -C ../drat commit -am "gocd $(PKGNAME) $(PKGVERS)" #Committing the changes
+	git -C ../drat push -f origin gh-pages #pushes to master branch
+
+	sudo chmod -R 777 ..
+
 .ONESHELL:
-drat_push:
-	sed -i "/## News/a - **$(PKGNAME) $(PKGVERS)** (linux) inserted at $(DATETIME)" /mnt/n/sykdomspulsen_config/drat/README.md
-	sed -i '1001,$ d' /mnt/n/sykdomspulsen_config/drat/README.md # only keep first 1000 lines of readme
-	git -C /mnt/n/sykdomspulsen_config/drat add -A
-	git -C /mnt/n/sykdomspulsen_config/drat commit -am "Jenkins $(PKGNAME) $(PKGVERS)" #Committing the changes
-	git -C /mnt/n/sykdomspulsen_config/drat push -f origin gh-pages #pushes to master branch
+pkgdown:
+	sudo podman run --rm --privileged \
+		-v $(shell pwd):/rpkg \
+		-v $(shell pwd)/../built:/built \
+		-v $(shell pwd)/../drat:/drat \
+		docker.io/fhix/rfhiverse:latest /bin/bash -c 'Rscript -e "devtools::install(\"/rpkg\", dependencies = TRUE, upgrade = FALSE); pkgdown::build_site(\"/rpkg\")"'
+
+	git add .
+	git commit -am "Pkgdown built"
+	git subtree split --prefix docs -b gh-pages # create a local gh-pages branch containing the splitted output folder
+	git push -f origin gh-pages:gh-pages # force the push of the gh-pages branch to the remote gh-pages branch at origin
+	git branch -D gh-pages # delete the local gh-pages because you will need it: ref
+
+	sudo chmod -R 777 ..
 
 .ONESHELL:
 drat_prune_history:
@@ -99,19 +127,3 @@ drat_prune_history:
 	git branch -D gh-pages #Deleting master branch
 	git branch -m gh-pages #renaming branch as master
 	git -C /tmp/drat push -f origin gh-pages #pushes to master branch
-
-# this happens inside of docker
-.ONESHELL:
-pkgdown_build:
-	Rscript -e 'devtools::install("/rpkg", dependencies = TRUE, upgrade = FALSE); pkgdown::build_site("/rpkg")'
-
-# this happens outside of docker:
-pkgdown_deploy:
-	git add .
-	git commit -am "Pkgdown built"
-	git subtree split --prefix docs -b gh-pages # create a local gh-pages branch containing the splitted output folder
-	git push -f origin gh-pages:gh-pages # force the push of the gh-pages branch to the remote gh-pages branch at origin
-	git branch -D gh-pages # delete the local gh-pages because you will need it: ref
-
-clean:
-	@rm -rf $(PKGNAME)_$(PKGVERS).tar.gz $(PKGNAME).Rcheck
