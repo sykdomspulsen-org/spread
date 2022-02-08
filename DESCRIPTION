@@ -4,7 +4,7 @@ Version: 2020.9.16
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
-    person("Gunnar Rø", "Osnes", email = "GunnarOyvindIsaksson.Ro@fhi.no", role = c("aut")), 
+    person("Gunnar", "Rø", email = "GunnarOyvindIsaksson.Ro@fhi.no", role = c("aut")), 
     person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
         comment = c(ORCID = "0000-0002-6747-1726")
     ),
