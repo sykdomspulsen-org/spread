@@ -29,7 +29,7 @@ options(
 
 Save the file and restart R.
 
-You can now install [splverse](https://docs.sykdomspulsen.no/packages) packages from our [drat registry](https://docs.sykdomspulsen.no/drat).
+You can now install [splverse](https://docs.sykdomspulsen.no/packages) packages from our [drat repository](https://docs.sykdomspulsen.no/drat).
 
 ```
 install.packages("spread")
