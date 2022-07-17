@@ -1646,11 +1646,11 @@ List asymmetric_mobility_se1e2iiar_2strains_cpp(
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; 6=E1_b; 7 = E2_b; 8 = I_b; 9 = Ia_b for belonging to kommune
   /// 10 = S, 11 = E1, 12 = E2,  13 = I, 14 = Ia, 15 = R, 16 = E1_b, 17 = E2_b, 18 = I_b, 19 = Ia_b, for currently in kommune.
   /// 20 = symptomatic incidence occurring in a kommune of strain A;
-  /// 21 = asymptomatic incidence occuring in a kommune of strain A;
+  /// 21 = asymptomatic incidence occurring in a kommune of strain A;
   /// 22 = symptomatic incidence occurring in a kommune of strain B;
-  /// 23 = asymptomatic incidence occuring in a kommune of strain B;
+  /// 23 = asymptomatic incidence occurring in a kommune of strain B;
   /// 24 = symptomatic incidence occurring in a kommune total;
-  /// 25 = asymptomatic incidence occuring in a kommune total;
+  /// 25 = asymptomatic incidence occurring in a kommune total;
 
   StringVector res_names(n*4*M);
   IntegerVector res_week(n*4*M);

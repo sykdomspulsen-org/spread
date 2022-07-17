@@ -564,7 +564,7 @@ DataFrame asymmetric_mobility_se1e2iiar_cpp(
   /// Third index 0=S, 1=E1, 2 = E2, 3=I, 4=Ia, 5=R; for belonging to kommune
   /// 5 = 6, 7 = E1, 8 = E2,  9 = I, 10 = Ia, 11 = R, for currently in kommune.
   /// 12 = symptomatic incidence occurring in a kommune;
-  /// 13 = asymptomatic incidence occuring in a kommune;
+  /// 13 = asymptomatic incidence occurring in a kommune;
   for(int i = 0; i < n; ++i){
     values[i] = new int*[M * 4]; // 4 * M, stored for all 6-hour intervals.
     peak_date[i] = new int[N];
