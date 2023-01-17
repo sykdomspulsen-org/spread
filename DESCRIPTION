@@ -14,14 +14,9 @@ Description: A stochastic SEIIaR (susceptible, exposed, infectious, infectious a
 Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.9.4),
-    RcppProgress (>= 0.1),
     data.table,
     ggplot2,
-    csdata (>= 2022.11.22),
-    stringr,
-    readxl,
     matrixStats,
-    zoo,
     foreach,
     magrittr,
     stats,
@@ -31,6 +26,8 @@ Suggests:
     knitr,
     glue,
     rmarkdown,
+    RcppProgress (>= 0.1),
+    csdata (>= 2022.11.22),
     csmaps,
     distcrete,
     HDInterval,
