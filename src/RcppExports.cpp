@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // asymmetric_mobility_cpp
 DataFrame asymmetric_mobility_cpp(DataFrame seiiar_pop, List mobility_matrix, NumericMatrix seed_matrix, NumericVector betas, float a, float gamma, float asymptomaticProb, float asymptomaticRelativeInfectiousness, int N, int M);
 RcppExport SEXP _spread_asymmetric_mobility_cpp(SEXP seiiar_popSEXP, SEXP mobility_matrixSEXP, SEXP seed_matrixSEXP, SEXP betasSEXP, SEXP aSEXP, SEXP gammaSEXP, SEXP asymptomaticProbSEXP, SEXP asymptomaticRelativeInfectiousnessSEXP, SEXP NSEXP, SEXP MSEXP) {

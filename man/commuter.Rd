@@ -5,8 +5,8 @@
 \title{commuter}
 \usage{
 commuter(
-  seiiar = spread::norway_seiiar_oslo_2017_b2020,
-  commuters = spread::norway_commuters_2017_b2020,
+  seiiar = spread::nor_seiiar_oslo_2017_b2020,
+  commuters = spread::nor_commuters_2017_b2020,
   r0 = NULL,
   beta = NULL,
   latent_period = 1.9,
@@ -78,8 +78,8 @@ For more information, look at \code{vignette("commuter_model","spread")}
 }
 \examples{
 spread::commuter(
-  seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
-  commuters = spread::norway_commuters_2017_b2020,
+  seiiar = spread::nor_seiiar_measles_oslo_2017_b2020,
+  commuters = spread::nor_commuters_2017_b2020,
   r0 = 14,
   latent_period = 8,
   infectious_period = 5,

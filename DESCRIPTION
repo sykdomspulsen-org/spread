@@ -1,6 +1,6 @@
 Package: spread
 Title: Infectious Disease Spread Models
-Version: 2020.9.16
+Version: 2023.1.17
 Authors@R: c(
     person("Solveig", "Engebretsen", email = "solveig.engebretsen@medisin.uio.no", role = c("aut")), 
     person("Andreas Nygård", "Osnes", email = "andreas.n.osnes@gmail.com", role = c("aut")), 
@@ -17,7 +17,7 @@ Imports:
     RcppProgress (>= 0.1),
     data.table,
     ggplot2,
-    fhidata (>= 2019.1.23),
+    csdata (>= 2022.11.22),
     stringr,
     readxl,
     matrixStats,
@@ -31,6 +31,7 @@ Suggests:
     knitr,
     glue,
     rmarkdown,
+    csmaps,
     distcrete,
     HDInterval,
     epitrix
@@ -39,7 +40,7 @@ URL: https://docs.sykdomspulsen.no/spread, https://github.com/sykdomspulsen-org/
 BugReports: https://github.com/sykdomspulsen-org/spread/issues
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 LinkingTo: 
     Rcpp, RcppProgress
 VignetteBuilder: knitr

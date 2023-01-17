@@ -13,8 +13,8 @@ commuter_calculate_beta_from_r0 <- function(
 
 
 commuter_convert_seiiar <- function(
-                                    seiiar = spread::norway_seiiar_oslo_2017_b2020,
-                                    commuters = spread::norway_commuters_2017_b2020) {
+                                    seiiar = spread::nor_seiiar_oslo_2017_b2020,
+                                    commuters = spread::nor_commuters_2017_b2020) {
   . <- NULL
   S <- NULL
   E <- NULL
@@ -151,8 +151,8 @@ check_commuters <- function(commuters) {
 #' @param aggregate_location Do you want to aggregate over all location_codes?
 #' @examples
 #' spread::commuter(
-#'   seiiar = spread::norway_seiiar_measles_oslo_2017_b2020,
-#'   commuters = spread::norway_commuters_2017_b2020,
+#'   seiiar = spread::nor_seiiar_measles_oslo_2017_b2020,
+#'   commuters = spread::nor_commuters_2017_b2020,
 #'   r0 = 14,
 #'   latent_period = 8,
 #'   infectious_period = 5,
@@ -177,8 +177,8 @@ check_commuters <- function(commuters) {
 #' @import data.table
 #' @export
 commuter <- function(
-                     seiiar = spread::norway_seiiar_oslo_2017_b2020,
-                     commuters = spread::norway_commuters_2017_b2020,
+                     seiiar = spread::nor_seiiar_oslo_2017_b2020,
+                     commuters = spread::nor_commuters_2017_b2020,
                      r0 = NULL,
                      beta = NULL,
                      latent_period = 1.9,

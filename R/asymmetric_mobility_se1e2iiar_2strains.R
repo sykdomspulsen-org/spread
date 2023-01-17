@@ -50,7 +50,8 @@
 #' }
 #' @examples
 #' spread::asymmetric_mobility_se1e2iiar_2strains(
-#'   se1e2iiar_2strains_pop = spread::asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop,
+#'   se1e2iiar_2strains_pop =
+#'     spread::asymmetric_mobility_se1e2iiar_dummy_se1e2iiar_2strains_pop,
 #'   mobility_matrix = spread::asymmetric_mobility_se1e2iiar_dummy_mobility_matrix,
 #'   dynamic_seeds = spread::asymmetric_mobility_se1e2iiar_2strains_dummy_dynamic_seeds,
 #'   betas = spread::asymmetric_mobility_se1e2iiar_dummy_betas,

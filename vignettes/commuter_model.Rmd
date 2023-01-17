@@ -40,21 +40,21 @@ library(data.table)
 
 ```{r}
 # no one in Norway is infected, and everyone is susceptible
-spread::norway_seiiar_noinfected_2017_b2020
+spread::nor_seiiar_noinfected_2017_b2020
 
 # 10 people in Oslo are infected, and everyone is susceptible
-spread::norway_seiiar_oslo_2017_b2020
+spread::nor_seiiar_oslo_2017_b2020
 
 # no one in Norway is infected, and childhood vaccination data is used to
 # estimate the number of "recovered" (i.e. non-susceptible) people for measles
-spread::norway_seiiar_measles_noinfected_2017_b2020
+spread::nor_seiiar_measles_noinfected_2017_b2020
 
 # 10 people in Oslo is infected, and childhood vaccination data is used to
 # estimate the number of "recovered" (i.e. non-susceptible) people for measles
-spread::norway_seiiar_measles_oslo_2017_b2020
+spread::nor_seiiar_measles_oslo_2017_b2020
 
 # we can take a closer look at Oslo
-spread::norway_seiiar_measles_oslo_2017_b2020[location_code=="municip0301"]
+spread::nor_seiiar_measles_oslo_2017_b2020[location_code=="municip_nor0301"]
 ```
 
 `commuters` is a dataset that contains the following variables:
@@ -65,7 +65,7 @@ spread::norway_seiiar_measles_oslo_2017_b2020[location_code=="municip0301"]
 
 ```{r}
 # we provide the number of municipal commuters in Norway in 2017
-spread::norway_commuters_2017_b2020
+spread::nor_commuters_2017_b2020
 ```
 
 `r0` is the basic reproductive number.
@@ -83,13 +83,13 @@ spread::norway_commuters_2017_b2020
 # Example
 
 
-We simulate one measles outbreak using the datasets `spread::norway_seiiar_measles_oslo_2017_b2020` and `spread::norway_commuters_2017_b2020`:
+We simulate one measles outbreak using the datasets `spread::nor_seiiar_measles_oslo_2017_b2020` and `spread::nor_commuters_2017_b2020`:
 
 ```{r}
 set.seed(4)
 d <- spread::commuter(
-  seiiar=spread::norway_seiiar_measles_oslo_2017_b2020,
-  commuters=spread::norway_commuters_2017_b2020,
+  seiiar=spread::nor_seiiar_measles_oslo_2017_b2020,
+  commuters=spread::nor_commuters_2017_b2020,
   r0=14,
   latent_period = 8,
   infectious_period = 5,
@@ -103,21 +103,26 @@ d <- spread::commuter(
 Inspecting the data from Oslo:
 
 ```{r}
-d[location_code=="municip0301"]
+d[location_code=="municip_nor0301"]
 ```
 
 We can merge in information about counties, and create county level data:
 
 ```{r}
 d[
-  fhidata::norway_locations_hierarchy(from = "municip", to = "county"),
+  csdata::nor_locations_hierarchy_from_to(
+    from = "municip", 
+    to = "county",
+    include_to_name = TRUE
+    ),
   on = "location_code==from_code",
-  county_code := to_code
-]
-d[
-  fhidata::norway_locations_names(),
-  on = "county_code==location_code",
-  county_name := location_name     
+  c(
+    "county_code",
+    "county_name"
+  ) := .(
+    to_code,
+    to_name
+  )
 ]
 
 county <- d[,.(
@@ -130,17 +135,16 @@ county <- d[,.(
   pop=sum(pop)
 ),
 keyby=.(county_code,county_name,week,day,is_6pm)]
-county[,county_name:=factor(county_name,levels=unique(fhidata::norway_locations_b2020[,c("county_code","county_name")]$county_name))]
 county
 ```
 
 We can produce a daily epicurve for each county:
 ```{r fig.height=7, fig.width=7}
-p <- ggplot(county, aes(x=day, y=incidence))
-p <- p + geom_col()
-p <- p + facet_wrap(~county_name)
-p <- p + scale_x_continuous("Day")
-p
+q <- ggplot(county, aes(x=day, y=incidence))
+q <- q + geom_col()
+q <- q + facet_wrap(~county_name)
+q <- q + scale_x_continuous("Day")
+q
 ```
 
 And we can produce weekly maps:
@@ -151,22 +155,22 @@ w <- county[,.(
   pop = mean(pop)
 ), keyby=.(county_code, week)]
 
-w[,weekly_incidence_per_10000 := 10000*incidence_weekly/pop]
+w[,weekly_incidence_pr10000 := 10000*incidence_weekly/pop]
 w[,facet:=glue::glue("Week {week}",week=week)]
 
 pd <- merge(
   w,
-  fhimaps::norway_nuts3_map_b2020_default_dt, 
+  csmaps::nor_county_map_b2020_default_dt, 
   by.x="county_code",
   by.y="location_code",
   allow.cartesian = T)
 
-p <- ggplot(data=pd, mapping=aes( x = long, y = lat, group = group))
-p <- p + geom_polygon(aes(fill=weekly_incidence_per_10000))
-p <- p + facet_wrap(~facet)
-p <- p + theme_void()
-p <- p + coord_quickmap()
-p
+q <- ggplot(data=pd, mapping=aes( x = long, y = lat, group = group))
+q <- q + geom_polygon(aes(fill=weekly_incidence_pr10000))
+q <- q + facet_wrap(~facet)
+q <- q + theme_void()
+q <- q + coord_quickmap()
+q
 
 ```
 

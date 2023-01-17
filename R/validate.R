@@ -14,7 +14,7 @@ validate_seiiar <- function(seiiar) {
 }
 
 validate_vax_prev <- function(vax) {
-  needed_names <- c("location_code", "proportion")
+  needed_names <- c("location_code", "vaccination_coverage_pr1")
   if (sum(!needed_names %in% names(vax)) > 0) {
     stop(glue::glue("names are not c({glue::glue_collapse(needed_names, sep=', ')})"))
   }
