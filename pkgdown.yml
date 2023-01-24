@@ -1,0 +1,13 @@
+pandoc: '2.13'
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles:
+  asymmetric_mobility_intro: asymmetric_mobility_intro.html
+  branching_process: branching_process.html
+  commuter_model: commuter_model.html
+  including_vax: including_vax.html
+last_built: 2023-01-24T11:07Z
+urls:
+  reference: https://docs.sykdomspulsen.no/spread/reference
+  article: https://docs.sykdomspulsen.no/spread/articles
+
